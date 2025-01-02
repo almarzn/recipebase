@@ -7,7 +7,8 @@ export default defineNuxtConfig({
     'shadcn-nuxt',
     '@nuxtjs/color-mode',
     '@nuxtjs/supabase',
-    '@nuxt/eslint'
+    '@nuxt/eslint',
+    '@nuxt/image'
   ],
   app: {
     head: {
