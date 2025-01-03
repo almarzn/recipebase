@@ -9,7 +9,7 @@ import { EllipsisVertical } from "lucide-vue-next";
 import DeleteHandbook from "~/components/handbook/DeleteHandbook.vue";
 
 defineEmits(["update"]);
-defineProps<{ book: { name: string; id: string } }>();
+defineProps<{ book: { name: string; id: string; slug: string } }>();
 
 const open = ref(false);
 </script>
@@ -23,10 +23,12 @@ const open = ref(false);
     />
     <CardHeader>
       <CardTitle>{{ book.name }}</CardTitle>
-      <CardDescription> 0 recipe</CardDescription>
+      <CardDescription>0 recipe</CardDescription>
     </CardHeader>
     <CardFooter class="flex gap-3 p-0 pr-6">
-      <Button variant="secondary">Recipes</Button>
+      <NuxtLink :to="`/books/${book.slug}`">
+        <Button variant="secondary">Recipes</Button>
+      </NuxtLink>
       <DropdownMenu>
         <DropdownMenuTrigger as-child>
           <Button variant="outline" class="w-0">

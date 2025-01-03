@@ -1,5 +1,6 @@
 <template>
-  <div class="flex h-lvh w-lvw items-stretch flex-col">
+  <div class="flex h-lvh w-lvw items-stretch flex-col bg-radial">
+    <NuxtLoadingIndicator />
     <div class="p-4">
       <div class="flex gap-4 justify-start items-center text-sm">
         <div class="max-sm:hidden">Recipebase.co</div>

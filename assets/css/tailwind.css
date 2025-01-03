@@ -56,7 +56,7 @@
     --accent: 215 27.9% 16.9%;
     --accent-foreground: 210 20% 98%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 62.8% 60.6%;
     --destructive-foreground: 210 20% 98%;
 
     --border: 215 27.9% 16.9%;
@@ -79,11 +79,19 @@
   }
 
   .heading-3 {
-    @apply scroll-m-20 text-2xl font-semibold tracking-tight;
+    @apply scroll-m-20 text-lg md:text-2xl font-semibold tracking-tight;
   }
 
   .heading-4 {
     @apply scroll-m-20 text-xl font-medium tracking-tight;
+  }
+
+  .bg-radial {
+    background-image: radial-gradient(
+      ellipse 80% 50% at 50% -20%,
+      rgba(48, 82, 120, 0.5),
+      rgba(25, 8, 43, 0.1)
+    );
   }
 }
 
