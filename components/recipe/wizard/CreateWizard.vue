@@ -9,30 +9,21 @@ import {
 } from "~/components/recipe/wizard";
 import {
   ArrowRight,
+  Check,
   Cog,
   CookingPot,
   ShoppingBasket,
-  Check,
 } from "lucide-vue-next";
 import type { Database } from "~/types/database.types";
-import { useCurrentBook } from "~/composables/useCurrentBook";
-import { Recipes } from "~/lib/recipes";
-import { slugify } from "~/lib/utils";
+import { Recipes } from "~/lib/Recipes";
 import FormStepper from "~/components/ui/form-stepper/FormStepper.vue";
 import { toast } from "vue-sonner";
 
+const emits = defineEmits(["create"]);
+
 const client = useSupabaseClient<Database>();
 
-const book = await useCurrentBook();
-
-const { data: recipes, status } = await useAsyncData(
-  () => Recipes.using(client).getRecipesByBookId(book.value?.id),
-  { watch: [book], lazy: true },
-);
-
 const steps = computed(() => {
-  const recipeSlugs = recipes.value?.map((el) => el.slug);
-
   return [
     {
       step: 1,
@@ -44,11 +35,8 @@ const steps = computed(() => {
           name: true,
         })
         .refine(
-          ({ name }) => {
-            if (status.value === "pending") {
-              return false;
-            }
-            return !recipeSlugs?.includes(slugify(name));
+          async ({ name }) => {
+            return (await Recipes.using(client).getBySlug(name)) === undefined;
           },
           { path: ["name"], message: "That name is already taken" },
         ),
@@ -83,12 +71,12 @@ const submit = async (values: Recipe) => {
   submitting.value = true;
 
   try {
-    const { slug } = await $fetch(`/api/books/${book.value?.id}/recipes`, {
+    const { slug } = await $fetch(`/api/recipes`, {
       method: "post",
       body: values,
     });
 
-    navigateTo(`/books/${book.value?.slug}/recipes/${slug}`);
+    emits("create", slug);
   } catch {
     toast.error("An error occured while creating the recipe");
     submitting.value = false;
@@ -98,7 +86,7 @@ const submit = async (values: Recipe) => {
 
 <template>
   <Form
-    v-slot="{ meta, values, validate }"
+    v-slot="{ meta, values }"
     as=""
     keep-values
     :validation-schema="toTypedSchema(steps[currentStep - 1].schema)"
@@ -118,15 +106,14 @@ const submit = async (values: Recipe) => {
       orientation="vertical"
       :steps
       header="Create a new recipe"
-      sub-header="Create a new recipe, for dessert or salé, and add it to your handbook."
-      :back-link-to="{ name: 'books-slug', params: { slug: book?.slug } }"
+      sub-header="Create a new recipe, for dessert or salé, whatever you want."
+      :back-link-to="{ name: 'recipes' }"
     >
       <form
         class="flex flex-col gap-6 grow items-stretch"
         @submit="
           (e) => {
             e.preventDefault();
-            validate();
 
             if (isLastStep && meta.valid) {
               submit(values as Recipe);
@@ -151,10 +138,7 @@ const submit = async (values: Recipe) => {
             v-if="isLastStep"
             type="submit"
             :loading="submitting"
-            @click="
-              validate();
-              meta.valid && nextStep();
-            "
+            @click="meta.valid && nextStep()"
           >
             Create recipe
             <Check />
@@ -163,10 +147,7 @@ const submit = async (values: Recipe) => {
             v-else
             :disabled="isNextDisabled"
             type="button"
-            @click="
-              validate();
-              meta.valid && nextStep();
-            "
+            @click="meta.valid && nextStep()"
           >
             Next
             <ArrowRight />

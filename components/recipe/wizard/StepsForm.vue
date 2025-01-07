@@ -11,7 +11,7 @@ import {
 import type { Step } from "~/types/recipe";
 
 const join = (value?: Step[]) => {
-  return value?.map((el) => el.text).join("\n");
+  return value?.map((el) => el.text)?.join("\n");
 };
 
 const split = (value?: string): Step[] | undefined => {
@@ -20,17 +20,13 @@ const split = (value?: string): Step[] | undefined => {
 </script>
 
 <template>
-  <h4 class="heading-4">Write the recipe!</h4>
-  <p class="text-muted-foreground">
-    Please describe each step in the following area.
-  </p>
-  <FormField v-slot="{ componentField }" name="steps">
+  <FormField v-slot="{ componentField, value }" name="steps">
     <FormItem>
       <FormLabel>Recipe steps</FormLabel>
       <FormControl>
         <Textarea
           class="h-64"
-          :model-value="join(componentField.modelValue?.steps)"
+          :model-value="join(value)"
           @input="
             componentField['onUpdate:modelValue']!(
               split($event.currentTarget.value),

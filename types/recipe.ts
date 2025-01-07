@@ -7,7 +7,7 @@ export const realUnitSchema = z.enum([
   "LITER",
   "ARBITRARY",
 ]);
-export type RealUnit = z.infer<typeof realUnitSchema>;
+export type IngredientUnit = z.infer<typeof realUnitSchema>;
 
 export const ingredientSchema = z.object({
   name: z.string().max(500).trim().nonempty(),
@@ -34,4 +34,9 @@ export const recipeSchema = z.object({
   steps: z.array(stepSchema),
 });
 
+export const existingRecipeSchema = recipeSchema.extend({
+  id: z.string(),
+});
+
 export type Recipe = z.infer<typeof recipeSchema>;
+export type ExistingRecipe = z.infer<typeof existingRecipeSchema>;

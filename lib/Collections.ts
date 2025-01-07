@@ -1,11 +1,12 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "~/types/database.types";
 
-export class Books {
-  private constructor(private readonly client: SupabaseClient) {}
+export class Collections {
+  private constructor(private readonly client: SupabaseClient<Database>) {}
 
-  async getBookBySlug(slug: string) {
+  async getBySlug(slug: string) {
     const { data } = await this.client
-      .from("books")
+      .from("collections")
       .select(`id, name, created_at, slug`)
       .eq("slug", slug)
       .limit(1)
@@ -14,9 +15,9 @@ export class Books {
     return data?.[0];
   }
 
-  async getBookById(id: string) {
+  async getById(id: string) {
     const { data } = await this.client
-      .from("books")
+      .from("collections")
       .select(`id, name, created_at, slug`)
       .eq("id", id)
       .limit(1)
@@ -26,6 +27,6 @@ export class Books {
   }
 
   static using(client: SupabaseClient) {
-    return new Books(client);
+    return new Collections(client);
   }
 }

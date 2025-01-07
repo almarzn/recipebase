@@ -6,27 +6,29 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { EllipsisVertical } from "lucide-vue-next";
-import DeleteHandbook from "~/components/handbook/DeleteHandbook.vue";
+import DeleteHandbook from "~/components/collections/DeleteCollection.vue";
 
 defineEmits(["update"]);
-defineProps<{ book: { name: string; id: string; slug: string } }>();
+defineProps<{ collection: { name: string; id: string; slug: string } }>();
 
 const open = ref(false);
 </script>
 
 <template>
-  <Card class="flex flex-row items-center justify-between">
+  <Card
+    class="flex flex-row items-center justify-between bg-black/15 backdrop-blur-xl"
+  >
     <DeleteHandbook
-      :id="book.id"
+      :id="collection.id"
       v-model:open="open"
       @delete="$emit('update')"
     />
     <CardHeader>
-      <CardTitle>{{ book.name }}</CardTitle>
+      <CardTitle>{{ collection.name }}</CardTitle>
       <CardDescription>0 recipe</CardDescription>
     </CardHeader>
     <CardFooter class="flex gap-3 p-0 pr-6">
-      <NuxtLink :to="`/books/${book.slug}`">
+      <NuxtLink :to="`/collections/${collection.slug}`">
         <Button variant="secondary">Recipes</Button>
       </NuxtLink>
       <DropdownMenu>

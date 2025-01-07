@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { FieldArray } from "vee-validate";
-import { Label } from "radix-vue";
 import { IngredientInput } from "@/components/ui/ingredient-input";
-import type { Ingredient, RealUnit } from "~/types/recipe";
+import type { Ingredient, IngredientUnit } from "~/types/recipe";
 import { Redo2 } from "lucide-vue-next";
+import { Label } from "~/components/ui/label";
 
 const naturalIngredientRegex =
   /^\s*(?<quantity>\d+)(?<unit>\w+)?\s+(?:de |d'|of )?(?<name>.+)$/;
 
 const addingIngredientText = ref("");
 
-const unitConverter: Record<string, RealUnit> = {
+const unitConverter: Record<string, IngredientUnit> = {
   G: "GRAM",
   KG: "KILOGRAM",
   ML: "MILLITER",

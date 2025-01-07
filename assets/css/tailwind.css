@@ -75,15 +75,15 @@
   }
 
   .heading-2 {
-    @apply scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0;
+    @apply text-3xl font-semibold transition-colors first:mt-0;
   }
 
   .heading-3 {
-    @apply scroll-m-20 text-lg md:text-2xl font-semibold tracking-tight;
+    @apply scroll-m-20 text-lg md:text-2xl font-semibold;
   }
 
   .heading-4 {
-    @apply scroll-m-20 text-xl font-medium tracking-tight;
+    @apply scroll-m-20 text-xl font-medium;
   }
 
   .bg-radial {

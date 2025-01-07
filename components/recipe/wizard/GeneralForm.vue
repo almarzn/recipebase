@@ -11,7 +11,6 @@ import {
 </script>
 
 <template>
-  <h4 class="heading-4">General</h4>
   <FormField v-slot="{ componentField }" name="name">
     <FormItem>
       <FormLabel>Recipe name</FormLabel>

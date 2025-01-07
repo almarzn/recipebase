@@ -48,18 +48,18 @@ const submit = async () => {
     <DialogTrigger as-child>
       <Button :variant="variant">
         <Plus />
-        Create a handbook
+        Create a collection
       </Button>
     </DialogTrigger>
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Create a new handbook</DialogTitle>
+        <DialogTitle>Create a new collection</DialogTitle>
         <DialogDescription>
-          Click create to submit a new handbook.
+          Click create to submit a new collection.
         </DialogDescription>
       </DialogHeader>
       <div class="flex flex-col gap-2 items-start">
-        <Label for="name" class="text-right text-sm"> Handbook name </Label>
+        <Label for="name" class="text-right text-sm">Collection name</Label>
         <Input
           id="name"
           v-model="newBookProps.name"
