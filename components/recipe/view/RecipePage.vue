@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { IngredientUnit, Recipe } from "~/types/recipe";
-import { ShoppingBasket, CookingPot } from "lucide-vue-next";
 
 defineProps<{
   recipe: Recipe;
@@ -17,7 +16,7 @@ const units: Record<IngredientUnit, string> = {
 
 <template>
   <div class="flex grow gap-20 max-md:flex-col">
-    <div class="flex flex-col gap-4 min-w-56">
+    <div class="flex flex-col gap-4 md:w-56">
       <h3 class="heading-3">Ingredients</h3>
       <ul class="grid grid-cols-[1fr_auto_auto_auto] gap-x-1 gap-y-2">
         <li
@@ -29,12 +28,18 @@ const units: Record<IngredientUnit, string> = {
             {{ ingredient.name }}
           </div>
           <div />
-          <div class="place-self-end">
+          <div class="justify-self-end">
             {{ ingredient.quantity }}
           </div>
           <span class="text-gray-400">
             {{ units[ingredient.unit] }}
           </span>
+          <div
+            v-if="ingredient.notes"
+            class="col-span-3 text-xs text-muted-foreground"
+          >
+            {{ ingredient.notes }}
+          </div>
         </li>
       </ul>
     </div>
@@ -52,6 +57,12 @@ const units: Record<IngredientUnit, string> = {
         >
           <li v-for="(step, index) in recipe.steps" :key="index">
             {{ step.text }}
+            <div
+              v-if="step.notes"
+              class="col-span-3 text-xs text-muted-foreground"
+            >
+              {{ step.notes }}
+            </div>
           </li>
         </ol>
       </div>

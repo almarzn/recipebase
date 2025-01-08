@@ -11,7 +11,7 @@ export type IngredientUnit = z.infer<typeof realUnitSchema>;
 
 export const ingredientSchema = z.object({
   name: z.string().max(500).trim().nonempty(),
-  quantity: z.number().positive(),
+  quantity: z.number().positive().or(z.null()),
   unit: realUnitSchema,
   notes: z.string().max(500).optional(),
 });

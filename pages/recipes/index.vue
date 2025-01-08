@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import type { Database } from "~/types/database.types";
-import { ChevronDown, CookingPot, Plus } from "lucide-vue-next";
+import { ChevronDown, CookingPot, Plus, Globe, Image } from "lucide-vue-next";
 import { Recipes } from "~/lib/Recipes";
 import PageLayout from "~/components/layout/PageLayout.vue";
 import { Breadcrumbs } from "~/components/layout";
 import { ErrorStatus } from "~/components/ui/status";
+import ImportUrlModal from "~/components/recipe/ImportUrlModal.vue";
 
 const client = useSupabaseClient<Database>();
 
-const { data: recipes, error } = await useAsyncData(() =>
+const { data: recipes, error } = await useAsyncData("recipes", () =>
   Recipes.using(client).findAll(),
 );
+
+const importing = ref<"url" | "image">();
 </script>
 
 <template>
@@ -38,10 +41,27 @@ const { data: recipes, error } = await useAsyncData(() =>
             Create recipe
           </Button>
         </NuxtLink>
-        <Button variant="outline">
-          Import recipe
-          <ChevronDown />
-        </Button>
+        <ImportUrlModal
+          :model-value="importing === 'url'"
+          @update:model-value="importing = undefined"
+          @create="refreshNuxtData('recipes')"
+        />
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button variant="outline">
+              Import recipe
+              <ChevronDown />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem @click="importing = 'url'"
+              ><Globe /> From webpage...</DropdownMenuItem
+            >
+            <DropdownMenuItem @click="importing = 'image'"
+              ><Image /> From image...</DropdownMenuItem
+            >
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
 

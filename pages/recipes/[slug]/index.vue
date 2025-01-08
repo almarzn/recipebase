@@ -12,7 +12,7 @@
             to: { name: 'recipes' },
           },
           {
-            text: recipe?.name,
+            text: recipe?.name ?? 'Unknown',
           },
         ]"
       />

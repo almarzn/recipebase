@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "~/types/database.types";
 import type { Recipe } from "~/types/recipe";
 import { existingRecipeSchema, recipeSchema } from "~/types/recipe";
+import { slugify } from "~/lib/utils";
 
 export class Recipes {
   private constructor(private readonly client: SupabaseClient<Database>) {}
@@ -71,5 +72,15 @@ export class Recipes {
 
   async updateById(id: string, props: Partial<Recipe>) {
     await this.client.from("recipes").update(props).eq("id", id);
+  }
+
+  async create(props: Recipe) {
+    await this.client.from("recipes").insert({
+      name: props.name,
+      slug: slugify(props.name),
+      description: props.description,
+      steps: props.steps,
+      ingredients: props.ingredients,
+    });
   }
 }
