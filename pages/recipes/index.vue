@@ -1,16 +1,23 @@
 <script setup lang="ts">
 import type { Database } from "~/types/database.types";
-import { ChevronDown, CookingPot, Plus, Globe, Image } from "lucide-vue-next";
+import { ChevronDown, CookingPot, Globe, Image, Plus } from "lucide-vue-next";
 import { Recipes } from "~/lib/Recipes";
 import PageLayout from "~/components/layout/PageLayout.vue";
 import { Breadcrumbs } from "~/components/layout";
 import { ErrorStatus } from "~/components/ui/status";
 import ImportUrlModal from "~/components/recipe/ImportUrlModal.vue";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import RecipeTag from "~/components/recipe/RecipeTag.vue";
 
 const client = useSupabaseClient<Database>();
 
 const { data: recipes, error } = await useAsyncData("recipes", () =>
-  Recipes.using(client).findAll(),
+  Recipes.using(client).findAllWithTags(),
 );
 
 const importing = ref<"url" | "image">();
@@ -53,13 +60,26 @@ const importing = ref<"url" | "image">();
               <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem @click="importing = 'url'"
-              ><Globe /> From webpage...</DropdownMenuItem
-            >
-            <DropdownMenuItem @click="importing = 'image'"
-              ><Image /> From image...</DropdownMenuItem
-            >
+          <DropdownMenuContent class="max-w-64">
+            <DropdownMenuItem @click="importing = 'url'">
+              <Globe />
+              <div class="flex flex-col">
+                <div class="flex items-center">From webpage</div>
+                <div class="text-muted-foreground text-xs">
+                  Paste any link pointing to a recipe and add it to your
+                  recipes. You will then be able to edit it.
+                </div>
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem @click="importing = 'image'">
+              <Image />
+              <div class="flex flex-col">
+                <div class="flex items-center">From image</div>
+                <div class="text-muted-foreground text-xs">
+                  Upload a picture from a book and use it to get started!
+                </div>
+              </div>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -86,7 +106,10 @@ const importing = ref<"url" | "image">();
 
     <error-status v-if="error" />
 
-    <div v-else class="flex flex-col gap-8 items-stretch self-stretch">
+    <div
+      v-else
+      class="flex flex-col gap-2 items-stretch self-stretch backdrop-blur-3xl"
+    >
       <NuxtLink
         v-for="recipe in recipes"
         :key="recipe.id"
@@ -94,9 +117,18 @@ const importing = ref<"url" | "image">();
           name: 'recipes-slug',
           params: { slug: recipe.slug },
         }"
-        class="border p-6 rounded-md backdrop-blur-xl"
+        class="border p-6 rounded-md backdrop-blur-xl flex flex-col gap-2"
       >
-        <div>{{ recipe.name }}</div>
+        <div v-if="recipe.tags.length > 0" class="flex gap-2">
+          <RecipeTag v-for="tag in recipe.tags" :key="tag.id" :tag />
+        </div>
+
+        <div class="flex flex-col">
+          <div class="font-medium">{{ recipe.name }}</div>
+          <div class="text-xs text-muted-foreground">
+            {{ recipe.description }}
+          </div>
+        </div>
       </NuxtLink>
     </div>
   </PageLayout>

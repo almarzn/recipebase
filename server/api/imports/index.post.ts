@@ -14,7 +14,15 @@ turndownService.remove("meta");
 turndownService.remove("footer");
 turndownService.remove("header");
 turndownService.remove("button");
+turndownService.remove("img");
+turndownService.remove("video");
 turndownService.remove("head");
+turndownService.remove("script");
+turndownService.remove("noscript");
+turndownService.addRule("striplinks", {
+  filter: "a",
+  replacement: (content) => content,
+});
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAPI_KEY as string,
@@ -29,13 +37,15 @@ export default defineEventHandler(async (event) => {
 
   const markdownBody = turndownService.turndown(body);
 
+  console.log(markdownBody);
+
   const completion = await openai.beta.chat.completions.parse({
     model: "gpt-4o-mini",
     messages: [
       {
         role: "system",
         content:
-          "You are an expert at structured data extraction and at cooking. You will be given an unstructured webpage containing one or more recipe, and should convert them into structured data. Make sure to return every recipe on the page in a different object. Return an empty array if there are no recipe on the webpage. Keep the original language. Make sure that each step is written in a natural order, and only contain one instruction. Rewrite them if necessary.",
+          "You are an expert at structured data extraction and at cooking. You will be given an unstructured webpage containing one or more recipe, and should convert them into structured data. Make sure to return every recipe on the page in a different object. Return an empty array if there are no recipe on the webpage. Keep the original language. Make sure that each step is written in a natural order, and only contain one instruction. Rewrite them if necessary. For the description field, remove any information related to do original support, and only return the recipe, what it is and how to execute it correctly. Remove any useless blabla. Always strip the title from useless informations, such as 'How to'and such.",
       },
       { role: "user", content: markdownBody },
     ],

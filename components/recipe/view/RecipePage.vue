@@ -16,7 +16,7 @@ const units: Record<IngredientUnit, string> = {
 
 <template>
   <div class="flex grow gap-20 max-md:flex-col">
-    <div class="flex flex-col gap-4 md:w-56">
+    <div class="flex flex-col gap-4 basis-56 min-w-56">
       <h3 class="heading-3">Ingredients</h3>
       <ul class="grid grid-cols-[1fr_auto_auto_auto] gap-x-1 gap-y-2">
         <li

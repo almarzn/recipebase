@@ -7,10 +7,10 @@ import { slugify } from "~/lib/utils";
 export class Recipes {
   private constructor(private readonly client: SupabaseClient<Database>) {}
 
-  async findAll() {
+  async findAllWithTags() {
     const { data, error } = await this.client
       .from("recipes")
-      .select(`*`)
+      .select(`*, tags(id, text, color, icon)`)
       .order("created_at");
 
     if (error) {
