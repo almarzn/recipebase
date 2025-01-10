@@ -12,6 +12,7 @@ on:
 jobs:
   build:
 
+    secrets: inherit
     runs-on: ubuntu-latest
 
     strategy:
