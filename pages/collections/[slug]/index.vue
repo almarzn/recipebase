@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import type { Database } from "~/types/database.types";
-import { Plus, CookingPot, ChevronDown } from "lucide-vue-next";
+import { ChevronDown, CookingPot, Plus } from "lucide-vue-next";
 import { useCurrentCollection } from "~/composables/useCurrentCollection";
 import { Recipes } from "~/lib/Recipes";
 import PageLayout from "~/components/layout/PageLayout.vue";
 import { Breadcrumbs } from "~/components/layout";
-import { toast } from "vue-sonner";
 import { ErrorStatus } from "~/components/ui/status";
 
 const collection = await useCurrentCollection();
@@ -20,7 +19,7 @@ const { data: recipes, error } = await useAsyncData(
 
 <template>
   <PageLayout>
-    <div class="flex justify-between flex-wrap items-center">
+    <div class="flex flex-wrap items-center justify-between">
       <breadcrumbs
         :items="[
           {
@@ -37,7 +36,7 @@ const { data: recipes, error } = await useAsyncData(
           },
         ]"
       />
-      <div class="flex flex-wrap gap-3 items-stretch">
+      <div class="flex flex-wrap items-stretch gap-3">
         <NuxtLink
           :to="{
             name: 'collections-slug-create',
@@ -58,10 +57,10 @@ const { data: recipes, error } = await useAsyncData(
 
     <div
       v-if="recipes?.length === 0"
-      class="flex gap-8 items-center self-center"
+      class="flex items-center gap-8 self-center"
     >
       <CookingPot :size="64" class="stroke-muted-foreground" />
-      <div class="flex flex-col gap-4 max-w-96 items-start self-center">
+      <div class="flex max-w-96 flex-col items-start gap-4 self-center">
         <div class="flex flex-col gap-1">
           <h4 class="heading-4">No recipe created yet</h4>
           <p class="text-muted-foreground">
@@ -77,7 +76,7 @@ const { data: recipes, error } = await useAsyncData(
 
     <error-status v-if="error" />
 
-    <div v-else class="flex flex-col gap-8 items-stretch self-stretch">
+    <div v-else class="flex flex-col items-stretch gap-8 self-stretch">
       <NuxtLink
         v-for="recipe in recipes"
         :key="recipe.id"
@@ -85,7 +84,7 @@ const { data: recipes, error } = await useAsyncData(
           name: 'collections-slug-recipes-recipeSlug',
           params: { slug: collection!.slug, recipeSlug: recipe.slug },
         }"
-        class="border p-6 rounded-md backdrop-blur-xl"
+        class="rounded-md border p-6 backdrop-blur-xl"
       >
         <div>{{ recipe.name }}</div>
       </NuxtLink>

@@ -110,7 +110,7 @@ const submit = async (values: RecipePayload) => {
       :back-link-to="{ name: 'recipes' }"
     >
       <form
-        class="flex flex-col gap-6 grow items-stretch"
+        class="flex grow flex-col items-stretch gap-6"
         @submit="
           (e) => {
             e.preventDefault();

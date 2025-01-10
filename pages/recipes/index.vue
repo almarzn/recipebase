@@ -25,7 +25,7 @@ const importing = ref<"url" | "image">();
 
 <template>
   <PageLayout>
-    <div class="flex justify-between flex-wrap items-center">
+    <div class="flex flex-wrap items-center justify-between">
       <breadcrumbs
         :items="[
           {
@@ -37,7 +37,7 @@ const importing = ref<"url" | "image">();
           },
         ]"
       />
-      <div class="flex flex-wrap gap-3 items-stretch">
+      <div class="flex flex-wrap items-stretch gap-3">
         <NuxtLink
           :to="{
             name: 'create-recipe',
@@ -65,7 +65,7 @@ const importing = ref<"url" | "image">();
               <Globe />
               <div class="flex flex-col">
                 <div class="flex items-center">From webpage</div>
-                <div class="text-muted-foreground text-xs">
+                <div class="text-xs text-muted-foreground">
                   Paste any link pointing to a recipe and add it to your
                   recipes. You will then be able to edit it.
                 </div>
@@ -75,7 +75,7 @@ const importing = ref<"url" | "image">();
               <Image />
               <div class="flex flex-col">
                 <div class="flex items-center">From image</div>
-                <div class="text-muted-foreground text-xs">
+                <div class="text-xs text-muted-foreground">
                   Upload a picture from a book and use it to get started!
                 </div>
               </div>
@@ -87,10 +87,10 @@ const importing = ref<"url" | "image">();
 
     <div
       v-if="recipes?.length === 0"
-      class="flex gap-8 items-center self-center"
+      class="flex items-center gap-8 self-center"
     >
       <CookingPot :size="64" class="stroke-muted-foreground" />
-      <div class="flex flex-col gap-4 max-w-96 items-start self-center">
+      <div class="flex max-w-96 flex-col items-start gap-4 self-center">
         <div class="flex flex-col gap-1">
           <h4 class="heading-4">No recipe created yet</h4>
           <p class="text-muted-foreground">
@@ -108,7 +108,7 @@ const importing = ref<"url" | "image">();
 
     <div
       v-else
-      class="flex flex-col gap-2 items-stretch self-stretch backdrop-blur-3xl"
+      class="flex flex-col items-stretch gap-2 self-stretch backdrop-blur-3xl"
     >
       <NuxtLink
         v-for="recipe in recipes"
@@ -117,7 +117,7 @@ const importing = ref<"url" | "image">();
           name: 'recipes-slug',
           params: { slug: recipe.slug },
         }"
-        class="border p-6 rounded-md flex flex-col gap-2"
+        class="flex flex-col gap-2 rounded-md border p-6"
       >
         <div class="flex flex-col">
           <div class="font-medium">{{ recipe.name }}</div>

@@ -83,10 +83,10 @@ const tagsById = computed(() => keyBy(tags.data.value, "id"));
       <FormControl>
         <TagsInput
           :model-value="value"
-          class="px-0 gap-0 w-80"
+          class="w-80 gap-0 px-0"
           @update:model-value="setValue($event)"
         >
-          <div class="flex gap-2 flex-wrap items-center px-3">
+          <div class="flex flex-wrap items-center gap-2 px-3">
             <TagsInputItem v-for="item in value" :key="item" :value="item">
               <RecipeTag :tag="tagsById[item]">
                 <TagsInputItemDelete class="mr-0" />
@@ -115,7 +115,7 @@ const tagsById = computed(() => keyBy(tags.data.value, "id"));
               <ComboboxContent>
                 <CommandList
                   position="popper"
-                  class="w-[--radix-popper-anchor-width] rounded-md mt-2 border bg-popover text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+                  class="mt-2 w-[--radix-popper-anchor-width] rounded-md border bg-popover text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
                 >
                   <CommandEmpty />
                   <CommandGroup>

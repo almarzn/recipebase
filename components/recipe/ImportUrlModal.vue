@@ -104,17 +104,17 @@ const createRecipes = async () => {
         </Button>
       </div>
       <div
-        class="flex gap-2 flex-col self-stretch border min-h-52 rounded-md p-2"
+        class="flex min-h-52 flex-col gap-2 self-stretch rounded-md border p-2"
       >
         <template v-if="results?.status === 'idle'">
-          <div class="self-center flex items-center flex-col p-8">
-            <ScanSearch class="stroke-muted size-24" stroke-width="1" />
+          <div class="flex flex-col items-center self-center p-8">
+            <ScanSearch class="size-24 stroke-muted" stroke-width="1" />
             <div class="text-muted">Enter an URL to get started.</div>
           </div>
         </template>
         <template v-if="results?.status === 'pending'">
-          <div class="self-center flex items-center flex-col p-8 gap-4">
-            <ScanSearch class="stroke-muted size-24" stroke-width="1" />
+          <div class="flex flex-col items-center gap-4 self-center p-8">
+            <ScanSearch class="size-24 stroke-muted" stroke-width="1" />
             <Progress indeterminate class="h-1" />
           </div>
         </template>
@@ -124,8 +124,8 @@ const createRecipes = async () => {
         <template
           v-if="results?.status === 'success' && results.recipes.length === 0"
         >
-          <div class="self-center flex items-center flex-col p-8 gap-4">
-            <Bird class="stroke-muted size-24" stroke-width="1" />
+          <div class="flex flex-col items-center gap-4 self-center p-8">
+            <Bird class="size-24 stroke-muted" stroke-width="1" />
             <div class="text-muted">No recipe found.</div>
           </div>
         </template>
@@ -137,10 +137,10 @@ const createRecipes = async () => {
             :checked="selection?.includes(slugify(result.name))"
             @update:checked="change(slugify(result.name), $event)"
           >
-            <div class="flex flex-col gap-1 items-start py-2 px-4">
+            <div class="flex flex-col items-start gap-1 px-4 py-2">
               <div class="leading-none">{{ result.name }}</div>
               <div
-                class="text-muted-foreground text-xs max-h-8 overflow-hidden overflow-ellipsis"
+                class="max-h-8 overflow-hidden text-ellipsis text-xs text-muted-foreground"
               >
                 {{ result.description ?? "No description provided" }}
               </div>

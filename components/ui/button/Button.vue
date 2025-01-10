@@ -27,14 +27,14 @@ const props = withDefaults(defineProps<Props>(), {
     :data-loading="loading"
   >
     <div
-      class="flex items-center justify-center opacity-0 group-data-[loading=true]:opacity-100 transition-opacity"
+      class="flex items-center justify-center opacity-0 transition-opacity group-data-[loading=true]:opacity-100"
     >
       <slot name="loader">
         <Loader class="animate-spin" />
       </slot>
     </div>
     <div
-      class="flex items-center justify-center gap-2 group-data-[loading=true]:opacity-0 transition-opacity"
+      class="flex items-center justify-center gap-2 transition-opacity group-data-[loading=true]:opacity-0"
     >
       <slot />
     </div>

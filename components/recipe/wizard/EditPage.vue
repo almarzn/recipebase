@@ -124,7 +124,7 @@ const submit = async (
         validate-on-mount
       >
         <form
-          class="flex flex-col gap-6 grow items-stretch"
+          class="flex grow flex-col items-stretch gap-6"
           @submit="
             (e) => {
               e.preventDefault();

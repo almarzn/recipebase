@@ -34,12 +34,12 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
     "
   >
     <div
-      class="shrink-0 w-4 h-4 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring group-disabled:cursor-not-allowed disabled:opacity-50 group-data-[state=checked]:bg-primary group-data-[state=checked]:text-primary-foreground"
+      class="size-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50 group-disabled:cursor-not-allowed group-data-[state=checked]:bg-primary group-data-[state=checked]:text-primary-foreground"
     >
       <CheckboxIndicator
-        class="flex h-full w-full items-center justify-center text-current"
+        class="flex size-full items-center justify-center text-current"
       >
-        <CheckIcon class="h-4 w-4" />
+        <CheckIcon class="size-4" />
       </CheckboxIndicator>
     </div>
 

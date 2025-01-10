@@ -35,22 +35,22 @@ const addingIngredient = computed((): Ingredient | undefined => {
   <FieldArray v-slot="{ fields, push, remove }" name="ingredients">
     <Label>Ingredients</Label>
     <div
-      class="flex flex-col gap-2 border bg-card/10 backdrop-blur text-card-foreground rounded-md"
+      class="flex flex-col gap-2 rounded-md border bg-card/10 text-card-foreground backdrop-blur"
     >
       <div
         v-if="fields.length === 0"
-        class="grow items-center flex flex-col gap-2 justify-center min-h-64"
+        class="flex min-h-64 grow flex-col items-center justify-center gap-2"
       >
         <div
-          class="text-muted-foreground text-md font-semibold max-w-44 text-center"
+          class="max-w-44 text-center text-base font-semibold text-muted-foreground"
         >
           No ingredient yet
         </div>
-        <div class="text-muted-foreground text-xs max-w-44 text-center">
+        <div class="max-w-44 text-center text-xs text-muted-foreground">
           Write a new ingredient in the input and press enter
         </div>
       </div>
-      <ul v-else class="flex flex-col gap-1 min-h-64 pt-4 px-4">
+      <ul v-else class="flex min-h-64 flex-col gap-1 px-4 pt-4">
         <li v-for="(_, index) in fields" :key="index">
           <IngredientInput
             :name="`ingredients[${index}]`"
@@ -60,7 +60,7 @@ const addingIngredient = computed((): Ingredient | undefined => {
       </ul>
       <div class="flex flex-col gap-1 border-t p-2">
         <label
-          class="text-xs text-muted-foreground/50 pl-3 font-lights"
+          class="pl-3 text-xs text-muted-foreground/50"
           for="add-ingredient"
         >
           Add an ingredient

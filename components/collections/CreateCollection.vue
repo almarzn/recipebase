@@ -58,7 +58,7 @@ const submit = async () => {
           Click create to submit a new collection.
         </DialogDescription>
       </DialogHeader>
-      <div class="flex flex-col gap-2 items-start">
+      <div class="flex flex-col items-start gap-2">
         <Label for="name" class="text-right text-sm">Collection name</Label>
         <Input
           id="name"

@@ -4,7 +4,7 @@ export { default as Button } from "./Button.vue";
 
 export const buttonVariants = cva(
   [
-    "inline-grid items-center grid-stack place-content-center whitespace-nowrap rounded-md text-sm font-medium",
+    "grid-stack inline-grid place-content-center items-center whitespace-nowrap rounded-md text-sm font-medium",
     "ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
     "focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
     "[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
@@ -19,7 +19,7 @@ export const buttonVariants = cva(
         outline:
           "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
         secondary:
-          "bg-white/5 backdrop-blur-2xl text-secondary-foreground shadow-sm hover:bg-secondary/80",
+          "bg-white/5 text-secondary-foreground shadow-sm backdrop-blur-2xl hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },
@@ -27,7 +27,7 @@ export const buttonVariants = cva(
         default: "h-9 px-4 py-2",
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-10 rounded-md px-8",
-        icon: "h-9 w-9",
+        icon: "size-9",
       },
     },
     defaultVariants: {

@@ -1,8 +1,8 @@
 <template>
-  <div class="flex h-lvh w-lvw items-stretch flex-col bg-radial">
+  <div class="bg-radial flex h-lvh w-lvw flex-col items-stretch">
     <NuxtLoadingIndicator />
     <div class="p-4">
-      <div class="flex gap-4 justify-start items-center text-sm">
+      <div class="flex items-center justify-start gap-4 text-sm">
         <div class="max-sm:hidden">Recipebase.co</div>
 
         <div>Handbooks</div>
@@ -10,7 +10,7 @@
         <div class="grow" />
 
         <template v-if="user">
-          <div class="rounded-full overflow-clip">
+          <div class="text-clip rounded-full">
             <div v-if="avatarUrl" class="w-7">
               <NuxtImg :src="avatarUrl" />
             </div>

@@ -1,10 +1,8 @@
 <script lang="ts" setup>
 import type { HTMLAttributes } from "vue";
 import { cn } from "@/lib/utils";
-import { Primitive, type PrimitiveProps } from "radix-vue";
+import type { PrimitiveProps } from "radix-vue";
 import { NuxtLink } from "#components";
-import type { NavigateToOptions } from "#app/composables/router";
-import type { RawNavConfig } from "@redocly/config";
 import type { RouteLocationRaw } from "#vue-router";
 
 const props = withDefaults(

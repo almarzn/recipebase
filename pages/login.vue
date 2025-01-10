@@ -1,24 +1,22 @@
 <template>
-  <div class="grow flex flex-col gap-4 max-w-96 self-center mt-16">
+  <div class="mt-16 flex max-w-96 grow flex-col gap-4 self-center">
     <h1 class="heading-3">Login to Recipbase</h1>
 
     <p>You need to login to use this website</p>
 
-    <Button @click="signInWithOAuth()">
-      Login with Google
-    </Button>
+    <Button @click="signInWithOAuth()"> Login with Google </Button>
   </div>
 </template>
 <script setup lang="ts">
-const supabase = useSupabaseClient()
+const supabase = useSupabaseClient();
 
 const signInWithOAuth = async () => {
   const { error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
+    provider: "google",
     options: {
-      redirectTo: window.location.origin + '/confirm',
+      redirectTo: window.location.origin + "/confirm",
     },
-  })
-  if (error) console.log(error)
-}
+  });
+  if (error) console.log(error);
+};
 </script>

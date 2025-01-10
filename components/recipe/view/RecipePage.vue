@@ -16,14 +16,14 @@ const units: Record<IngredientUnit, string> = {
 </script>
 
 <template>
-  <div class="flex grow gap-4 md:gap-10 lg:gap-20 max-md:flex-col">
-    <div class="flex flex-col gap-4 basis-56 min-w-56">
+  <div class="flex grow gap-4 max-md:flex-col md:gap-10 lg:gap-20">
+    <div class="flex min-w-56 basis-56 flex-col gap-4">
       <h3 class="heading-3">Ingredients</h3>
       <ul class="grid grid-cols-[1fr_auto_auto_auto] gap-x-1 gap-y-2">
         <li
           v-for="(ingredient, index) in recipe.ingredients"
           :key="index"
-          class="grid grid-cols-subgrid col-span-4 border-b pb-1"
+          class="col-span-4 grid grid-cols-subgrid border-b pb-1"
         >
           <div class="">
             {{ ingredient.name }}
@@ -60,7 +60,7 @@ const units: Record<IngredientUnit, string> = {
         <h3 class="heading-3">Steps</h3>
 
         <ol
-          class="list-decimal flex flex-col gap-2 marker:text-muted-foreground ml-6"
+          class="ml-6 flex list-decimal flex-col gap-2 marker:text-muted-foreground"
         >
           <li v-for="(step, index) in recipe.steps" :key="index">
             {{ step.text }}

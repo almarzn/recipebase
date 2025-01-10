@@ -44,7 +44,7 @@ defineProps<{ name: string }>();
     <Field v-slot="{ componentField }" :name="`${name}.name`">
       <Input v-bind="componentField" />
     </Field>
-    <Button variant="ghost" class="p-2 aspect-square" @click="$emit('delete')">
+    <Button variant="ghost" class="aspect-square p-2" @click="$emit('delete')">
       <Trash2 />
     </Button>
   </div>

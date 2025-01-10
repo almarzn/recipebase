@@ -51,13 +51,13 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
     v-bind="forwarded"
   >
     <div
-      class="flex w-full flex-col justify-start gap-7 md:max-w-xs bg-cyan-800/15 px-6 pt-4 pb-10 rounded-lg"
+      class="flex w-full flex-col justify-start gap-7 rounded-lg bg-cyan-800/15 px-6 pb-10 pt-4 md:max-w-xs"
     >
-      <div class="flex md:flex-col gap-2 max-md:items-center">
+      <div class="flex gap-2 max-md:items-center md:flex-col">
         <NuxtLink :to="backLinkTo">
           <Button
             variant="secondary"
-            class="rounded-full self-start md:mb-5 bg-cyan-800/30"
+            class="self-start rounded-full bg-cyan-800/30 md:mb-5"
           >
             <ArrowLeft />
             Back
@@ -69,13 +69,13 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
         </p>
       </div>
 
-      <div class="flex md:flex-col gap-7 flex-wrap">
+      <div class="flex flex-wrap gap-7 md:flex-col">
         <StepperItem
           v-for="step of steps"
           :key="step.step"
           v-slot="{ state }"
           :step="step.step"
-          class="relative flex md:w-full items-start gap-6 max-md:items-center"
+          class="relative flex items-start gap-6 max-md:items-center md:w-full"
         >
           <StepperSeparator
             v-if="step.step !== steps[steps.length - 1].step"
@@ -90,7 +90,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
                   : 'outline'
               "
               size="icon"
-              class="z-10 rounded-full shrink-0 group-data-[state=active]:bg-cyan-600 group-data-[state=completed]:bg-cyan-600"
+              class="z-10 shrink-0 rounded-full group-data-[state=active]:bg-cyan-600 group-data-[state=completed]:bg-cyan-600"
               :class="[
                 state === 'active' &&
                   'ring-2 ring-cyan-600 ring-offset-2 ring-offset-background',

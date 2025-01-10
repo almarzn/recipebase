@@ -22,19 +22,19 @@ const updateData = () => {
 
 <template>
   <div
-    class="max-w-screen-xl flex flex-col gap-8 items-stretch w-full self-center"
+    class="flex w-full max-w-screen-xl flex-col items-stretch gap-8 self-center"
   >
-    <div class="flex justify-between flex-wrap items-center">
+    <div class="flex flex-wrap items-center justify-between">
       <slot />
       <create-collection variant="default" @create="updateData()" />
     </div>
 
     <div
       v-if="collections?.length === 0"
-      class="flex gap-8 items-center self-center"
+      class="flex items-center gap-8 self-center"
     >
       <book-text :size="64" class="stroke-muted-foreground" />
-      <div class="flex flex-col gap-3 max-w-96 items-start self-center">
+      <div class="flex max-w-96 flex-col items-start gap-3 self-center">
         <h4 class="heading-4">No handbook created yet</h4>
         <p class="text-muted-foreground">
           Create a new handbook to get started.
@@ -43,7 +43,7 @@ const updateData = () => {
       </div>
     </div>
 
-    <div v-else class="grid md:grid-cols-2 gap-8 items-center self-stretch">
+    <div v-else class="grid items-center gap-8 self-stretch md:grid-cols-2">
       <collection-item
         v-for="collection in collections"
         :key="collection.id"

@@ -8,7 +8,7 @@ const route = useRoute("collections-slug-recipes-recipeSlug");
 const client = useSupabaseClient();
 const recipeSlug = computed(() => route.params.slug);
 const book = await useCurrentCollection();
-const { data: recipe, error } = await useAsyncData(
+const { data: recipe } = await useAsyncData(
   async () => {
     return Recipes.using(client).getBySlugWithTags(recipeSlug.value);
   },

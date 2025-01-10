@@ -2,7 +2,7 @@
   <Breadcrumb>
     <BreadcrumbList>
       <template v-for="(item, index) in items" :key="index">
-        <BreadcrumbItem class="text-md">
+        <BreadcrumbItem class="text-base">
           <BreadcrumbLink v-if="item.to !== undefined" :to="item.to">
             {{ item.text }}
           </BreadcrumbLink>
