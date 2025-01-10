@@ -32,6 +32,7 @@
     <error-status v-if="error" />
   </page-layout>
 </template>
+
 <script setup lang="ts">
 import PageLayout from "~/components/layout/PageLayout.vue";
 import { RecipePage } from "~/components/recipe/view";
@@ -45,7 +46,7 @@ const client = useSupabaseClient();
 const recipeSlug = computed(() => route.params.slug);
 const { data: recipe, error } = await useAsyncData(
   async () => {
-    return Recipes.using(client).getBySlug(recipeSlug.value);
+    return Recipes.using(client).getBySlugWithTags(recipeSlug.value);
   },
   {
     watch: [recipeSlug],

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
-import { type Recipe, recipeSchema } from "~/types/recipe";
+import { type RecipePayload, recipePayload } from "~/types/recipe";
 import { Form } from "vee-validate";
 import {
   GeneralForm,
@@ -29,7 +29,7 @@ const steps = computed(() => {
       step: 1,
       title: "General",
       description: "Provide the recipe name and the general details",
-      schema: recipeSchema
+      schema: recipePayload
         .pick({
           description: true,
           name: true,
@@ -46,7 +46,7 @@ const steps = computed(() => {
       step: 2,
       title: "Ingredients",
       description: "List here the ingredients in your recipe",
-      schema: recipeSchema.pick({
+      schema: recipePayload.pick({
         ingredients: true,
       }),
       icon: ShoppingBasket,
@@ -55,7 +55,7 @@ const steps = computed(() => {
       step: 3,
       title: "Steps",
       description: "Write the different preparation steps for the recipe",
-      schema: recipeSchema.pick({
+      schema: recipePayload.pick({
         steps: true,
       }),
       icon: CookingPot,
@@ -67,7 +67,7 @@ const currentStep = ref(1);
 
 const submitting = ref(false);
 
-const submit = async (values: Recipe) => {
+const submit = async (values: RecipePayload) => {
   submitting.value = true;
 
   try {
@@ -116,7 +116,7 @@ const submit = async (values: Recipe) => {
             e.preventDefault();
 
             if (isLastStep && meta.valid) {
-              submit(values as Recipe);
+              submit(values as RecipePayload);
             }
           }
         "

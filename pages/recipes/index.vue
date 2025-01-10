@@ -117,17 +117,16 @@ const importing = ref<"url" | "image">();
           name: 'recipes-slug',
           params: { slug: recipe.slug },
         }"
-        class="border p-6 rounded-md backdrop-blur-xl flex flex-col gap-2"
+        class="border p-6 rounded-md flex flex-col gap-2"
       >
-        <div v-if="recipe.tags.length > 0" class="flex gap-2">
-          <RecipeTag v-for="tag in recipe.tags" :key="tag.id" :tag />
-        </div>
-
         <div class="flex flex-col">
           <div class="font-medium">{{ recipe.name }}</div>
           <div class="text-xs text-muted-foreground">
             {{ recipe.description }}
           </div>
+        </div>
+        <div v-if="recipe.tags.length > 0" class="flex gap-2">
+          <RecipeTag v-for="tag in recipe.tags" :key="tag.id" :tag />
         </div>
       </NuxtLink>
     </div>

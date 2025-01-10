@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import type { IngredientUnit, Recipe } from "~/types/recipe";
+import type { IngredientUnit, RecipeDetails } from "~/types/recipe";
+import RecipeTag from "~/components/recipe/RecipeTag.vue";
 
 defineProps<{
-  recipe: Recipe;
+  recipe: RecipeDetails;
 }>();
 
 const units: Record<IngredientUnit, string> = {
@@ -15,7 +16,7 @@ const units: Record<IngredientUnit, string> = {
 </script>
 
 <template>
-  <div class="flex grow gap-20 max-md:flex-col">
+  <div class="flex grow gap-4 md:gap-10 lg:gap-20 max-md:flex-col">
     <div class="flex flex-col gap-4 basis-56 min-w-56">
       <h3 class="heading-3">Ingredients</h3>
       <ul class="grid grid-cols-[1fr_auto_auto_auto] gap-x-1 gap-y-2">
@@ -45,7 +46,13 @@ const units: Record<IngredientUnit, string> = {
     </div>
 
     <div class="flex flex-col gap-4">
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-2">
+          <div class="flex gap-1">
+            <RecipeTag v-for="tag in recipe.tags" :key="tag.id" :tag />
+          </div>
+          <h2 class="heading-2">{{ recipe.name }}</h2>
+        </div>
         <p class="text-muted-foreground">{{ recipe.description }}</p>
       </div>
 

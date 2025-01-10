@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { Database } from "~/types/database.types";
 
 export const realUnitSchema = z.enum([
   "GRAM",
@@ -27,16 +28,27 @@ export const stepSchema = z.object({
 
 export type Step = z.infer<typeof stepSchema>;
 
-export const recipeSchema = z.object({
+export const recipePayload = z.object({
   name: z.string().max(500).trim(),
   description: z.string().max(1000).optional(),
   ingredients: z.array(ingredientSchema),
   steps: z.array(stepSchema),
+  tags: z.array(z.string()),
 });
 
-export const existingRecipeSchema = recipeSchema.extend({
+export const existingRecipeSchema = recipePayload.extend({
   id: z.string(),
 });
 
-export type Recipe = z.infer<typeof recipeSchema>;
+export type RecipePayload = z.infer<typeof recipePayload>;
+
+export type TagProps = Pick<
+  Database["public"]["Tables"]["tags"]["Row"],
+  "color" | "icon" | "text" | "id"
+>;
+
+export type RecipeDetails = Omit<RecipePayload, "tags"> & {
+  id: string;
+  tags: TagProps[];
+};
 export type ExistingRecipe = z.infer<typeof existingRecipeSchema>;

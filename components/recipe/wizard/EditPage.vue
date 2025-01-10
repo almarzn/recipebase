@@ -3,7 +3,11 @@ import { useSupabaseClient } from "#imports";
 import type { Database } from "~/types/database.types";
 import { useMemoize } from "@vueuse/core";
 import { Recipes } from "~/lib/Recipes";
-import { type ExistingRecipe, type Recipe, recipeSchema } from "~/types/recipe";
+import {
+  type ExistingRecipe,
+  type RecipePayload,
+  recipePayload,
+} from "~/types/recipe";
 import { Check, Cog, CookingPot, ShoppingBasket } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 import { toTypedSchema } from "@vee-validate/zod";
@@ -31,10 +35,11 @@ const pages = computed(() => {
     {
       key: "general",
       title: "General",
-      schema: recipeSchema
+      schema: recipePayload
         .pick({
           description: true,
           name: true,
+          tags: true,
         })
         .refine(
           async (props) => {
@@ -52,7 +57,7 @@ const pages = computed(() => {
     {
       key: "ingredients",
       title: "Ingredients",
-      schema: recipeSchema.pick({
+      schema: recipePayload.pick({
         ingredients: true,
       }),
       icon: ShoppingBasket,
@@ -60,7 +65,7 @@ const pages = computed(() => {
     {
       key: "steps",
       title: "Steps",
-      schema: recipeSchema.pick({
+      schema: recipePayload.pick({
         steps: true,
       }),
       icon: CookingPot,
@@ -71,7 +76,7 @@ const pages = computed(() => {
 const submitting = ref(false);
 
 const submit = async (
-  values: Partial<Recipe>,
+  values: Partial<RecipePayload>,
   resetForm: (values: Partial<object>) => unknown,
 ) => {
   submitting.value = true;
@@ -125,7 +130,7 @@ const submit = async (
               e.preventDefault();
 
               if (meta.valid) {
-                submit(values as Recipe, resetForm);
+                submit(values as RecipePayload, resetForm);
               }
             }
           "
@@ -140,7 +145,8 @@ const submit = async (
               :loading="submitting"
               :disabled="!meta.dirty"
               @click="
-                meta.valid && submit(values as Partial<Recipe>, resetForm)
+                meta.valid &&
+                submit(values as Partial<RecipePayload>, resetForm)
               "
             >
               Save changes

@@ -4,13 +4,13 @@ import { RecipePage } from "~/components/recipe/view";
 import PageLayout from "~/components/layout/PageLayout.vue";
 import { useCurrentCollection } from "~/composables/useCurrentCollection";
 
-const route = useRoute("books-slug-recipes-recipeSlug");
+const route = useRoute("collections-slug-recipes-recipeSlug");
 const client = useSupabaseClient();
-const recipeSlug = computed(() => route.params.recipeSlug);
+const recipeSlug = computed(() => route.params.slug);
 const book = await useCurrentCollection();
 const { data: recipe, error } = await useAsyncData(
   async () => {
-    return Recipes.using(client).getBySlug(recipeSlug.value);
+    return Recipes.using(client).getBySlugWithTags(recipeSlug.value);
   },
   {
     watch: [recipeSlug],

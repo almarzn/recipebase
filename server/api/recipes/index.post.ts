@@ -1,11 +1,11 @@
 import { serverSupabaseClient } from "#supabase/server";
 import type { Database } from "~/types/database.types";
 import { slugify } from "~/lib/utils";
-import { recipeSchema } from "~/types/recipe";
+import { recipePayload } from "~/types/recipe";
 
 export default defineEventHandler(async (event) => {
   const payload = await readValidatedBody(event, (val) =>
-    recipeSchema.parse(val),
+    recipePayload.parse(val),
   );
   const client = await serverSupabaseClient<Database>(event);
 
@@ -24,6 +24,13 @@ export default defineEventHandler(async (event) => {
     console.log(error);
     throw createError({
       status: 500,
+    });
+  }
+
+  for (const tag of payload.tags) {
+    await client.from("recipe_tags").insert({
+      recipe_id: result[0].id,
+      tag_id: tag,
     });
   }
 

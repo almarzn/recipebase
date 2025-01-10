@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Database } from "~/types/database.types";
+import type { Database } from "@/types/database.types";
 import type { LucideProps } from "lucide-vue-next";
 import {
   Apple,
@@ -18,12 +18,10 @@ import {
 } from "lucide-vue-next";
 import Tag from "~/components/ui/tag/Tag.vue";
 import type { FunctionalComponent } from "vue";
+import type { TagProps } from "~/types/recipe";
 
-const props = defineProps<{
-  tag: Pick<
-    Database["public"]["Tables"]["tags"]["Row"],
-    "color" | "icon" | "text"
-  >;
+defineProps<{
+  tag: TagProps;
 }>();
 
 const icons: Record<
@@ -49,5 +47,6 @@ const icons: Record<
   <Tag :color="tag.color">
     <Component :is="icons[tag.icon!]" v-if="tag.icon" class="size-3" />
     {{ tag.text }}
+    <slot />
   </Tag>
 </template>

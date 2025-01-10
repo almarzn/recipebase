@@ -1,8 +1,10 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "~/types/database.types";
-import type { Recipe } from "~/types/recipe";
-import { existingRecipeSchema, recipeSchema } from "~/types/recipe";
+import type { RecipeDetails, RecipePayload } from "~/types/recipe";
+import { ingredientSchema, stepSchema } from "~/types/recipe";
 import { slugify } from "~/lib/utils";
+import { z } from "zod";
+import { omit } from "lodash";
 
 export class Recipes {
   private constructor(private readonly client: SupabaseClient<Database>) {}
@@ -48,7 +50,7 @@ export class Recipes {
   async getBySlug(slug: string) {
     const { data } = await this.client
       .from("recipes")
-      .select()
+      .select("*, tags(id)")
       .eq("slug", slug);
 
     if (!data || data?.length === 0) {
@@ -57,24 +59,74 @@ export class Recipes {
 
     const result = data[0];
 
-    return existingRecipeSchema.parse({
+    return {
       id: result.id,
       name: result.name,
-      steps: result.steps ?? [],
-      ingredients: result.ingredients ?? [],
+      steps: z.array(stepSchema).parse(result.steps ?? []),
+      ingredients: z.array(ingredientSchema).parse(result.ingredients ?? []),
       description: result.description ?? undefined,
-    });
+      tags: result.tags.map((it) => it.id),
+    };
+  }
+
+  async getBySlugWithTags(slug: string): Promise<RecipeDetails | null> {
+    const { data } = await this.client
+      .from("recipes")
+      .select("*, tags(id, text, color, icon)")
+      .eq("slug", slug);
+
+    if (!data || data?.length === 0) {
+      return null;
+    }
+
+    const result = data[0];
+
+    return {
+      id: result.id,
+      name: result.name,
+      steps: z.array(stepSchema).parse(result.steps ?? []),
+      ingredients: z.array(ingredientSchema).parse(result.ingredients ?? []),
+      description: result.description ?? undefined,
+      tags: result.tags,
+    };
   }
 
   static using(client: SupabaseClient) {
     return new Recipes(client);
   }
 
-  async updateById(id: string, props: Partial<Recipe>) {
-    await this.client.from("recipes").update(props).eq("id", id);
+  async updateById(id: string, props: Partial<RecipePayload>) {
+    await this.client
+      .from("recipes")
+      .update(omit(props, ["tags"]))
+      .eq("id", id)
+      .throwOnError();
+    await this.updateTags(id, props);
   }
 
-  async create(props: Recipe) {
+  private async updateTags(id: string, props: Partial<RecipePayload>) {
+    if (!props.tags) {
+      return;
+    }
+
+    await this.client
+      .from("recipe_tags")
+      .delete()
+      .eq("recipe_id", id)
+      .throwOnError();
+
+    for (const tag of props.tags) {
+      await this.client
+        .from("recipe_tags")
+        .insert({
+          recipe_id: id,
+          tag_id: tag,
+        })
+        .throwOnError();
+    }
+  }
+
+  async create(props: RecipePayload) {
     await this.client.from("recipes").insert({
       name: props.name,
       slug: slugify(props.name),

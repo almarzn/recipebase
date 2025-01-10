@@ -2,7 +2,7 @@
 import { Dialog, DialogTitle, DialogContent } from "@/components/ui/dialog";
 import { ArrowRight, ScanSearch, Bird } from "lucide-vue-next";
 import { z } from "zod";
-import type { Recipe } from "~/types/recipe";
+import type { RecipePayload } from "~/types/recipe";
 import { Checkbox } from "~/components/ui/checkbox";
 import { slugify } from "~/lib/utils";
 import { Progress } from "~/components/ui/progress";
@@ -15,7 +15,7 @@ const emits = defineEmits(["create"]);
 const client = useSupabaseClient();
 const url = ref<string>();
 const results = ref<
-  | { status: "success"; recipes: Recipe[] }
+  | { status: "success"; recipes: RecipePayload[] }
   | { status: "error" }
   | { status: "idle" }
   | { status: "pending" }
@@ -28,12 +28,15 @@ const submitting = ref<boolean>();
 const loadResults = async () => {
   try {
     results.value = { status: "pending" };
-    const { recipes } = await $fetch<{ recipes: Recipe[] }>("/api/imports", {
-      method: "POST",
-      body: {
-        url: url.value,
+    const { recipes } = await $fetch<{ recipes: RecipePayload[] }>(
+      "/api/imports",
+      {
+        method: "POST",
+        body: {
+          url: url.value,
+        },
       },
-    });
+    );
 
     results.value = { status: "success", recipes };
 
