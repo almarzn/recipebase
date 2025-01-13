@@ -1,19 +1,43 @@
 import { z } from "zod";
 import type { Database } from "~/types/database.types";
 
-export const realUnitSchema = z.enum([
-  "GRAM",
-  "KILOGRAM",
-  "MILLITER",
-  "LITER",
-  "ARBITRARY",
+export const ingredientUnitSchema = z.enum([
+  "teaspoon",
+  "tablespoon",
+  "cup",
+  "fluid ounce",
+  "pint",
+  "quart",
+  "gallon",
+  "milliliter",
+  "liter",
+  "deciliter",
+  "centiliter",
+  "gram",
+  "kilogram",
+  "milligram",
+  "ounce",
+  "pound",
+  "stone",
+  "bushel",
+  "peck",
+  "gill",
+  "dram",
+  "scruple",
+  "grain",
+  "millimeter",
+  "centimeter",
+  "meter",
+  "inch",
+  "arbitrary",
 ]);
-export type IngredientUnit = z.infer<typeof realUnitSchema>;
+
+export type IngredientUnit = z.infer<typeof ingredientUnitSchema>;
 
 export const ingredientSchema = z.object({
   name: z.string().max(500).trim().nonempty(),
   quantity: z.number().positive().or(z.null()),
-  unit: realUnitSchema,
+  unit: ingredientUnitSchema.optional(),
   notes: z.string().max(500).optional(),
 });
 
@@ -29,7 +53,7 @@ export const stepSchema = z.object({
 export type Step = z.infer<typeof stepSchema>;
 
 export const recipePayload = z.object({
-  name: z.string().max(500).trim(),
+  name: z.string().max(500).trim().nonempty(),
   description: z.string().max(1000).optional(),
   ingredients: z.array(ingredientSchema),
   steps: z.array(stepSchema),

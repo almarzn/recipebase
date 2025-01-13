@@ -52,4 +52,8 @@ const { data: recipe, error } = await useAsyncData(
     watch: [recipeSlug],
   },
 );
+
+if (error.value) {
+  console.error(error.value);
+}
 </script>

@@ -1,18 +1,15 @@
 <script setup lang="ts">
-import type { IngredientUnit, RecipeDetails } from "~/types/recipe";
+import type { RecipeDetails } from "~/types/recipe";
 import RecipeTag from "~/components/recipe/RecipeTag.vue";
+import { UnitFormatter } from "~/lib/Unit";
 
 defineProps<{
   recipe: RecipeDetails;
 }>();
 
-const units: Record<IngredientUnit, string> = {
-  GRAM: "g",
-  KILOGRAM: "kg",
-  MILLITER: "ml",
-  LITER: "l",
-  ARBITRARY: " ",
-};
+const formatter = new UnitFormatter({
+  style: "short",
+});
 </script>
 
 <template>
@@ -30,10 +27,13 @@ const units: Record<IngredientUnit, string> = {
           </div>
           <div />
           <div class="justify-self-end">
-            {{ ingredient.quantity }}
+            {{
+              ingredient.quantity &&
+              formatter.formatQuantity(ingredient.quantity, ingredient.unit)
+            }}
           </div>
           <span class="text-gray-400">
-            {{ units[ingredient.unit] }}
+            {{ formatter.formatUnit(ingredient.unit) }}
           </span>
           <div
             v-if="ingredient.notes"

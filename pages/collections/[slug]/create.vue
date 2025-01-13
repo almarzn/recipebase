@@ -42,6 +42,7 @@ const steps = computed(() => {
         .pick({
           description: true,
           name: true,
+          tags: true,
         })
         .refine(
           ({ name }) => {
@@ -104,6 +105,7 @@ const submit = async (values: RecipePayload) => {
     :validation-schema="toTypedSchema(steps[currentStep - 1].schema)"
     :initial-values="{
       ingredients: [],
+      tags: [],
     }"
   >
     <FormStepper

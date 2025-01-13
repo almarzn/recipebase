@@ -121,7 +121,7 @@ const tagsById = computed(() => keyBy(tags.data.value, "id"));
                   <CommandGroup>
                     <CommandItem
                       v-for="tag in filteredTags?.filter(
-                        (it) => !value.includes(it.id),
+                        (it) => !value?.includes(it.id),
                       )"
                       :key="tag.id"
                       :value="tag.text"

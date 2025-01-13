@@ -4,8 +4,9 @@
     <div class="p-4">
       <div class="flex items-center justify-start gap-4 text-sm">
         <div class="max-sm:hidden">Recipebase.co</div>
-
-        <div>Handbooks</div>
+        <div class="w-2"></div>
+        <NuxtLink to="/recipes">Recipes</NuxtLink>
+        <NuxtLink to="/collections">Collections</NuxtLink>
 
         <div class="grow" />
 

@@ -5,7 +5,7 @@ import { Primitive, type PrimitiveProps } from "radix-vue";
 import { type ButtonVariants, buttonVariants } from ".";
 import { Loader } from "lucide-vue-next";
 
-interface Props extends PrimitiveProps {
+export interface ButtonProps extends PrimitiveProps {
   variant?: ButtonVariants["variant"];
   size?: ButtonVariants["size"];
   class?: HTMLAttributes["class"];
@@ -13,7 +13,7 @@ interface Props extends PrimitiveProps {
   disabled?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<ButtonProps>(), {
   as: "button",
 });
 </script>

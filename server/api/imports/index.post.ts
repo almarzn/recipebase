@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { zodResponseFormat } from "openai/helpers/zod";
 import OpenAI from "openai";
-import { realUnitSchema } from "~/types/recipe";
+import { ingredientUnitSchema } from "~/types/recipe";
 import TurndownService from "turndown";
 
 const payloadSchema = z.object({
@@ -59,7 +59,7 @@ export default defineEventHandler(async (event) => {
               z.object({
                 name: z.string(),
                 quantity: z.number().or(z.null()),
-                unit: realUnitSchema,
+                unit: ingredientUnitSchema,
                 notes: z.string().optional(),
               }),
             ),

@@ -1,21 +1,20 @@
 <script setup lang="ts">
 import { FieldArray } from "vee-validate";
 import { IngredientInput } from "@/components/ui/ingredient-input";
-import type { Ingredient, IngredientUnit } from "~/types/recipe";
-import { Redo2 } from "lucide-vue-next";
+import {
+  type Ingredient,
+  ingredientSchema,
+  type IngredientUnit,
+  ingredientUnitSchema,
+} from "~/types/recipe";
+import { Redo2, PlusCircle } from "lucide-vue-next";
 import { Label } from "~/components/ui/label";
+import { getUnitByShort, UnitFormatter } from "~/lib/Unit";
 
 const naturalIngredientRegex =
   /^\s*(?<quantity>\d+)(?<unit>\w+)?\s+(?:de |d'|of )?(?<name>.+)$/;
 
 const addingIngredientText = ref("");
-
-const unitConverter: Record<string, IngredientUnit> = {
-  G: "GRAM",
-  KG: "KILOGRAM",
-  ML: "MILLITER",
-  L: "LITER",
-};
 
 const addingIngredient = computed((): Ingredient | undefined => {
   const match = naturalIngredientRegex.exec(addingIngredientText.value);
@@ -26,7 +25,7 @@ const addingIngredient = computed((): Ingredient | undefined => {
 
   return {
     quantity: Number(quantity),
-    unit: unitConverter[unit.toUpperCase()] ?? "ARBITRARY",
+    unit: getUnitByShort(unit),
     name,
   };
 });
@@ -47,15 +46,54 @@ const addingIngredient = computed((): Ingredient | undefined => {
           No ingredient yet
         </div>
         <div class="max-w-44 text-center text-xs text-muted-foreground">
-          Write a new ingredient in the input and press enter
+          Write a new ingredient in the input and press enter, or:
+        </div>
+        <div class="h-1"></div>
+        <div class="max-w-44 text-center text-xs text-muted-foreground">
+          <Button
+            variant="outline"
+            @click.prevent="push({ unit: 'arbitrary' })"
+          >
+            <PlusCircle />
+            Add an ingredient
+          </Button>
         </div>
       </div>
-      <ul v-else class="flex min-h-64 flex-col gap-1 px-4 pt-4">
-        <li v-for="(_, index) in fields" :key="index">
-          <IngredientInput
-            :name="`ingredients[${index}]`"
-            @delete="remove(index)"
-          />
+      <ul
+        v-else
+        class="grid min-h-64 grid-cols-[auto_auto_1fr_auto] content-start gap-2 px-4 pt-4"
+      >
+        <li
+          class="col-span-4 grid grid-cols-subgrid text-xs text-muted-foreground"
+        >
+          <div>Quantity</div>
+          <div>Units</div>
+          <div>Name</div>
+          <div></div>
+        </li>
+        <IngredientInput
+          v-for="(_, index) in fields"
+          :key="index"
+          as="div"
+          class=""
+          :name="`ingredients[${index}]`"
+          @delete="remove(index)"
+        />
+        <li class="col-span-4 grid grid-cols-subgrid">
+          <Button
+            class="col-span-3 w-full"
+            variant="outline"
+            type="button"
+            @click.prevent="
+              push({
+                unit: 'arbitrary',
+              })
+            "
+          >
+            <PlusCircle />
+            Add another ingredient
+          </Button>
+          <div></div>
         </li>
       </ul>
       <div class="flex flex-col gap-1 border-t p-2">
@@ -63,7 +101,7 @@ const addingIngredient = computed((): Ingredient | undefined => {
           class="pl-3 text-xs text-muted-foreground/50"
           for="add-ingredient"
         >
-          Add an ingredient
+          Or type to add an ingredient using (quantity + unit + name)
         </label>
         <div class="flex gap-1">
           <Input

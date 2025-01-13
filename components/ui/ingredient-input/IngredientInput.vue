@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Ingredient } from "~/types/recipe";
 import { Field } from "vee-validate";
-import { FormControl } from "~/components/ui/form";
+import { FormControl, FormItem } from "~/components/ui/form";
 import {
   Select,
   SelectContent,
@@ -10,16 +10,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Input } from "~/components/ui/input";
 import { SelectLabel } from "~/components/ui/select";
 import { Trash2 } from "lucide-vue-next";
+import { metricUnits, imperialUnits, UnitFormatter } from "~/lib/Unit";
 
 defineEmits(["delete"]);
 defineModel<Ingredient>();
-defineProps<{ name: string }>();
+defineProps<{ name: string; as?: string }>();
+
+const formatter = new UnitFormatter({ style: "long" });
 </script>
 
 <template>
-  <div class="flex gap-1">
+  <Component :is="as ?? 'div'" class="col-span-4 grid grid-cols-subgrid">
     <Field v-slot="{ componentField }" :name="`${name}.quantity`">
       <Input v-bind="componentField" class="w-16" />
     </Field>
@@ -32,20 +36,36 @@ defineProps<{ name: string }>();
         </FormControl>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>SI units</SelectLabel>
-            <SelectItem value="GRAM">grams</SelectItem>
-            <SelectItem value="KILOGRAM">kilograms</SelectItem>
-            <SelectItem value="LITER">liters</SelectItem>
-            <SelectItem value="MILLITER">milliliters</SelectItem>
+            <SelectLabel>Metric units</SelectLabel>
+            <SelectItem
+              v-for="unit of metricUnits"
+              :key="unit.name"
+              :value="unit.name"
+              >{{ formatter.formatUnit(unit.name) }}
+            </SelectItem>
+          </SelectGroup>
+          <SelectGroup>
+            <SelectLabel>Imperial units</SelectLabel>
+            <SelectItem
+              v-for="unit of imperialUnits"
+              :key="unit.name"
+              :value="unit.name"
+              >{{ formatter.formatUnit(unit.name) }}
+            </SelectItem>
           </SelectGroup>
         </SelectContent>
       </Select>
     </Field>
     <Field v-slot="{ componentField }" :name="`${name}.name`">
-      <Input v-bind="componentField" />
+      <FormItem class="space-y-0">
+        <FormControl class="group">
+          <Input v-bind="componentField" />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
     </Field>
     <Button variant="ghost" class="aspect-square p-2" @click="$emit('delete')">
       <Trash2 />
     </Button>
-  </div>
+  </Component>
 </template>

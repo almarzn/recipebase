@@ -18,6 +18,8 @@ import type { Database } from "~/types/database.types";
 import { Recipes } from "~/lib/Recipes";
 import FormStepper from "~/components/ui/form-stepper/FormStepper.vue";
 import { toast } from "vue-sonner";
+import { slugify } from "~/lib/utils";
+import LoadingButton from "~/components/ui/button/LoadingButton.vue";
 
 const emits = defineEmits(["create"]);
 
@@ -33,10 +35,13 @@ const steps = computed(() => {
         .pick({
           description: true,
           name: true,
+          tags: true,
         })
         .refine(
           async ({ name }) => {
-            return (await Recipes.using(client).getBySlug(name)) === undefined;
+            return (
+              (await Recipes.using(client).getBySlug(slugify(name))) === null
+            );
           },
           { path: ["name"], message: "That name is already taken" },
         ),
@@ -86,12 +91,13 @@ const submit = async (values: RecipePayload) => {
 
 <template>
   <Form
-    v-slot="{ meta, values }"
+    v-slot="{ meta, values, validate }"
     as=""
     keep-values
     :validation-schema="toTypedSchema(steps[currentStep - 1].schema)"
     :initial-values="{
       ingredients: [],
+      tags: [],
     }"
   >
     <FormStepper
@@ -143,15 +149,20 @@ const submit = async (values: RecipePayload) => {
             Create recipe
             <Check />
           </Button>
-          <Button
+          <LoadingButton
             v-else
             :disabled="isNextDisabled"
             type="button"
-            @click="meta.valid && nextStep()"
+            :action="
+              async () => {
+                await validate();
+                meta.valid && nextStep();
+              }
+            "
           >
             Next
             <ArrowRight />
-          </Button>
+          </LoadingButton>
         </div>
       </form>
     </FormStepper>

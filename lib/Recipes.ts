@@ -63,7 +63,9 @@ export class Recipes {
       id: result.id,
       name: result.name,
       steps: z.array(stepSchema).parse(result.steps ?? []),
-      ingredients: z.array(ingredientSchema).parse(result.ingredients ?? []),
+      ingredients:
+        z.array(ingredientSchema).safeParse(result.ingredients ?? []).data ??
+        [],
       description: result.description ?? undefined,
       tags: result.tags.map((it) => it.id),
     };

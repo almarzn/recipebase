@@ -15,6 +15,9 @@ module.exports = {
       },
     },
     extend: {
+      aria: {
+        invalid: 'invalid="true"',
+      },
       spacing: {
         container: "32rem",
       },
