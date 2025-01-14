@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import type { RecipeDetails } from "~/types/recipe";
+import type { Ingredient, RecipeDetails } from "~/types/recipe";
 import RecipeTag from "~/components/recipe/RecipeTag.vue";
 import { UnitFormatter } from "~/lib/Unit";
+import { Separator } from "~/components/ui/separator";
 
 defineProps<{
   recipe: RecipeDetails;
@@ -20,27 +21,35 @@ const formatter = new UnitFormatter({
         <li
           v-for="(ingredient, index) in recipe.ingredients"
           :key="index"
-          class="col-span-4 grid grid-cols-subgrid border-b pb-1"
+          class="col-span-4 grid grid-cols-subgrid pb-1"
+          :class="'separate' in ingredient ? '' : 'border-b'"
         >
-          <div class="">
-            {{ ingredient.name }}
-          </div>
-          <div />
-          <div class="justify-self-end">
-            {{
-              ingredient.quantity &&
-              formatter.formatQuantity(ingredient.quantity, ingredient.unit)
-            }}
-          </div>
-          <span class="text-gray-400">
-            {{ formatter.formatUnit(ingredient.unit) }}
-          </span>
-          <div
-            v-if="ingredient.notes"
-            class="col-span-3 text-xs text-muted-foreground"
-          >
-            {{ ingredient.notes }}
-          </div>
+          <template v-if="'separate' in ingredient">
+            <div class="mt-2 font-semibold uppercase text-muted-foreground">
+              {{ ingredient.separate }}
+            </div>
+          </template>
+          <template v-else>
+            <div class="">
+              {{ ingredient.name }}
+            </div>
+            <div />
+            <div class="justify-self-end">
+              {{
+                ingredient.quantity &&
+                formatter.formatQuantity(ingredient.quantity, ingredient.unit)
+              }}
+            </div>
+            <span class="text-gray-400">
+              {{ ingredient.unit && formatter.formatUnit(ingredient.unit) }}
+            </span>
+            <div
+              v-if="ingredient.notes"
+              class="col-span-3 text-xs text-muted-foreground"
+            >
+              {{ ingredient.notes }}
+            </div>
+          </template>
         </li>
       </ul>
     </div>

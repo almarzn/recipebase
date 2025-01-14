@@ -116,13 +116,13 @@ const submit = async (
       class="grow"
     >
       <Form
-        v-slot="{ meta, values, resetForm }"
+        v-slot="{ meta, values, resetForm, validate, errors }"
         as=""
         keep-values
         :validation-schema="toTypedSchema(page.schema)"
         :initial-values="recipe"
         validate-on-mount
-      >
+        >{{ console.log(values, errors) }}
         <form
           class="flex grow flex-col items-stretch gap-6"
           @submit="
@@ -145,8 +145,9 @@ const submit = async (
               :loading="submitting"
               :disabled="!meta.dirty"
               @click="
+                validate();
                 meta.valid &&
-                submit(values as Partial<RecipePayload>, resetForm)
+                  submit(values as Partial<RecipePayload>, resetForm);
               "
             >
               Save changes

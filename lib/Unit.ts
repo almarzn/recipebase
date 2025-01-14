@@ -219,7 +219,10 @@ export class UnitFormatter {
     }
   }
 
-  formatQuantity(quantity: number, name: IngredientUnit): string {
+  formatQuantity(quantity: number, name: IngredientUnit | undefined): string {
+    if (!name) {
+      return quantity.toLocaleString();
+    }
     const unit = units[name]!;
 
     if (this.options.type === "metric" && unit.type === "imperial") {

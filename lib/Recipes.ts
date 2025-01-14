@@ -1,6 +1,10 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "~/types/database.types";
-import type { RecipeDetails, RecipePayload } from "~/types/recipe";
+import {
+  ingredientFieldSchema,
+  type RecipeDetails,
+  type RecipePayload,
+} from "~/types/recipe";
 import { ingredientSchema, stepSchema } from "~/types/recipe";
 import { slugify } from "~/lib/utils";
 import { z } from "zod";
@@ -63,9 +67,7 @@ export class Recipes {
       id: result.id,
       name: result.name,
       steps: z.array(stepSchema).parse(result.steps ?? []),
-      ingredients:
-        z.array(ingredientSchema).safeParse(result.ingredients ?? []).data ??
-        [],
+      ingredients: ingredientFieldSchema.parse(result.ingredients ?? []),
       description: result.description ?? undefined,
       tags: result.tags.map((it) => it.id),
     };
@@ -87,7 +89,7 @@ export class Recipes {
       id: result.id,
       name: result.name,
       steps: z.array(stepSchema).parse(result.steps ?? []),
-      ingredients: z.array(ingredientSchema).parse(result.ingredients ?? []),
+      ingredients: ingredientFieldSchema.parse(result.ingredients ?? []),
       description: result.description ?? undefined,
       tags: result.tags,
     };

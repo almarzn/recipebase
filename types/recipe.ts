@@ -36,12 +36,16 @@ export type IngredientUnit = z.infer<typeof ingredientUnitSchema>;
 
 export const ingredientSchema = z.object({
   name: z.string().max(500).trim().nonempty(),
-  quantity: z.number().positive().or(z.null()),
+  quantity: z.coerce.number().nonnegative().optional(),
   unit: ingredientUnitSchema.optional(),
   notes: z.string().max(500).optional(),
 });
 
 export type Ingredient = z.infer<typeof ingredientSchema>;
+
+export const separatorSchema = z.object({
+  separate: z.string(),
+});
 
 export const stepSchema = z.object({
   text: z.string().max(500).trim().nonempty({
@@ -52,10 +56,14 @@ export const stepSchema = z.object({
 
 export type Step = z.infer<typeof stepSchema>;
 
+export const ingredientFieldSchema = z.array(
+  ingredientSchema.or(separatorSchema),
+);
+
 export const recipePayload = z.object({
   name: z.string().max(500).trim().nonempty(),
   description: z.string().max(1000).optional(),
-  ingredients: z.array(ingredientSchema),
+  ingredients: ingredientFieldSchema,
   steps: z.array(stepSchema),
   tags: z.array(z.string()),
 });

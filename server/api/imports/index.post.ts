@@ -45,7 +45,17 @@ export default defineEventHandler(async (event) => {
       {
         role: "system",
         content:
-          "You are an expert at structured data extraction and at cooking. You will be given an unstructured webpage containing one or more recipe, and should convert them into structured data. Make sure to return every recipe on the page in a different object. Return an empty array if there are no recipe on the webpage. Keep the original language. Make sure that each step is written in a natural order, and only contain one instruction. Rewrite them if necessary. For the description field, remove any information related to do original support, and only return the recipe, what it is and how to execute it correctly. Remove any useless blabla. Always strip the title from useless informations, such as 'How to'and such.",
+          "You are an expert at structured data extraction and at cooking. You will be given an unstructured webpage " +
+          "containing one or more recipe, and should convert them into structured data. Make sure to return every " +
+          "recipe on the page in a different object. Return an empty array if there are no recipe on the webpage. " +
+          "Keep the original language. Make sure that each step is written in a natural order, and only contain one " +
+          "instruction. Rewrite them if necessary. For the description field, remove any information related to do " +
+          "original support, and only return the recipe, what it is and how to execute it correctly. Remove any " +
+          "useless blabla. Always strip the title from useless informations, such as 'How to' and such. For the " +
+          "ingredients, make sure to add separator to the different ingredients if the recipe contains it, by adding " +
+          "an object with only the separate property - which contains the label of the separator, that should contain" +
+          "the name of the part. Also, the ingredient quantity property is optional, do not include it if nothing is" +
+          "specified. ",
       },
       { role: "user", content: markdownBody },
     ],
@@ -56,12 +66,18 @@ export default defineEventHandler(async (event) => {
             name: z.string(),
             description: z.string().optional(),
             ingredients: z.array(
-              z.object({
-                name: z.string(),
-                quantity: z.number().or(z.null()),
-                unit: ingredientUnitSchema,
-                notes: z.string().optional(),
-              }),
+              z
+                .object({
+                  name: z.string(),
+                  quantity: z.number().optional(),
+                  unit: ingredientUnitSchema.optional(),
+                  notes: z.string().optional(),
+                })
+                .or(
+                  z.object({
+                    separate: z.string(),
+                  }),
+                ),
             ),
             steps: z.array(
               z.object({

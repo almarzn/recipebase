@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FieldArray } from "vee-validate";
+import { Field, FieldArray } from "vee-validate";
 import { IngredientInput } from "@/components/ui/ingredient-input";
 import {
   type Ingredient,
@@ -7,9 +7,11 @@ import {
   type IngredientUnit,
   ingredientUnitSchema,
 } from "~/types/recipe";
-import { Redo2, PlusCircle } from "lucide-vue-next";
+import { Redo2, PlusCircle, Trash2 } from "lucide-vue-next";
 import { Label } from "~/components/ui/label";
 import { getUnitByShort, UnitFormatter } from "~/lib/Unit";
+import { Input } from "~/components/ui/input";
+import { FormControl, FormItem } from "~/components/ui/form";
 
 const naturalIngredientRegex =
   /^\s*(?<quantity>\d+)(?<unit>\w+)?\s+(?:de |d'|of )?(?<name>.+)$/;
@@ -61,39 +63,85 @@ const addingIngredient = computed((): Ingredient | undefined => {
       </div>
       <ul
         v-else
-        class="grid min-h-64 grid-cols-[auto_auto_1fr_auto] content-start gap-2 px-4 pt-4"
+        class="grid min-h-64 grid-cols-[auto_auto_1fr_2fr_auto] content-start gap-2 px-4 pt-4"
       >
         <li
-          class="col-span-4 grid grid-cols-subgrid text-xs text-muted-foreground"
+          class="col-span-5 grid grid-cols-subgrid text-xs text-muted-foreground"
         >
           <div>Quantity</div>
           <div>Units</div>
           <div>Name</div>
+          <div>Notes</div>
           <div></div>
         </li>
-        <IngredientInput
-          v-for="(_, index) in fields"
-          :key="index"
-          as="div"
-          class=""
-          :name="`ingredients[${index}]`"
-          @delete="remove(index)"
-        />
-        <li class="col-span-4 grid grid-cols-subgrid">
-          <Button
-            class="col-span-3 w-full"
-            variant="outline"
-            type="button"
-            @click.prevent="
-              push({
-                unit: 'arbitrary',
-              })
-            "
+        <template v-for="(element, index) in fields" :key="index">
+          <Field
+            v-if="'separate' in (element.value as any)"
+            v-slot="{ componentField }"
+            :name="`ingredients[${index}].separate`"
           >
-            <PlusCircle />
-            Add another ingredient
-          </Button>
-          <div></div>
+            <FormItem
+              class="col-span-5 grid grid-cols-subgrid items-center space-y-0"
+            >
+              <div class="col-span-2 text-xs text-muted-foreground">
+                Separator
+              </div>
+
+              <div class="group col-span-2">
+                <FormControl>
+                  <Input
+                    v-bind="componentField"
+                    placeholder="Separator label"
+                  />
+                </FormControl>
+                <FormMessage />
+              </div>
+              <Button
+                variant="ghost"
+                class="aspect-square p-2"
+                @click="remove(index)"
+              >
+                <Trash2 />
+              </Button>
+            </FormItem>
+          </Field>
+          <IngredientInput
+            v-else
+            as="li"
+            class=""
+            :name="`ingredients[${index}]`"
+            @delete="remove(index)"
+          />
+        </template>
+        <li class="col-span-5 grid grid-cols-subgrid">
+          <div class="col-span-4 flex gap-2">
+            <Button
+              class="grow"
+              variant="outline"
+              type="button"
+              @click.prevent="
+                push({
+                  unit: 'arbitrary',
+                })
+              "
+            >
+              <PlusCircle />
+              Add another ingredient
+            </Button>
+            <Button
+              class="grow"
+              variant="outline"
+              type="button"
+              @click.prevent="
+                push({
+                  separate: '',
+                })
+              "
+            >
+              Add a separator
+            </Button>
+            <div></div>
+          </div>
         </li>
       </ul>
       <div class="flex flex-col gap-1 border-t p-2">

@@ -19,11 +19,11 @@ defineEmits(["delete"]);
 defineModel<Ingredient>();
 defineProps<{ name: string; as?: string }>();
 
-const formatter = new UnitFormatter({ style: "long" });
+const formatter = new UnitFormatter({ style: "full" });
 </script>
 
 <template>
-  <Component :is="as ?? 'div'" class="col-span-4 grid grid-cols-subgrid">
+  <Component :is="as ?? 'div'" class="col-span-5 grid grid-cols-subgrid">
     <Field v-slot="{ componentField }" :name="`${name}.quantity`">
       <Input v-bind="componentField" class="w-16" />
     </Field>
@@ -59,7 +59,18 @@ const formatter = new UnitFormatter({ style: "long" });
     <Field v-slot="{ componentField }" :name="`${name}.name`">
       <FormItem class="space-y-0">
         <FormControl class="group">
-          <Input v-bind="componentField" />
+          <Input v-bind="componentField" placeholder="Name of the ingredient" />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </Field>
+    <Field v-slot="{ componentField }" :name="`${name}.notes`">
+      <FormItem class="space-y-0">
+        <FormControl class="group">
+          <Input
+            v-bind="componentField"
+            placeholder="Additional informations"
+          />
         </FormControl>
         <FormMessage />
       </FormItem>
