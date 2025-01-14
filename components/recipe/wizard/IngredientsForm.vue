@@ -1,24 +1,20 @@
 <script setup lang="ts">
 import { Field, FieldArray } from "vee-validate";
 import { IngredientInput } from "@/components/ui/ingredient-input";
-import {
-  type Ingredient,
-  ingredientSchema,
-  type IngredientUnit,
-  ingredientUnitSchema,
-} from "~/types/recipe";
-import { Redo2, PlusCircle, Trash2 } from "lucide-vue-next";
+import type { Ingredient } from "~/types/recipe";
+import { PlusCircle, Redo2, Trash2 } from "lucide-vue-next";
 import { Label } from "~/components/ui/label";
-import { getUnitByShort, UnitFormatter } from "~/lib/Unit";
+import { getUnitByShort } from "~/lib/Unit";
 import { Input } from "~/components/ui/input";
 import { FormControl, FormItem } from "~/components/ui/form";
+import { v4 } from "uuid";
 
 const naturalIngredientRegex =
   /^\s*(?<quantity>\d+)(?<unit>\w+)?\s+(?:de |d'|of )?(?<name>.+)$/;
 
 const addingIngredientText = ref("");
 
-const addingIngredient = computed((): Ingredient | undefined => {
+const addingIngredient = computed((): Omit<Ingredient, "id"> | undefined => {
   const match = naturalIngredientRegex.exec(addingIngredientText.value);
   if (!match || !match.groups) {
     return undefined;
@@ -31,6 +27,10 @@ const addingIngredient = computed((): Ingredient | undefined => {
     name,
   };
 });
+
+const newIngredient = (props: Partial<Ingredient> = {}) => {
+  return { unit: "arbitrary", id: v4(), ...props };
+};
 </script>
 <template>
   <FieldArray v-slot="{ fields, push, remove }" name="ingredients">
@@ -52,10 +52,7 @@ const addingIngredient = computed((): Ingredient | undefined => {
         </div>
         <div class="h-1"></div>
         <div class="max-w-44 text-center text-xs text-muted-foreground">
-          <Button
-            variant="outline"
-            @click.prevent="push({ unit: 'arbitrary' })"
-          >
+          <Button variant="outline" @click.prevent="push(newIngredient())">
             <PlusCircle />
             Add an ingredient
           </Button>
@@ -74,7 +71,10 @@ const addingIngredient = computed((): Ingredient | undefined => {
           <div>Notes</div>
           <div></div>
         </li>
-        <template v-for="(element, index) in fields" :key="index">
+        <template
+          v-for="(element, index) in fields"
+          :key="(element.value! as Ingredient).id"
+        >
           <Field
             v-if="'separate' in (element.value as any)"
             v-slot="{ componentField }"
@@ -119,11 +119,7 @@ const addingIngredient = computed((): Ingredient | undefined => {
               class="grow"
               variant="outline"
               type="button"
-              @click.prevent="
-                push({
-                  unit: 'arbitrary',
-                })
-              "
+              @click.prevent="push(newIngredient())"
             >
               <PlusCircle />
               Add another ingredient
@@ -134,6 +130,7 @@ const addingIngredient = computed((): Ingredient | undefined => {
               type="button"
               @click.prevent="
                 push({
+                  id: v4(),
                   separate: '',
                 })
               "
@@ -167,7 +164,7 @@ const addingIngredient = computed((): Ingredient | undefined => {
             variant="secondary"
             :disabled="addingIngredient === undefined"
             @click="
-              push(addingIngredient);
+              push(newIngredient(addingIngredient));
               addingIngredientText = '';
             "
           >

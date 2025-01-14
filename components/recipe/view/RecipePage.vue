@@ -19,13 +19,13 @@ const formatter = new UnitFormatter({
       <h3 class="heading-3">Ingredients</h3>
       <ul class="grid grid-cols-[1fr_auto_auto_auto] gap-x-1 gap-y-2">
         <li
-          v-for="(ingredient, index) in recipe.ingredients"
-          :key="index"
+          v-for="ingredient in recipe.ingredients"
+          :key="ingredient.id"
           class="col-span-4 grid grid-cols-subgrid pb-1"
           :class="'separate' in ingredient ? '' : 'border-b'"
         >
           <template v-if="'separate' in ingredient">
-            <div class="mt-2 font-semibold uppercase text-muted-foreground">
+            <div class="mt-6 text-xs uppercase text-muted-foreground">
               {{ ingredient.separate }}
             </div>
           </template>

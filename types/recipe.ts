@@ -35,6 +35,7 @@ export const ingredientUnitSchema = z.enum([
 export type IngredientUnit = z.infer<typeof ingredientUnitSchema>;
 
 export const ingredientSchema = z.object({
+  id: z.string().uuid(),
   name: z.string().max(500).trim().nonempty(),
   quantity: z.coerce.number().nonnegative().optional(),
   unit: ingredientUnitSchema.optional(),
@@ -44,6 +45,7 @@ export const ingredientSchema = z.object({
 export type Ingredient = z.infer<typeof ingredientSchema>;
 
 export const separatorSchema = z.object({
+  id: z.string().uuid(),
   separate: z.string(),
 });
 
