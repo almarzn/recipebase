@@ -2,24 +2,14 @@
 import type { Ingredient } from "~/types/recipe";
 import { Field } from "vee-validate";
 import { FormControl, FormItem } from "~/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Input } from "~/components/ui/input";
-import { SelectLabel } from "~/components/ui/select";
 import { Trash2 } from "lucide-vue-next";
-import { metricUnits, imperialUnits, UnitFormatter } from "~/lib/Unit";
+import { UnitFormatter } from "~/lib/Unit";
+import { UnitSelect } from "~/components/ui/unit-select";
 
 defineEmits(["delete"]);
 defineModel<Ingredient>();
 defineProps<{ name: string; as?: string }>();
-
-const formatter = new UnitFormatter({ style: "full" });
 </script>
 
 <template>
@@ -28,33 +18,7 @@ const formatter = new UnitFormatter({ style: "full" });
       <Input v-bind="componentField" class="w-16" />
     </Field>
     <Field v-slot="{ componentField }" :name="`${name}.unit`">
-      <Select v-bind="componentField">
-        <FormControl>
-          <SelectTrigger>
-            <SelectValue placeholder="Unit" />
-          </SelectTrigger>
-        </FormControl>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Metric units</SelectLabel>
-            <SelectItem
-              v-for="unit of metricUnits"
-              :key="unit.name"
-              :value="unit.name"
-              >{{ formatter.formatUnit(unit.name) }}
-            </SelectItem>
-          </SelectGroup>
-          <SelectGroup>
-            <SelectLabel>Imperial units</SelectLabel>
-            <SelectItem
-              v-for="unit of imperialUnits"
-              :key="unit.name"
-              :value="unit.name"
-              >{{ formatter.formatUnit(unit.name) }}
-            </SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+      <UnitSelect v-bind="componentField" />
     </Field>
     <Field v-slot="{ componentField }" :name="`${name}.name`">
       <FormItem class="space-y-0">

@@ -9,6 +9,7 @@ export interface ButtonProps extends PrimitiveProps {
   variant?: ButtonVariants["variant"];
   size?: ButtonVariants["size"];
   class?: HTMLAttributes["class"];
+  classes?: Partial<Record<"base" | "content", HTMLAttributes["class"]>>;
   loading?: boolean;
   disabled?: boolean;
 }
@@ -22,7 +23,14 @@ const props = withDefaults(defineProps<ButtonProps>(), {
   <Primitive
     :as="as"
     :as-child="asChild"
-    :class="cn('group', buttonVariants({ variant, size }), props.class)"
+    :class="
+      cn(
+        'group',
+        buttonVariants({ variant, size }),
+        props.class,
+        props.classes?.base,
+      )
+    "
     :disabled="disabled || loading"
     :data-loading="loading"
   >
@@ -34,7 +42,12 @@ const props = withDefaults(defineProps<ButtonProps>(), {
       </slot>
     </div>
     <div
-      class="flex items-center justify-center gap-2 transition-opacity group-data-[loading=true]:opacity-0"
+      :class="
+        cn(
+          'flex items-center justify-center gap-2 transition-opacity group-data-[loading=true]:opacity-0',
+          props.classes?.content,
+        )
+      "
     >
       <slot />
     </div>
