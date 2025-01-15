@@ -64,7 +64,7 @@ const newIngredient = (props: Partial<Ingredient> = {}) => {
         :list="fields"
         item-key="id"
         handle=".handle"
-        class="grid min-h-64 grid-cols-[auto_auto_auto_1fr_2fr_auto] place-items-center content-start gap-2 px-4 pt-4"
+        class="grid min-h-64 grid-cols-[auto_auto_auto_1fr_auto_20px_auto] place-items-center content-start gap-2 px-4 pt-4"
         :animation="300"
         ghost-class="opacity-50"
         drag-class="bg-[#060715]"
@@ -72,18 +72,18 @@ const newIngredient = (props: Partial<Ingredient> = {}) => {
       >
         <template #header>
           <li
-            class="col-span-6 grid grid-cols-subgrid text-xs text-muted-foreground"
+            class="col-span-7 grid grid-cols-subgrid text-xs text-muted-foreground"
           >
             <div></div>
             <div>Quantity</div>
             <div>Units</div>
             <div>Name</div>
-            <div>Notes</div>
+            <div></div>
             <div></div>
           </li>
         </template>
         <template #item="{ element, index }">
-          <div class="col-span-6 grid grid-cols-subgrid">
+          <div class="col-span-7 grid grid-cols-subgrid">
             <Field
               v-if="'separate' in (element.value as any)"
               v-slot="{ componentField }"
@@ -95,9 +95,9 @@ const newIngredient = (props: Partial<Ingredient> = {}) => {
                 <GripVertical />
               </div>
               <FormItem
-                class="col-span-5 grid grid-cols-subgrid items-center space-y-0"
+                class="col-span-6 grid grid-cols-subgrid items-center space-y-0 rounded-sm bg-muted/40 p-2"
               >
-                <div class="col-span-2 text-xs text-muted-foreground">
+                <div class="col-span-1 text-xs text-muted-foreground">
                   Separator
                 </div>
 
@@ -110,9 +110,11 @@ const newIngredient = (props: Partial<Ingredient> = {}) => {
                   </FormControl>
                   <FormMessage />
                 </div>
+                <div></div>
+                <div></div>
                 <Button
                   variant="ghost"
-                  class="aspect-square p-2"
+                  class="aspect-square p-2 text-muted-foreground"
                   @click="remove(index)"
                 >
                   <Trash2 />
