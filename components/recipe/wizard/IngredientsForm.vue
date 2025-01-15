@@ -2,12 +2,13 @@
 import { Field, FieldArray } from "vee-validate";
 import { IngredientInput } from "@/components/ui/ingredient-input";
 import type { Ingredient } from "~/types/recipe";
-import { PlusCircle, Redo2, Trash2 } from "lucide-vue-next";
+import { PlusCircle, Redo2, Trash2, GripVertical } from "lucide-vue-next";
 import { Label } from "~/components/ui/label";
 import { getUnitByShort } from "~/lib/Unit";
 import { Input } from "~/components/ui/input";
 import { FormControl, FormItem } from "~/components/ui/form";
 import { v4 } from "uuid";
+import Vuedraggable from "vuedraggable";
 
 const naturalIngredientRegex =
   /^\s*(?<quantity>\d+)(?<unit>\w+)?\s+(?:de |d'|of )?(?<name>.+)$/;
@@ -33,7 +34,7 @@ const newIngredient = (props: Partial<Ingredient> = {}) => {
 };
 </script>
 <template>
-  <FieldArray v-slot="{ fields, push, remove }" name="ingredients">
+  <FieldArray v-slot="{ fields, push, remove, move }" name="ingredients">
     <Label>Ingredients</Label>
     <div
       class="flex flex-col gap-2 rounded-md border bg-card/10 text-card-foreground backdrop-blur"
@@ -58,89 +59,111 @@ const newIngredient = (props: Partial<Ingredient> = {}) => {
           </Button>
         </div>
       </div>
-      <ul
+      <Vuedraggable
         v-else
-        class="grid min-h-64 grid-cols-[auto_auto_1fr_2fr_auto] content-start gap-2 px-4 pt-4"
+        :list="fields"
+        item-key="id"
+        handle=".handle"
+        class="grid min-h-64 grid-cols-[auto_auto_auto_1fr_2fr_auto] place-items-center content-start gap-2 px-4 pt-4"
+        :animation="300"
+        ghost-class="opacity-50"
+        drag-class="bg-[#060715]"
+        @change="move($event.moved.oldIndex, $event.moved.newIndex)"
       >
-        <li
-          class="col-span-5 grid grid-cols-subgrid text-xs text-muted-foreground"
-        >
-          <div>Quantity</div>
-          <div>Units</div>
-          <div>Name</div>
-          <div>Notes</div>
-          <div></div>
-        </li>
-        <template
-          v-for="(element, index) in fields"
-          :key="(element.value! as Ingredient).id"
-        >
-          <Field
-            v-if="'separate' in (element.value as any)"
-            v-slot="{ componentField }"
-            :name="`ingredients[${index}].separate`"
+        <template #header>
+          <li
+            class="col-span-6 grid grid-cols-subgrid text-xs text-muted-foreground"
           >
-            <FormItem
-              class="col-span-5 grid grid-cols-subgrid items-center space-y-0"
+            <div></div>
+            <div>Quantity</div>
+            <div>Units</div>
+            <div>Name</div>
+            <div>Notes</div>
+            <div></div>
+          </li>
+        </template>
+        <template #item="{ element, index }">
+          <div class="col-span-6 grid grid-cols-subgrid">
+            <Field
+              v-if="'separate' in (element.value as any)"
+              v-slot="{ componentField }"
+              :name="`ingredients[${index}].separate`"
             >
-              <div class="col-span-2 text-xs text-muted-foreground">
-                Separator
+              <div
+                class="handle col-span-1 place-self-center text-muted-foreground"
+              >
+                <GripVertical />
+              </div>
+              <FormItem
+                class="col-span-5 grid grid-cols-subgrid items-center space-y-0"
+              >
+                <div class="col-span-2 text-xs text-muted-foreground">
+                  Separator
+                </div>
+
+                <div class="group col-span-2">
+                  <FormControl>
+                    <Input
+                      v-bind="componentField"
+                      placeholder="Separator label"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+                <Button
+                  variant="ghost"
+                  class="aspect-square p-2"
+                  @click="remove(index)"
+                >
+                  <Trash2 />
+                </Button>
+              </FormItem>
+            </Field>
+            <template v-else>
+              <div
+                class="handle col-span-1 place-self-center text-muted-foreground"
+              >
+                <GripVertical />
               </div>
 
-              <div class="group col-span-2">
-                <FormControl>
-                  <Input
-                    v-bind="componentField"
-                    placeholder="Separator label"
-                  />
-                </FormControl>
-                <FormMessage />
-              </div>
-              <Button
-                variant="ghost"
-                class="aspect-square p-2"
-                @click="remove(index)"
-              >
-                <Trash2 />
-              </Button>
-            </FormItem>
-          </Field>
-          <IngredientInput
-            v-else
-            as="li"
-            class=""
-            :name="`ingredients[${index}]`"
-            @delete="remove(index)"
-          />
-        </template>
-        <li class="col-span-5 grid grid-cols-subgrid">
-          <div class="col-span-4 flex gap-2">
-            <Button
-              class="grow"
-              variant="outline"
-              type="button"
-              @click.prevent="push(newIngredient())"
-            >
-              <PlusCircle />
-              Add another ingredient
-            </Button>
-            <Button
-              class="grow"
-              variant="outline"
-              type="button"
-              @click.prevent="
-                push({
-                  id: v4(),
-                  separate: '',
-                })
-              "
-            >
-              Add a separator
-            </Button>
-            <div></div>
+              <IngredientInput
+                class=""
+                :name="`ingredients[${index}]`"
+                @delete="remove(index)"
+              />
+            </template>
           </div>
-        </li>
-      </ul>
+        </template>
+        <template #footer>
+          <div class="col-span-6 grid grid-cols-subgrid">
+            <div class="col-span-4 col-start-2 flex gap-2">
+              <Button
+                class="grow"
+                variant="outline"
+                type="button"
+                @click.prevent="push(newIngredient())"
+              >
+                <PlusCircle />
+                Add another ingredient
+              </Button>
+              <Button
+                class="grow"
+                variant="outline"
+                type="button"
+                @click.prevent="
+                  push({
+                    id: v4(),
+                    separate: '',
+                  })
+                "
+              >
+                Add a separator
+              </Button>
+              <div></div>
+            </div>
+          </div>
+        </template>
+      </Vuedraggable>
       <div class="flex flex-col gap-1 border-t p-2">
         <label
           class="pl-3 text-xs text-muted-foreground/50"

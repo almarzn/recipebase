@@ -103,4 +103,12 @@
       grid-area: stack;
     }
   }
+
+  .handle {
+    user-select: none;
+    cursor: move;
+    & > svg {
+      pointer-events: none;
+    }
+  }
 }

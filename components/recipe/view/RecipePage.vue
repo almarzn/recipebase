@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import type { Ingredient, RecipeDetails } from "~/types/recipe";
+import type { RecipeDetails } from "~/types/recipe";
 import RecipeTag from "~/components/recipe/RecipeTag.vue";
 import { UnitFormatter } from "~/lib/Unit";
-import { Separator } from "~/components/ui/separator";
 
 defineProps<{
   recipe: RecipeDetails;
@@ -25,7 +24,7 @@ const formatter = new UnitFormatter({
           :class="'separate' in ingredient ? '' : 'border-b'"
         >
           <template v-if="'separate' in ingredient">
-            <div class="mt-6 text-xs uppercase text-muted-foreground">
+            <div class="mb-1 mt-6 text-xs uppercase text-muted-foreground">
               {{ ingredient.separate }}
             </div>
           </template>
