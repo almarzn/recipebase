@@ -91,7 +91,7 @@ const submit = async (values: RecipePayload) => {
 
 <template>
   <Form
-    v-slot="{ meta, values, validate, errors }"
+    v-slot="{ meta, values, validate }"
     as=""
     keep-values
     :validation-schema="toTypedSchema(steps[currentStep - 1].schema)"

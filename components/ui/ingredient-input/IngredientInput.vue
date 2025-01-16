@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import type { Ingredient } from "~/types/recipe";
 import { Field } from "vee-validate";
 import { FormControl, FormItem } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { Trash2, NotepadText, Dot } from "lucide-vue-next";
+import { NotepadText, Trash2 } from "lucide-vue-next";
 import { UnitSelect } from "~/components/ui/unit-select";
 import { Textarea } from "~/components/ui/textarea";
 import IconBadge from "~/components/ui/icon-badge/IconBadge.vue";

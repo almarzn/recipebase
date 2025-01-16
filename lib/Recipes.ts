@@ -4,8 +4,8 @@ import {
   ingredientFieldSchema,
   type RecipeDetails,
   type RecipePayload,
+  stepSchema,
 } from "~/types/recipe";
-import { ingredientSchema, stepSchema } from "~/types/recipe";
 import { slugify } from "~/lib/utils";
 import { z } from "zod";
 import { omit } from "lodash";
