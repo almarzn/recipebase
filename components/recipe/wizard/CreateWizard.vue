@@ -91,13 +91,14 @@ const submit = async (values: RecipePayload) => {
 
 <template>
   <Form
-    v-slot="{ meta, values, validate }"
+    v-slot="{ meta, values, validate, errors }"
     as=""
     keep-values
     :validation-schema="toTypedSchema(steps[currentStep - 1].schema)"
     :initial-values="{
       ingredients: [],
       tags: [],
+      steps: [],
     }"
   >
     <FormStepper
@@ -120,6 +121,8 @@ const submit = async (values: RecipePayload) => {
         @submit="
           (e) => {
             e.preventDefault();
+
+            validate();
 
             if (isLastStep && meta.valid) {
               submit(values as RecipePayload);

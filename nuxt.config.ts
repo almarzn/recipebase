@@ -18,5 +18,13 @@ export default defineNuxtConfig({
       },
     },
   },
+  nitro: {
+    storage: {
+      data: {
+        driver: "fs",
+        base: "./data",
+      },
+    },
+  },
   components: false,
 });

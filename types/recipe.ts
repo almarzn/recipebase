@@ -50,6 +50,7 @@ export const separatorSchema = z.object({
 });
 
 export const stepSchema = z.object({
+  id: z.string().uuid(),
   text: z.string().max(500).trim().nonempty({
     message: "Each step should at least contain one non-blank character",
   }),

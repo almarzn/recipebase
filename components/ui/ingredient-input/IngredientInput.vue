@@ -6,6 +6,7 @@ import { Input } from "~/components/ui/input";
 import { Trash2, NotepadText, Dot } from "lucide-vue-next";
 import { UnitSelect } from "~/components/ui/unit-select";
 import { Textarea } from "~/components/ui/textarea";
+import IconBadge from "~/components/ui/icon-badge/IconBadge.vue";
 
 defineEmits(["delete"]);
 defineProps<{ name: string; as?: string }>();
@@ -31,15 +32,9 @@ defineProps<{ name: string; as?: string }>();
       <Popover>
         <PopoverTrigger as-child>
           <Button variant="ghost" class="aspect-square p-2">
-            <div class="relative size-4">
+            <IconBadge :active="!!componentField.modelValue">
               <NotepadText class="stroke-muted-foreground" />
-              <div
-                v-if="componentField.modelValue"
-                class="absolute bottom-0 right-0 flex size-2 items-center justify-center rounded-full bg-black"
-              >
-                <div class="size-1.5 rounded-full bg-purple-500" />
-              </div>
-            </div>
+            </IconBadge>
           </Button>
         </PopoverTrigger>
         <PopoverContent>

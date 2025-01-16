@@ -141,7 +141,7 @@ const newIngredient = (props: Partial<Ingredient> = {}) => {
             <div class="col-span-4 col-start-2 flex gap-2">
               <Button
                 class="grow"
-                variant="outline"
+                variant="secondary"
                 type="button"
                 @click.prevent="push(newIngredient())"
               >
@@ -150,7 +150,7 @@ const newIngredient = (props: Partial<Ingredient> = {}) => {
               </Button>
               <Button
                 class="grow"
-                variant="outline"
+                variant="secondary"
                 type="button"
                 @click.prevent="
                   push({

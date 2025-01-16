@@ -4,7 +4,6 @@ import OpenAI from "openai";
 import type { RecipePayload } from "~/types/recipe";
 import { ingredientUnitSchema } from "~/types/recipe";
 import TurndownService from "turndown";
-import { randomUUID } from "node:crypto";
 import { v4 } from "uuid";
 
 const payloadSchema = z.object({
@@ -40,9 +39,9 @@ const responseFormat = z.object({
         z
           .object({
             name: z.string(),
-            quantity: z.number().optional(),
-            unit: ingredientUnitSchema.optional(),
-            notes: z.string().optional(),
+            quantity: z.number().or(z.null()),
+            unit: ingredientUnitSchema,
+            notes: z.string().or(z.null()),
           })
           .or(
             z.object({
@@ -59,6 +58,7 @@ const responseFormat = z.object({
     }),
   ),
 });
+
 export default defineEventHandler(async (event) => {
   const payload = await readValidatedBody(event, (val) =>
     payloadSchema.parse(val),
@@ -68,24 +68,14 @@ export default defineEventHandler(async (event) => {
 
   const markdownBody = turndownService.turndown(body);
 
+  const storage = useStorage("data");
+
   const completion = await openai.beta.chat.completions.parse({
-    model: "gpt-4o-mini",
+    model: "gpt-4o",
     messages: [
       {
         role: "system",
-        content:
-          "You are an expert at structured data extraction and at cooking. You will be given an unstructured webpage " +
-          "containing one or more recipe, and should convert them into structured data. Make sure to return every " +
-          "recipe on the page in a different object. Return an empty array if there are no recipe on the webpage. " +
-          "Keep the original language. Make sure that each step is written in a natural order, and only contain one " +
-          "instruction. Rewrite them if necessary. For the description field, remove any information related to do " +
-          "original support, and only return the recipe, what it is and how to execute it correctly. Remove any " +
-          "useless blabla. Always strip the title from useless informations, such as 'How to' and such. " +
-          "" +
-          "For the ingredients, make sure to add separator to the different ingredients if the recipe contains it, by adding " +
-          "an object with only the separate property. The separate property contains a very short text describing the ingredients " +
-          "that follow. Also, the ingredient quantity property is optional, do not include it if nothing is specified. " +
-          "The notes property is optional and should only be used to further characterize the ingredient, if necessary.",
+        content: (await storage.getItem("prompt.md")) as string,
       },
       { role: "user", content: markdownBody },
     ],
@@ -95,13 +85,24 @@ export default defineEventHandler(async (event) => {
   const { recipes } = JSON.parse(
     completion.choices[0].message.content!,
   ) as z.infer<typeof responseFormat>;
+
   return {
     recipes: recipes.map(
-      ({ ingredients, ...recipe }): RecipePayload => ({
+      ({ ingredients, steps, ...recipe }): RecipePayload => ({
         ingredients: ingredients.map((ingredient) => ({
-          ...ingredient,
           id: v4(),
+          ...("separate" in ingredient
+            ? {
+                separate: ingredient.separate,
+              }
+            : {
+                name: ingredient.name,
+                unit: ingredient.unit,
+                notes: ingredient.notes ?? undefined,
+                quantity: ingredient.quantity ?? undefined,
+              }),
         })),
+        steps: steps.map((step) => ({ ...step, id: v4() })),
         tags: [],
         ...recipe,
       }),
