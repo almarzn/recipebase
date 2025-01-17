@@ -6,7 +6,7 @@ defineProps<{
 
 <template>
   <div
-    class="flex w-full max-w-screen-xl flex-col items-stretch gap-1 self-center p-4"
+    class="flex w-full max-w-screen-xl grow flex-col items-stretch gap-1 self-center overflow-scroll p-4 pt-0"
   >
     <div class="flex flex-col gap-8">
       <slot />
