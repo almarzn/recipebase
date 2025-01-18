@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { Step } from "~/types/recipe";
 import { MessageCirclePlus } from "lucide-vue-next";
-import StepComments from "~/components/recipe/view/StepComments.vue";
+import StepCommentsSideLayout from "~/components/recipe/view/StepComments.vue";
+import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 
 const { commentTo } = defineProps<{
   step: Step;
@@ -12,6 +13,7 @@ const { commentTo } = defineProps<{
     created_at: Date;
   }[];
   commentTo: HTMLElement | null;
+  commentLayout: "side" | "none";
 }>();
 defineEmits<{
   addComment: [];
@@ -26,7 +28,7 @@ const hover = ref(false);
 <template>
   <li ref="item" class="group">
     <div
-      class="flex items-center justify-between rounded-md pl-3 transition-colors group-hover:bg-gray-900 data-[hover=true]:bg-gray-900"
+      class="flex items-center justify-between rounded-md p-1 pl-3 transition-colors group-hover:bg-gray-900 data-[hover=true]:bg-gray-900"
       :data-hover="hover"
       @mouseenter="hover = true"
       @mouseleave="hover = false"
@@ -39,14 +41,15 @@ const hover = ref(false);
       </div>
       <Button
         variant="ghost"
-        class="h-auto self-stretch rounded-l-none opacity-0 transition-opacity group-hover:opacity-100"
+        class="h-auto self-stretch opacity-0 transition-opacity group-hover:opacity-100"
         @click="$emit('addComment')"
       >
         <MessageCirclePlus />
       </Button>
     </div>
     <ClientOnly>
-      <StepComments
+      <StepCommentsSideLayout
+        v-if="commentLayout === 'side'"
         v-model:hover="hover"
         :comments
         :comment-to
