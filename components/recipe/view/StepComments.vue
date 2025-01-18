@@ -48,11 +48,13 @@ const scrollParent = computed(
 );
 
 const offset = computed(() => {
+  const previousSiblingOffset = previousSibling.bottom.value;
   const previousOffset =
-    previousSibling.bottom.value -
+    (previousSiblingOffset > 0
+      ? previousSiblingOffset
+      : -scrollParent.value?.scrollTop) -
     parentBounds.top.value +
-    8 -
-    (scrollParent.value?.scrollTop ?? 0);
+    8;
   const alignOffset = alignWithBounds.top.value - parentBounds.top.value;
   return Math.max(previousOffset, alignOffset);
 });
