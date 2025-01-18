@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import type { Step } from "~/types/recipe";
 import { MessageCirclePlus } from "lucide-vue-next";
-import { onWatcherCleanup } from "vue";
-import EditableComment from "~/components/recipe/view/EditableComment.vue";
+import StepComments from "~/components/recipe/view/StepComments.vue";
 
 const { commentTo } = defineProps<{
   step: Step;
@@ -21,46 +20,6 @@ defineEmits<{
 }>();
 const item = useTemplateRef("item");
 
-const commentsDiv = useTemplateRef("commentsDiv");
-
-const previousOffset = ref(0);
-
-const gap = 8;
-
-watch(
-  () => commentsDiv.value,
-  () => {
-    const previousElementSibling = commentsDiv.value?.previousElementSibling;
-
-    const updateOffset = () => {
-      if (previousElementSibling instanceof HTMLElement) {
-        previousOffset.value =
-          previousElementSibling.getBoundingClientRect().bottom -
-          commentTo!.getBoundingClientRect().top +
-          gap;
-      }
-    };
-
-    const resizeObserver = new ResizeObserver(updateOffset);
-    const mutationObserver = new MutationObserver(updateOffset);
-
-    if (previousElementSibling instanceof HTMLElement) {
-      updateOffset();
-
-      resizeObserver.observe(previousElementSibling!, {});
-      mutationObserver.observe(previousElementSibling!, {
-        attributes: true,
-        attributeFilter: ["style"],
-        subtree: false,
-      });
-    }
-
-    onWatcherCleanup(() => {
-      resizeObserver.disconnect();
-      mutationObserver.disconnect();
-    });
-  },
-);
 const hover = ref(false);
 </script>
 
@@ -86,27 +45,15 @@ const hover = ref(false);
         <MessageCirclePlus />
       </Button>
     </div>
-    <Teleport v-if="commentTo" :to="commentTo">
-      <div
-        ref="commentsDiv"
-        class="group/comment-container absolute flex w-full flex-col gap-2 transition-colors"
-        :style="`top: ${Math.max(previousOffset, (item?.getBoundingClientRect().top ?? 0) - commentTo.getBoundingClientRect().top)}px; opacity: ${item ? '1' : '0'}`"
-        :data-hover="hover"
-        @mouseenter="hover = true"
-        @mouseleave="hover = false"
-      >
-        <div v-for="comment in comments" ref="commentsDiv" :key="comment.id">
-          <EditableComment
-            :comment
-            :default-editing="!!comment.isNew"
-            @update="(value) => $emit('updateComment', comment.id, value)"
-            @delete="
-              $emit('deleteComment', comment.id);
-              hover = false;
-            "
-          />
-        </div>
-      </div>
-    </Teleport>
+    <ClientOnly>
+      <StepComments
+        v-model:hover="hover"
+        :comments
+        :comment-to
+        :align-with="item"
+        @update-comment="(id, content) => $emit('updateComment', id, content)"
+        @delete-comment="(id) => $emit('deleteComment', id)"
+      />
+    </ClientOnly>
   </li>
 </template>

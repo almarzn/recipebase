@@ -153,7 +153,7 @@ const deleteComment = async (id: string) => {
     </div>
 
     <div
-      class="flex grow flex-col gap-4 rounded-t-xl border p-5 shadow-md backdrop-blur-3xl"
+      class="flex grow flex-col gap-6 rounded-t-xl border p-5 shadow-md backdrop-blur-3xl"
     >
       <div class="flex flex-col gap-4">
         <div class="flex flex-col gap-2">
@@ -165,7 +165,7 @@ const deleteComment = async (id: string) => {
         <p class="text-muted-foreground">{{ recipe.description }}</p>
       </div>
 
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-4">
         <h3 class="heading-3">Steps</h3>
 
         <ol
