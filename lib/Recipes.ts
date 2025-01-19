@@ -14,14 +14,11 @@ export class Recipes {
   private constructor(private readonly client: SupabaseClient<Database>) {}
 
   async findAllWithTags() {
-    const { data, error } = await this.client
+    const { data } = await this.client
       .from("recipes")
       .select(`*, tags(id, text, color, icon)`)
-      .order("created_at");
-
-    if (error) {
-      throw error;
-    }
+      .order("created_at")
+      .throwOnError();
 
     return data;
   }

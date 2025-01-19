@@ -12,7 +12,7 @@
             to: { name: 'recipes' },
           },
           {
-            text: recipe?.name ?? 'Unknown',
+            text: status === 'success' ? (recipe?.name ?? '') : '',
           },
         ]"
       />
@@ -28,7 +28,11 @@
         </Button>
       </NuxtLink>
     </div>
-    <recipe-page v-if="recipe" :recipe />
+
+    <recipe-page v-if="status === 'success' && recipe" :recipe />
+
+    <RecipePageSkeleton v-if="status === 'pending'" />
+
     <error-status v-if="error" />
   </page-layout>
 </template>
@@ -40,16 +44,23 @@ import { Recipes } from "~/lib/Recipes";
 import { ErrorStatus } from "~/components/ui/status";
 import { Breadcrumbs } from "~/components/layout";
 import { Pencil } from "lucide-vue-next";
+import RecipePageSkeleton from "~/components/recipe/view/RecipePageSkeleton.vue";
 
 const route = useRoute("recipes-slug");
 const client = useSupabaseClient();
 const recipeSlug = computed(() => route.params.slug);
-const { data: recipe, error } = await useAsyncData(
+const {
+  data: recipe,
+  status,
+  error,
+} = await useAsyncData(
   async () => {
     return Recipes.using(client).getBySlugWithTags(recipeSlug.value);
   },
   {
     watch: [recipeSlug],
+    lazy: true,
+    server: true,
   },
 );
 

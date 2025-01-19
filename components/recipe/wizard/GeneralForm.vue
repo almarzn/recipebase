@@ -42,8 +42,10 @@ const tags = await useAsyncData(() => Tags.using(client).findAll(), {
 
 const filteredTags = computed(() => {
   const filter = searchTerm.value ?? "";
-  return tags.data.value?.filter((it) =>
-    it.text.toLowerCase().includes(filter.toLowerCase()),
+  return (
+    tags.data.value?.filter((it) =>
+      it.text.toLowerCase().includes(filter.toLowerCase()),
+    ) ?? []
   );
 });
 
@@ -88,7 +90,7 @@ const tagsById = computed(() => keyBy(tags.data.value, "id"));
         >
           <div class="flex flex-wrap items-center gap-2 px-3">
             <TagsInputItem v-for="item in value" :key="item" :value="item">
-              <RecipeTag :tag="tagsById[item]">
+              <RecipeTag v-if="tagsById[item]" :tag="tagsById[item]">
                 <TagsInputItemDelete class="mr-0" />
               </RecipeTag>
             </TagsInputItem>

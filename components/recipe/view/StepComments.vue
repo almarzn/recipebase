@@ -52,7 +52,7 @@ const offset = computed(() => {
   const previousOffset =
     (previousSiblingOffset > 0
       ? previousSiblingOffset
-      : -scrollParent.value?.scrollTop) -
+      : -(scrollParent.value?.scrollTop ?? 0)) -
     parentBounds.top.value +
     8;
   const alignOffset = alignWithBounds.top.value - parentBounds.top.value;

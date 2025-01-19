@@ -20,7 +20,7 @@ import Tag from "~/components/ui/tag/Tag.vue";
 import type { FunctionalComponent } from "vue";
 import type { TagProps } from "~/types/recipe";
 
-defineProps<{
+const props = defineProps<{
   tag: TagProps;
 }>();
 

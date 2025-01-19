@@ -93,6 +93,42 @@
       rgba(25, 8, 43, 0.1)
     );
   }
+
+  .skeleton-3 {
+    @apply bg-gray-100 dark:bg-gray-800 animate-pulse text-transparent;
+  }
+
+  .skeleton-2 {
+    @apply bg-gray-200 dark:bg-gray-700 animate-pulse text-transparent;
+  }
+
+  .skeleton-1 {
+    @apply bg-gray-300 dark:bg-gray-600 animate-pulse text-transparent;
+  }
+
+  .skeleton-xs {
+    @apply rounded-md my-1 h-2;
+  }
+
+  .skeleton-base {
+    @apply rounded-md my-1.5 h-2;
+  }
+
+  .skeleton-lg {
+    @apply rounded-md my-3.5 h-3;
+  }
+
+  .skeleton-3xl {
+    @apply rounded-md my-2.5 h-4;
+  }
+
+  .skeleton-h2 {
+    @apply skeleton-3xl;
+  }
+
+  .skeleton-h3 {
+    @apply rounded-md my-2.5 h-3;
+  }
 }
 
 @layer utilities {

@@ -62,9 +62,8 @@ const commentLayout = computed(() =>
       </div>
     </div>
     <div
-      v-if="commentLayout === 'side'"
       ref="commentContainer"
-      class="relative min-w-56 basis-56"
+      class="relative min-w-56 basis-56 max-lg:hidden"
     ></div>
   </div>
 </template>

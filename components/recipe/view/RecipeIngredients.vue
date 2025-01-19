@@ -6,7 +6,6 @@
       <CollapsibleRoot
         v-for="group in groupedBySeparators"
         :key="group.id"
-        v-slot="{ open }"
         class="group/collapsible flex flex-col gap-3"
         default-open
       >

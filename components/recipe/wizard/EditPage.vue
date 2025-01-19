@@ -122,7 +122,7 @@ const submit = async (
         :validation-schema="toTypedSchema(page.schema)"
         :initial-values="recipe"
         validate-on-mount
-        >{{ console.log(values, errors) }}
+      >
         <form
           class="flex grow flex-col items-stretch gap-6"
           @submit="
