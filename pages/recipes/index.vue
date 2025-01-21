@@ -6,6 +6,7 @@ import {
   Image,
   Plus,
   SlidersHorizontal,
+  BadgePlus,
 } from "lucide-vue-next";
 import { type RecipeQuery, Recipes } from "~/lib/Recipes";
 import PageLayout from "~/components/layout/PageLayout.vue";
@@ -60,16 +61,6 @@ const importing = ref<"url" | "image">();
         ]"
       />
       <div class="flex flex-wrap items-stretch gap-3">
-        <NuxtLink
-          :to="{
-            name: 'create-recipe',
-          }"
-        >
-          <Button>
-            <Plus />
-            Create
-          </Button>
-        </NuxtLink>
         <ImportUrlModal
           :model-value="importing === 'url'"
           @update:model-value="importing = undefined"
@@ -77,12 +68,28 @@ const importing = ref<"url" | "image">();
         />
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <Button variant="outline">
-              Import
-              <ChevronDown />
+            <Button>
+              <Plus />
+              Create
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent class="max-w-64">
+            <NuxtLink
+              :to="{
+                name: 'create-recipe',
+              }"
+            >
+              <DropdownMenuItem>
+                <BadgePlus />
+                <div class="flex flex-col">
+                  <div class="flex items-center">From webpage</div>
+                  <div class="text-xs text-muted-foreground">
+                    Paste any link pointing to a recipe and add it to your
+                    recipes. You will then be able to edit it.
+                  </div>
+                </div>
+              </DropdownMenuItem>
+            </NuxtLink>
             <DropdownMenuItem @click="importing = 'url'">
               <Globe />
               <div class="flex flex-col">
