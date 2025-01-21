@@ -23,6 +23,7 @@
     "@vee-validate/zod": "^4.15.0",
     "@vueuse/components": "^12.4.0",
     "@vueuse/core": "^12.3.0",
+    "@vueuse/router": "^12.4.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lodash": "^4.17.21",
@@ -53,6 +54,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-tailwindcss": "^3.17.5",
     "supabase": "^2.1.1",
-    "tailwind-gradient-mask-image": "^1.2.0"
+    "tailwind-gradient-mask-image": "^1.2.0",
+    "tailwindcss-touch": "^1.0.1"
   }
 }

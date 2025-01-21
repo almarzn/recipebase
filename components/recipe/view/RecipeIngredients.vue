@@ -1,8 +1,8 @@
 <template>
-  <div class="flex min-w-56 basis-56 flex-col gap-6">
-    <h3 class="heading-3">Ingredients</h3>
+  <div class="flex h-full min-w-56 basis-56 flex-col gap-6">
+    <h3 class="heading-3 max-lg:hidden">Ingredients</h3>
 
-    <div class="sticky top-0 flex flex-col gap-6">
+    <div class="sticky top-4 flex flex-col gap-6">
       <CollapsibleRoot
         v-for="group in groupedBySeparators"
         :key="group.id"

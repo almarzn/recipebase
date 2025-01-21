@@ -13,6 +13,8 @@ export default defineNuxtConfig({
   ],
   app: {
     head: {
+      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.svg" }],
+
       bodyAttrs: {
         class: "dark",
       },
@@ -24,6 +26,11 @@ export default defineNuxtConfig({
         driver: "fs",
         base: "./data",
       },
+    },
+  },
+  router: {
+    options: {
+      scrollBehaviorType: "smooth",
     },
   },
   components: false,

@@ -2,7 +2,6 @@
 import type { Step } from "~/types/recipe";
 import { MessageCirclePlus } from "lucide-vue-next";
 import StepCommentsSideLayout from "~/components/recipe/view/StepComments.vue";
-import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 
 const { commentTo } = defineProps<{
   step: Step;
@@ -14,24 +13,32 @@ const { commentTo } = defineProps<{
   }[];
   commentTo: HTMLElement | null;
   commentLayout: "side" | "none";
+  index: number;
 }>();
+
 defineEmits<{
   addComment: [];
   updateComment: [id: string, content: string];
   deleteComment: [id: string];
 }>();
+
 const item = useTemplateRef("item");
 
 const hover = ref(false);
+const route = useRoute();
+const router = useRouter();
 </script>
 
 <template>
   <li ref="item" class="group">
     <div
-      class="flex items-center justify-between rounded-md p-1 pl-3 transition-colors group-hover:bg-gray-900 data-[hover=true]:bg-gray-900"
+      :id="`step-${index}`"
+      class="touch:group-hover:bg-gray-900 flex items-center justify-between rounded-md p-1 pl-3 transition-colors data-[current=true]:bg-gray-800 hover-hover:data-[hover=true]:bg-gray-800"
       :data-hover="hover"
+      :data-current="route.hash === `#step-${index}`"
       @mouseenter="hover = true"
       @mouseleave="hover = false"
+      @click="router.replace({ hash: `#step-${index}` })"
     >
       <div class="block p-1 pl-0">
         {{ step.text }}
@@ -41,7 +48,7 @@ const hover = ref(false);
       </div>
       <Button
         variant="ghost"
-        class="h-auto self-stretch opacity-0 transition-opacity group-hover:opacity-100"
+        class="h-auto self-stretch opacity-0 transition-opacity group-hover:opacity-100 max-lg:hidden"
         @click="$emit('addComment')"
       >
         <MessageCirclePlus />

@@ -4,7 +4,7 @@ import { Recipes } from "~/lib/Recipes";
 import { useSupabaseClient } from "#imports";
 import PageLayout from "~/components/layout/PageLayout.vue";
 import EditPage from "~/components/recipe/wizard/EditPage.vue";
-import { Breadcrumbs } from "~/components/layout";
+import { AdaptiveBreadcrumbs } from "~/components/layout";
 
 const route = useRoute("recipes-slug-edit");
 
@@ -17,7 +17,7 @@ const recipe = await useAsyncData(() =>
 
 <template>
   <PageLayout>
-    <breadcrumbs
+    <adaptive-breadcrumbs
       :items="[
         {
           text: 'Home',

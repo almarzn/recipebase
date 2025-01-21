@@ -94,5 +94,9 @@ module.exports = {
       },
     },
   },
-  plugins: [animate, require("tailwind-gradient-mask-image")],
+  plugins: [
+    animate,
+    require("tailwind-gradient-mask-image"),
+    require("tailwindcss-touch")(),
+  ],
 };

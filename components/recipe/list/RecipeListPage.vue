@@ -21,7 +21,7 @@ defineProps<{
           Create a new recipe to view it here.
         </p>
       </div>
-      <Button>
+      <Button variant="outline">
         <Plus />
         Create recipe
       </Button>
@@ -47,7 +47,7 @@ defineProps<{
           {{ recipe.description }}
         </div>
       </div>
-      <div v-if="recipe.tags?.length > 0" class="flex gap-2">
+      <div v-if="recipe.tags?.length > 0" class="flex flex-wrap gap-2">
         <RecipeTag v-for="tag in recipe.tags" :key="tag.id" :tag />
       </div>
     </NuxtLink>

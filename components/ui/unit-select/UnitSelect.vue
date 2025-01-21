@@ -9,10 +9,9 @@ import {
 } from "@/components/ui/popover";
 import { ingredientUnitSchema } from "~/types/recipe";
 import { Button } from "~/components/ui/button";
+import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 
 const model = defineModel<string>();
-
-const formatter = new UnitFormatter({ style: "full-inverted" });
 
 const parsedValue = computed(
   () => ingredientUnitSchema.safeParse(model.value).data ?? undefined,
@@ -23,6 +22,15 @@ const update = (value: string) => {
   model.value = value;
   open.value = false;
 };
+
+const breakpoints = useBreakpoints(breakpointsTailwind);
+
+const formatter = computed(
+  () =>
+    new UnitFormatter({
+      style: breakpoints.smallerOrEqual("lg") ? "short" : "full-inverted",
+    }),
+);
 </script>
 
 <template>
@@ -36,7 +44,7 @@ const update = (value: string) => {
             content: 'justify-between',
           }"
         >
-          <div class="w-20 overflow-hidden text-ellipsis text-start">
+          <div class="overflow-hidden text-ellipsis text-start lg:w-20">
             {{
               parsedValue
                 ? formatter.formatUnit(parsedValue)

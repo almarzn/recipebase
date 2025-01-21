@@ -1,7 +1,7 @@
 <template>
   <page-layout>
     <div class="flex items-center justify-between">
-      <breadcrumbs
+      <adaptive-breadcrumbs
         :items="[
           {
             text: 'Home',
@@ -24,12 +24,15 @@
       >
         <Button variant="secondary" class="rounded-full">
           <pencil />
-          Edit recipe
+          <span>
+            Edit
+            <span class="hidden md:inline">recipe</span>
+          </span>
         </Button>
       </NuxtLink>
     </div>
 
-    <recipe-page v-if="status === 'success' && recipe" :recipe />
+    <RecipePage v-if="status === 'success' && recipe" :recipe />
 
     <RecipePageSkeleton v-if="status === 'pending'" />
 
@@ -42,7 +45,7 @@ import PageLayout from "~/components/layout/PageLayout.vue";
 import { RecipePage } from "~/components/recipe/view";
 import { Recipes } from "~/lib/Recipes";
 import { ErrorStatus } from "~/components/ui/status";
-import { Breadcrumbs } from "~/components/layout";
+import { AdaptiveBreadcrumbs } from "~/components/layout";
 import { Pencil } from "lucide-vue-next";
 import RecipePageSkeleton from "~/components/recipe/view/RecipePageSkeleton.vue";
 

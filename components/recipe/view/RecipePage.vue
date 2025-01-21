@@ -5,6 +5,8 @@ import RecipeStep from "~/components/recipe/view/RecipeStep.vue";
 import RecipeIngredients from "~/components/recipe/view/RecipeIngredients.vue";
 import { useComments } from "~/components/recipe/view/useComments";
 import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
+import AdaptiveSheet from "~/components/ui/sheet/AdaptiveSheet.vue";
+import { ShoppingBasket } from "lucide-vue-next";
 
 const props = defineProps<{
   recipe: RecipeDetails;
@@ -26,10 +28,12 @@ const commentLayout = computed(() =>
 
 <template>
   <div class="flex grow gap-4 max-md:flex-col md:gap-6 lg:gap-12 2xl:gap-14">
-    <RecipeIngredients :recipe />
+    <AdaptiveSheet sheet-title="Ingredients" :icon="ShoppingBasket">
+      <RecipeIngredients :recipe />
+    </AdaptiveSheet>
 
     <div
-      class="flex grow flex-col gap-6 rounded-xl border p-5 shadow-md backdrop-blur-3xl"
+      class="flex grow flex-col gap-6 rounded-xl backdrop-blur-3xl md:border md:p-5 md:shadow-md"
     >
       <div class="flex flex-col gap-4">
         <div class="flex flex-col gap-2">
@@ -49,7 +53,8 @@ const commentLayout = computed(() =>
         >
           <RecipeStep
             v-for="(step, index) in recipe.steps"
-            :key="index"
+            :key="step.id"
+            :index="index"
             :step="step"
             :comment-to="commentContainer"
             :comments="commentsForStep(step.id)"
