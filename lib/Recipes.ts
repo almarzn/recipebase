@@ -1,26 +1,37 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "~/types/database.types";
-import {
-  ingredientFieldSchema,
-  type RecipeDetails,
-  type RecipePayload,
-  stepSchema,
-} from "~/types/recipe";
+import type { RecipeDetails, RecipePayload, TagProps } from "~/types/recipe";
+import { ingredientFieldSchema, stepSchema } from "~/types/recipe";
 import { slugify } from "~/lib/utils";
 import { z } from "zod";
 import { omit } from "lodash";
 
+export interface RecipeQuery {
+  withTags?: string[];
+}
+
+export type ManyRecipeWithTags = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  tags: TagProps[];
+};
+
 export class Recipes {
   private constructor(private readonly client: SupabaseClient<Database>) {}
 
-  async findAllWithTags() {
-    const { data } = await this.client
-      .from("recipes")
-      .select(`*, tags(id, text, color, icon)`)
-      .order("created_at")
+  async findAllWithTags(
+    query: RecipeQuery = {},
+  ): Promise<ManyRecipeWithTags[] | null> {
+    const response = await this.client
+      .rpc("get_recipes", {
+        tags: query.withTags ?? [],
+        text: "",
+      })
       .throwOnError();
 
-    return data;
+    return response.data as ManyRecipeWithTags[];
   }
 
   async findAllByCollectionId(collectionId: string) {
@@ -102,6 +113,7 @@ export class Recipes {
       .update(omit(props, ["tags"]))
       .eq("id", id)
       .throwOnError();
+
     await this.updateTags(id, props);
   }
 

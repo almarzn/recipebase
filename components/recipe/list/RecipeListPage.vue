@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { CookingPot, Plus } from "lucide-vue-next";
 import RecipeTag from "~/components/recipe/RecipeTag.vue";
-import { ErrorStatus } from "~/components/ui/status";
-import type { Recipes } from "~/lib/Recipes";
+import type { ManyRecipeWithTags } from "~/lib/Recipes";
 
 defineProps<{
-  recipes: Awaited<
-    ReturnType<ReturnType<(typeof Recipes)["using"]>["findAllWithTags"]>
-  >;
+  recipes: ManyRecipeWithTags[] | null;
 }>();
 </script>
 
 <template>
-  <div v-if="recipes?.length === 0" class="flex items-center gap-8 self-center">
+  <div
+    v-if="!recipes || recipes?.length === 0"
+    class="flex items-center gap-8 self-center"
+  >
     <CookingPot :size="64" class="stroke-muted-foreground" />
     <div class="flex max-w-96 flex-col items-start gap-4 self-center">
       <div class="flex flex-col gap-1">
@@ -39,7 +39,7 @@ defineProps<{
         name: 'recipes-slug',
         params: { slug: recipe.slug },
       }"
-      class="flex flex-col gap-2 rounded-md border p-6"
+      class="flex flex-col gap-2 rounded-md border px-6 py-5"
     >
       <div class="flex flex-col">
         <div class="font-medium">{{ recipe.name }}</div>
@@ -47,7 +47,7 @@ defineProps<{
           {{ recipe.description }}
         </div>
       </div>
-      <div v-if="recipe.tags.length > 0" class="flex gap-2">
+      <div v-if="recipe.tags?.length > 0" class="flex gap-2">
         <RecipeTag v-for="tag in recipe.tags" :key="tag.id" :tag />
       </div>
     </NuxtLink>

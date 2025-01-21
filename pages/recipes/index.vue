@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Database } from "~/types/database.types";
-import { ChevronDown, CookingPot, Globe, Image, Plus } from "lucide-vue-next";
-import { Recipes } from "~/lib/Recipes";
+import { ChevronDown, Globe, Image, Plus } from "lucide-vue-next";
+import { type RecipeQuery, Recipes } from "~/lib/Recipes";
 import PageLayout from "~/components/layout/PageLayout.vue";
 import { Breadcrumbs } from "~/components/layout";
 import { ErrorStatus } from "~/components/ui/status";
@@ -12,23 +12,33 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import RecipeTag from "~/components/recipe/RecipeTag.vue";
 import RecipeListPage from "~/components/recipe/list/RecipeListPage.vue";
 import RecipeListSkeleton from "~/components/recipe/list/RecipeListSkeleton.vue";
+import RecipeFilters from "~/components/recipe/list/RecipeFilterPage.vue";
 
 const client = useSupabaseClient<Database>();
 
+const query = ref<RecipeQuery>({
+  withTags: [],
+});
+
 const { data: recipes, status } = await useAsyncData(
   "recipes",
-  () => Recipes.using(client).findAllWithTags(),
-  { lazy: true, server: true },
+  () => {
+    return Recipes.using(client).findAllWithTags(query.value);
+  },
+  {
+    lazy: true,
+    watch: [query],
+  },
 );
+
 const importing = ref<"url" | "image">();
 </script>
 
 <template>
   <PageLayout>
-    <div class="flex flex-wrap items-center justify-between">
+    <div class="flex flex-wrap items-center justify-between gap-4">
       <breadcrumbs
         :items="[
           {
@@ -87,8 +97,17 @@ const importing = ref<"url" | "image">();
         </DropdownMenu>
       </div>
     </div>
-    <RecipeListPage v-if="status === 'success'" :recipes />
-    <RecipeListSkeleton v-if="status === 'pending'" />
-    <ErrorStatus v-if="status === 'error'" />
+
+    <div class="flex grow gap-4 max-md:flex-col md:gap-6 lg:gap-12 2xl:gap-14">
+      <div class="flex min-w-64 flex-col">
+        <RecipeFilters v-model="query" />
+      </div>
+
+      <div class="flex grow flex-col items-stretch justify-stretch">
+        <RecipeListPage v-if="status === 'success'" :recipes />
+        <RecipeListSkeleton v-if="status === 'pending'" />
+        <ErrorStatus v-if="status === 'error'" />
+      </div>
+    </div>
   </PageLayout>
 </template>
