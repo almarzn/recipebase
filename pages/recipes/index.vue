@@ -14,19 +14,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import RecipeListPage from "~/components/recipe/list/RecipeListPage.vue";
 import RecipeListSkeleton from "~/components/recipe/list/RecipeListSkeleton.vue";
-import RecipeFilters from "~/components/recipe/list/RecipeFilterPage.vue";
+import RecipeFilters from "~/components/recipe/list/RecipeFilters.vue";
+import { useDebounceFn } from "@vueuse/core";
 
 const client = useSupabaseClient<Database>();
 
-const query = ref<RecipeQuery>({
-  withTags: [],
+const query = reactive<RecipeQuery>({
+  tags: [],
+  text: "",
 });
 
 const { data: recipes, status } = await useAsyncData(
   "recipes",
-  () => {
-    return Recipes.using(client).findAllWithTags(query.value);
-  },
+  useDebounceFn(() => {
+    return Recipes.using(client).findAllWithTags(query);
+  }, 500),
   {
     lazy: true,
     watch: [query],
@@ -99,7 +101,7 @@ const importing = ref<"url" | "image">();
     </div>
 
     <div class="flex grow gap-4 max-md:flex-col md:gap-6 lg:gap-12 2xl:gap-14">
-      <div class="flex min-w-64 flex-col">
+      <div class="flex min-w-64 flex-col gap-4">
         <RecipeFilters v-model="query" />
       </div>
 

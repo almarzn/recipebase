@@ -7,7 +7,8 @@ import { z } from "zod";
 import { omit } from "lodash";
 
 export interface RecipeQuery {
-  withTags?: string[];
+  tags?: string[];
+  text?: string;
 }
 
 export type ManyRecipeWithTags = {
@@ -26,8 +27,8 @@ export class Recipes {
   ): Promise<ManyRecipeWithTags[] | null> {
     const response = await this.client
       .rpc("get_recipes", {
-        tags: query.withTags ?? [],
-        text: "",
+        tags: query.tags ?? [],
+        text: query.text ?? "",
       })
       .throwOnError();
 

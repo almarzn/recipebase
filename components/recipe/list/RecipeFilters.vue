@@ -8,9 +8,21 @@ import {
   CollapsibleTrigger,
 } from "radix-vue";
 import { ChevronsUpDown, LucideTags, CheckIcon } from "lucide-vue-next";
+import Input from "~/components/ui/input/Input.vue";
 import TagIcon from "~/components/recipe/TagIcon.vue";
+import { useVModel } from "@vueuse/core";
 
-const model = defineModel<RecipeQuery>();
+const props = defineProps<{
+  modelValue: RecipeQuery;
+}>();
+const emit = defineEmits<{
+  "update:model-value": [RecipeQuery];
+}>();
+
+const vModel = useVModel(props, "modelValue", emit, {
+  deep: true,
+  passive: true,
+});
 
 const client = useSupabaseClient();
 
@@ -20,18 +32,20 @@ const { data: allTags, status } = await useAsyncData("tagsWithCount", () =>
 
 const updateTag = (id: string, value: boolean) => {
   if (value) {
-    model.value = {
-      withTags: [...(model.value?.withTags ?? []), id],
-    };
+    vModel.value.tags = [...(vModel.value?.tags ?? []), id];
   } else {
-    model.value = {
-      withTags: model.value?.withTags!.filter((it) => it !== id),
-    };
+    vModel.value.tags = vModel!.value.tags!.filter((it) => it !== id);
   }
 };
 </script>
 
 <template>
+  <Input
+    v-model="vModel!.text"
+    class="rounded-full"
+    placeholder="Search recipes"
+  />
+
   <CollapsibleRoot
     class="group/collapsible flex flex-col gap-3 rounded-md md:border md:px-3 md:py-4"
     default-open
@@ -53,7 +67,7 @@ const updateTag = (id: string, value: boolean) => {
         v-for="tag in allTags"
         :key="tag.id"
         v-slot="{ checked }"
-        :checked="modelValue?.withTags?.includes(tag.id)"
+        :checked="vModel?.tags?.includes(tag.id)"
         class="flex items-center gap-2 rounded-full px-3 py-1 text-start text-sm data-[state=checked]:bg-gray-800"
         @update:checked="(value) => updateTag(tag.id, value)"
       >
