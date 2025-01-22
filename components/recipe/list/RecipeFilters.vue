@@ -47,7 +47,7 @@ const updateTag = (id: string, value: boolean) => {
 
 <template>
   <AdaptiveSheet
-    class="flex min-w-64 flex-col gap-4"
+    class="flex min-w-64 flex-col gap-7"
     :icon="SlidersHorizontal"
     sheet-title="Filter results"
   >
@@ -58,12 +58,12 @@ const updateTag = (id: string, value: boolean) => {
     />
 
     <CollapsibleRoot
-      class="group/collapsible flex flex-col gap-3 rounded-md md:border md:px-3 md:py-4"
+      class="group/collapsible flex flex-col gap-3 rounded-md"
       default-open
     >
       <CollapsibleTrigger class="flex items-center gap-2 px-2">
         <div class="size-3 text-muted-foreground">
-          <LucideTags class="size-3" />
+          <div class="size-3" />
         </div>
         <div class="text-xs uppercase text-muted-foreground">Tags</div>
         <div class="grow"></div>

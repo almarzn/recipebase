@@ -25,7 +25,7 @@ defineProps<{
           class="h-auto rounded-full border p-3 shadow-lg"
           variant="secondary"
         >
-          <Component :is="icon" class="size-8" />
+          <Component :is="icon" class="!size-5" />
         </Button>
       </div>
     </SheetTrigger>

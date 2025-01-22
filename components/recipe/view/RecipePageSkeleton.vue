@@ -2,7 +2,7 @@
 
 <template>
   <div class="flex grow gap-4 max-md:flex-col md:gap-6 lg:gap-12 2xl:gap-14">
-    <div class="flex min-w-56 basis-56 flex-col gap-6 max-lg:hidden">
+    <div class="flex min-w-56 basis-56 flex-col gap-6 max-md:hidden">
       <h3 class="skeleton-h3 skeleton-1 skeleton-lg w-28">Ingredients</h3>
 
       <ul class="flex flex-col gap-2">
@@ -19,7 +19,7 @@
     </div>
 
     <div
-      class="flex grow flex-col gap-6 rounded-xl border p-5 shadow-md backdrop-blur-3xl"
+      class="flex grow flex-col gap-6 md:rounded-xl md:border md:p-5 md:shadow-md md:backdrop-blur-3xl"
     >
       <div class="flex flex-col gap-4">
         <div class="flex flex-col gap-2">

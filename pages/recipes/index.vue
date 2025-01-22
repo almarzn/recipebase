@@ -1,13 +1,6 @@
 <script setup lang="ts">
 import type { Database } from "~/types/database.types";
-import {
-  ChevronDown,
-  Globe,
-  Image,
-  Plus,
-  SlidersHorizontal,
-  BadgePlus,
-} from "lucide-vue-next";
+import { BadgePlus, Globe, Image, Plus } from "lucide-vue-next";
 import { type RecipeQuery, Recipes } from "~/lib/Recipes";
 import PageLayout from "~/components/layout/PageLayout.vue";
 import { AdaptiveBreadcrumbs } from "~/components/layout";
@@ -23,7 +16,6 @@ import RecipeListPage from "~/components/recipe/list/RecipeListPage.vue";
 import RecipeListSkeleton from "~/components/recipe/list/RecipeListSkeleton.vue";
 import RecipeFilters from "~/components/recipe/list/RecipeFilters.vue";
 import { useDebounceFn } from "@vueuse/core";
-import AdaptiveSheet from "~/components/ui/sheet/AdaptiveSheet.vue";
 
 const client = useSupabaseClient<Database>();
 
@@ -73,7 +65,7 @@ const importing = ref<"url" | "image">();
               Create
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent class="max-w-64">
+          <DropdownMenuContent class="max-w-sm">
             <NuxtLink
               :to="{
                 name: 'create-recipe',
@@ -82,10 +74,10 @@ const importing = ref<"url" | "image">();
               <DropdownMenuItem>
                 <BadgePlus />
                 <div class="flex flex-col">
-                  <div class="flex items-center">From webpage</div>
+                  <div class="flex items-center">Create manually</div>
                   <div class="text-xs text-muted-foreground">
-                    Paste any link pointing to a recipe and add it to your
-                    recipes. You will then be able to edit it.
+                    Add a recipe by following our wizard. You will be able to
+                    specify ingredients and steps.
                   </div>
                 </div>
               </DropdownMenuItem>
@@ -93,7 +85,7 @@ const importing = ref<"url" | "image">();
             <DropdownMenuItem @click="importing = 'url'">
               <Globe />
               <div class="flex flex-col">
-                <div class="flex items-center">From webpage</div>
+                <div class="flex items-center">Import from webpage</div>
                 <div class="text-xs text-muted-foreground">
                   Paste any link pointing to a recipe and add it to your
                   recipes. You will then be able to edit it.
@@ -103,7 +95,7 @@ const importing = ref<"url" | "image">();
             <DropdownMenuItem @click="importing = 'image'">
               <Image />
               <div class="flex flex-col">
-                <div class="flex items-center">From image</div>
+                <div class="flex items-center">Import from image</div>
                 <div class="text-xs text-muted-foreground">
                   Upload a picture from a book and use it to get started!
                 </div>

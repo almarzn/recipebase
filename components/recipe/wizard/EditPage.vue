@@ -116,7 +116,7 @@ const submit = async (
       class="grow"
     >
       <Form
-        v-slot="{ meta, values, resetForm, validate, errors }"
+        v-slot="{ meta, values, resetForm, validate }"
         as=""
         keep-values
         :validation-schema="toTypedSchema(page.schema)"
