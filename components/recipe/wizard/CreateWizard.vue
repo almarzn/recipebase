@@ -20,6 +20,7 @@ import FormStepper from "~/components/ui/form-stepper/FormStepper.vue";
 import { toast } from "vue-sonner";
 import { slugify } from "~/lib/utils";
 import LoadingButton from "~/components/ui/button/LoadingButton.vue";
+import { SpinnerButton } from "~/components/ui/button";
 
 const emits = defineEmits(["create"]);
 
@@ -143,7 +144,7 @@ const submit = async (values: RecipePayload) => {
           >
             Previous
           </Button>
-          <Button
+          <SpinnerButton
             v-if="isLastStep"
             type="submit"
             :loading="submitting"
@@ -151,7 +152,7 @@ const submit = async (values: RecipePayload) => {
           >
             Create recipe
             <Check />
-          </Button>
+          </SpinnerButton>
           <LoadingButton
             v-else
             :disabled="isNextDisabled"

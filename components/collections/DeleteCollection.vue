@@ -9,6 +9,7 @@ import {
   AlertDialogTitle,
 } from "~/components/ui/alert-dialog";
 import { toast } from "vue-sonner";
+import { SpinnerButton } from "~/components/ui/button";
 
 const open = defineModel<boolean>();
 const props = defineProps<{ id: string }>();
@@ -47,7 +48,7 @@ const deleteBook = async () => {
       </AlertDialogHeader>
       <AlertDialogFooter>
         <AlertDialogCancel> Cancel </AlertDialogCancel>
-        <Button :loading @click="deleteBook()">Delete</Button>
+        <SpinnerButton :loading @click="deleteBook()">Delete</SpinnerButton>
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>

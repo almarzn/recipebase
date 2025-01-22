@@ -3,18 +3,14 @@ import type { HTMLAttributes } from "vue";
 import { cn } from "@/lib/utils";
 import { Primitive, type PrimitiveProps } from "radix-vue";
 import { type ButtonVariants, buttonVariants } from ".";
-import { Loader } from "lucide-vue-next";
 
-export interface ButtonProps extends PrimitiveProps {
+export interface Props extends PrimitiveProps {
   variant?: ButtonVariants["variant"];
   size?: ButtonVariants["size"];
   class?: HTMLAttributes["class"];
-  classes?: Partial<Record<"base" | "content", HTMLAttributes["class"]>>;
-  loading?: boolean;
-  disabled?: boolean;
 }
 
-const props = withDefaults(defineProps<ButtonProps>(), {
+const props = withDefaults(defineProps<Props>(), {
   as: "button",
 });
 </script>
@@ -23,33 +19,8 @@ const props = withDefaults(defineProps<ButtonProps>(), {
   <Primitive
     :as="as"
     :as-child="asChild"
-    :class="
-      cn(
-        'group',
-        buttonVariants({ variant, size }),
-        props.class,
-        props.classes?.base,
-      )
-    "
-    :disabled="disabled || loading"
-    :data-loading="loading"
+    :class="cn(buttonVariants({ variant, size }), props.class)"
   >
-    <div
-      class="flex items-center justify-center opacity-0 transition-opacity group-data-[loading=true]:opacity-100"
-    >
-      <slot name="loader">
-        <Loader class="animate-spin" />
-      </slot>
-    </div>
-    <div
-      :class="
-        cn(
-          'flex items-center justify-center gap-2 transition-opacity group-data-[loading=true]:opacity-0',
-          props.classes?.content,
-        )
-      "
-    >
-      <slot />
-    </div>
+    <slot />
   </Primitive>
 </template>

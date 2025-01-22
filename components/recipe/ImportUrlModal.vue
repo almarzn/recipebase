@@ -9,6 +9,7 @@ import { Progress } from "~/components/ui/progress";
 import { Recipes } from "~/lib/Recipes";
 import { toast } from "vue-sonner";
 import { Settings } from "~/lib/Settings";
+import { SpinnerButton } from "~/components/ui/button";
 
 const urlSchema = z.string().url("Must enter a valid URL");
 const open = defineModel<boolean>();
@@ -221,14 +222,14 @@ const hasApiKey = computed(() => {
         </div>
       </template>
       <DialogFooter>
-        <Button
+        <SpinnerButton
           :disabled="
             !(results.status === 'success' && (selection?.length ?? 0) > 0)
           "
           :loading="submitting"
           @click="createRecipes()"
           >Import {{ selection?.length }} recipes
-        </Button>
+        </SpinnerButton>
       </DialogFooter>
     </DialogContent>
   </Dialog>

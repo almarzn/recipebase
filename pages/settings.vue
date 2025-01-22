@@ -5,12 +5,13 @@ import { TabsContent } from "~/components/ui/tabs";
 import { Field, Form, useForm } from "vee-validate";
 import { Settings, settingsSchema } from "~/lib/Settings";
 import { toast } from "vue-sonner";
+import { SpinnerButton } from "~/components/ui/button";
 
 const client = useSupabaseClient();
 
 const settings = await useAsyncData(() => Settings.using(client).getSettings());
 
-const { meta, handleSubmit, isSubmitting } = useForm({
+const { meta, handleSubmit, isSubmitting, resetForm } = useForm({
   validationSchema: toTypedSchema(settingsSchema),
   initialValues: settings.data.value,
   validateOnMount: true,
@@ -21,6 +22,8 @@ const submitForm = handleSubmit(async (data) => {
     await Settings.using(client).updateSettings(data);
 
     toast.success("Settings saved!");
+
+    resetForm(data);
   } catch (e) {
     console.error(e);
 
@@ -48,9 +51,13 @@ const submitForm = handleSubmit(async (data) => {
         </FormItem>
       </FormField>
 
-      <Button type="submit" :disabled="!meta.dirty" :loading="isSubmitting">
+      <SpinnerButton
+        type="submit"
+        :disabled="!meta.dirty"
+        :loading="isSubmitting"
+      >
         Save changes
-      </Button>
+      </SpinnerButton>
     </form>
   </PageLayout>
 </template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Plus } from "lucide-vue-next";
-import type { ButtonVariants } from "~/components/ui/button";
+import { type ButtonVariants, SpinnerButton } from "~/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -70,14 +70,14 @@ const submit = async () => {
         <DialogClose as-child>
           <Button variant="outline">Cancel</Button>
         </DialogClose>
-        <Button
+        <SpinnerButton
           type="submit"
           :disabled="newBookProps.name.trim() === ''"
           :loading="loading"
           @click="submit()"
         >
           Create
-        </Button>
+        </SpinnerButton>
       </DialogFooter>
     </DialogContent>
   </Dialog>

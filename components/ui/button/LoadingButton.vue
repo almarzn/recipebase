@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { ButtonProps } from "~/components/ui/button/Button.vue";
+import SpinnerButton from "~/components/ui/button/SpinnerButton.vue";
 
 const { action, ...props } = defineProps<
   {
@@ -10,7 +11,7 @@ const loading = ref(false);
 </script>
 
 <template>
-  <Button
+  <SpinnerButton
     :loading
     v-bind="props"
     @click="
@@ -19,5 +20,5 @@ const loading = ref(false);
     "
   >
     <slot />
-  </Button>
+  </SpinnerButton>
 </template>

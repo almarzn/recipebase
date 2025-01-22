@@ -19,6 +19,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Form } from "vee-validate";
 import { slugify } from "~/lib/utils";
+import { SpinnerButton } from "~/components/ui/button";
 
 const { recipe } = defineProps<{ recipe: ExistingRecipe }>();
 
@@ -140,7 +141,7 @@ const submit = async (
           <StepsForm v-if="page.key === 'steps'" />
 
           <div class="flex gap-2">
-            <Button
+            <SpinnerButton
               type="submit"
               :loading="submitting"
               :disabled="!meta.dirty"
@@ -152,7 +153,7 @@ const submit = async (
             >
               Save changes
               <Check />
-            </Button>
+            </SpinnerButton>
           </div>
         </form>
       </Form>
