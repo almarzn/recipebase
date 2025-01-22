@@ -17,8 +17,11 @@ const avatarUrl = user.value?.user_metadata.avatar_url;
     class="px-5 py-3 text-sm max-md:border-b max-md:bg-gray-50/5 max-md:backdrop-blur-2xl md:px-7 md:py-5"
   >
     <div class="flex items-center justify-start gap-4">
-      <img src="/icon_white.svg" class="size-6" />
-      <div class="max-sm:hidden">Recipebase.co</div>
+      <NuxtLink to="/" class="flex items-center justify-start gap-4">
+        <img src="/icon_white.svg" class="size-6" alt="Log" />
+        <div class="max-sm:hidden">Recipebase.co</div>
+      </NuxtLink>
+
       <NuxtLink to="/recipes">Recipes</NuxtLink>
 
       <div class="grow" />
@@ -42,16 +45,19 @@ const avatarUrl = user.value?.user_metadata.avatar_url;
             <p class="text-muted-foreground">{{ user.email }}</p>
             <ul class="flex flex-col gap-2">
               <li>
-                <NuxtLink
-                  to="/settings"
-                  class="flex items-center gap-3 rounded-md px-3 py-1 hover:bg-gray-900"
-                >
-                  <UserCog class="size-5 stroke-muted-foreground" />
-                  Settings
-                </NuxtLink>
+                <SheetClose as-child>
+                  <NuxtLink
+                    to="/settings"
+                    class="flex items-center gap-3 rounded-md px-3 py-1 hover:bg-gray-900"
+                  >
+                    <UserCog class="size-5 stroke-muted-foreground" />
+                    Settings
+                  </NuxtLink>
+                </SheetClose>
               </li>
               <li
-                class="flex items-center gap-3 rounded-md px-3 py-1 hover:bg-gray-900"
+                class="flex cursor-pointer items-center gap-3 rounded-md px-3 py-1 hover:bg-gray-900"
+                @click="signOut()"
               >
                 <LogOut class="size-5 stroke-muted-foreground" />
                 Logout

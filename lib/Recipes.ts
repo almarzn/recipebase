@@ -22,6 +22,17 @@ export type ManyRecipeWithTags = {
 export class Recipes {
   private constructor(private readonly client: SupabaseClient<Database>) {}
 
+  async lastRecipes() {
+    const response = await this.client
+      .from("recipes")
+      .select("id, slug, name, tags(id, icon, color, text)")
+      .order("created_at", { ascending: false })
+      .limit(5)
+      .throwOnError();
+
+    return response.data ?? [];
+  }
+
   async findAllWithTags(
     query: RecipeQuery = {},
   ): Promise<ManyRecipeWithTags[] | null> {

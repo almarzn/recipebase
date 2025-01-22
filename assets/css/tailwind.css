@@ -83,7 +83,7 @@
   }
 
   .heading-4 {
-    @apply scroll-m-20 text-xl font-medium;
+    @apply scroll-m-20 text-base font-medium;
   }
 
   .bg-radial {
@@ -128,6 +128,10 @@
 
   .skeleton-h3 {
     @apply rounded-md my-2.5 h-3;
+  }
+
+  .skeleton-h5 {
+    @apply rounded-md my-2 h-2;
   }
 }
 

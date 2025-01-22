@@ -1,3 +1,10 @@
 <template>
-  <h3 class="heading-3">Hello</h3>
+  <PageLayout>
+    <UserHomePage />
+  </PageLayout>
 </template>
+
+<script setup lang="ts">
+import UserHomePage from "~/components/homepage/UserHomePage.vue";
+import PageLayout from "~/components/layout/PageLayout.vue";
+</script>

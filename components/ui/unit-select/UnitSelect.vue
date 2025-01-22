@@ -8,7 +8,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ingredientUnitSchema } from "~/types/recipe";
-import { Button } from "~/components/ui/button";
+import { LoaderButton } from "~/components/ui/button";
 import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 
 const model = defineModel<string>();
@@ -37,7 +37,7 @@ const formatter = computed(
   <Popover v-model:open="open">
     <PopoverTrigger as-child>
       <FormControl>
-        <Button
+        <LoaderButton
           variant="outline"
           :classes="{
             base: 'place-content-stretch',
@@ -52,7 +52,7 @@ const formatter = computed(
             }}
           </div>
           <ChevronsUpDown />
-        </Button>
+        </LoaderButton>
       </FormControl>
     </PopoverTrigger>
     <PopoverContent class="p-0">

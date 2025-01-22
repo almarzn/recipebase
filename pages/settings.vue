@@ -6,6 +6,7 @@ import { Field, Form, useForm } from "vee-validate";
 import { Settings, settingsSchema } from "~/lib/Settings";
 import { toast } from "vue-sonner";
 import { SpinnerButton } from "~/components/ui/button";
+import { AdaptiveBreadcrumbs } from "~/components/layout";
 
 const client = useSupabaseClient();
 
@@ -23,7 +24,9 @@ const submitForm = handleSubmit(async (data) => {
 
     toast.success("Settings saved!");
 
-    resetForm(data);
+    resetForm({
+      values: data,
+    });
   } catch (e) {
     console.error(e);
 
@@ -34,6 +37,10 @@ const submitForm = handleSubmit(async (data) => {
 
 <template>
   <PageLayout>
+    <AdaptiveBreadcrumbs
+      :items="[{ to: '/', text: 'Home' }, { text: 'Settings' }]"
+    />
+
     <h2>Settings</h2>
 
     <form class="flex flex-col items-start gap-4" @submit.prevent="submitForm">

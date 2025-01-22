@@ -16,12 +16,10 @@
       </BreadcrumbList>
     </Breadcrumb>
   </template>
-  <div v-else-if="lastLink" class="flex items-center gap-2">
-    <NuxtLink :to="lastLink">
-      <Button class="p-2" variant="ghost">
-        <ArrowLeft />
-      </Button>
-    </NuxtLink>
+  <div v-else class="flex items-center gap-2">
+    <Button class="p-2" variant="ghost" @click="router.back()">
+      <ArrowLeft />
+    </Button>
 
     <div>
       {{ currentPageText }}
@@ -49,6 +47,6 @@ const props = defineProps<{
 
 const breakpoints = useBreakpoints(breakpointsTailwind);
 
-const lastLink = computed(() => props.items.findLast((el) => el.to)?.to);
+const router = useRouter();
 const currentPageText = computed(() => last(props.items)?.text);
 </script>
