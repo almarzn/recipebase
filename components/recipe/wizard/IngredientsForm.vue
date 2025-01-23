@@ -33,6 +33,7 @@ const newIngredient = (props: Partial<Ingredient> = {}) => {
   return { unit: "arbitrary", id: v4(), ...props };
 };
 </script>
+
 <template>
   <FieldArray v-slot="{ fields, push, remove, move }" name="ingredients">
     <Label>Ingredients</Label>

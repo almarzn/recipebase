@@ -31,6 +31,7 @@ import { computed, ref } from "vue";
 import { Tags } from "~/lib/Tags";
 import RecipeTag from "~/components/recipe/RecipeTag.vue";
 import { keyBy } from "lodash";
+import TagSettingSheet from "~/components/profile/TagSettingSheet.vue";
 
 const open = ref(false);
 const searchTerm = ref("");
@@ -150,7 +151,14 @@ const tagsById = computed(() => keyBy(tags.data.value, "id"));
         </TagsInput>
       </FormControl>
       <FormDescription>
-        Tag this recipe to help you organize them.
+        Tag this recipe to help you organize them. Click
+        <TagSettingSheet @close-sheet="tags.refresh()">
+          <span
+            class="cursor-pointer text-foreground underline underline-offset-4"
+          >
+            here to edit tags
+          </span>
+        </TagSettingSheet>
       </FormDescription>
       <FormMessage />
     </FormItem>

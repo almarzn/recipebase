@@ -51,11 +51,7 @@ const updateTag = (id: string, value: boolean) => {
     :icon="SlidersHorizontal"
     sheet-title="Filter results"
   >
-    <Input
-      v-model="vModel!.text"
-      class="rounded-full"
-      placeholder="Search recipes"
-    />
+    <Input v-model="vModel!.text" placeholder="Search recipes" />
 
     <CollapsibleRoot
       class="group/collapsible flex flex-col gap-3 rounded-md"

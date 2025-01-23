@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { cn } from "~/lib/utils";
 import colors from "tailwindcss/colors";
+import { Primitive } from "radix-vue";
 
 const props = defineProps<{
   class?: string;
@@ -27,11 +28,15 @@ const props = defineProps<{
     | "fuchsia"
     | "pink"
     | "rose";
+  asChild?: boolean;
+  as?: string;
 }>();
 </script>
 
 <template>
-  <div
+  <Primitive
+    :as
+    :as-child
     :class="
       cn(
         'rounded-sm inline-flex items-center gap-1 px-2 py-0.5 text-xs border-[1px] border-solid',
@@ -45,5 +50,5 @@ const props = defineProps<{
     `"
   >
     <slot />
-  </div>
+  </Primitive>
 </template>
