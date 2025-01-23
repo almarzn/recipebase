@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Vuedraggable from "vuedraggable";
 import { FieldArray } from "vee-validate";
-import StepRow from "~/components/recipe/wizard/steps/StepRow.vue";
+import StepRow from "~/components/recipe/form/steps/StepRow.vue";
 import { PlusCircle } from "lucide-vue-next";
 import { v4 } from "uuid";
 

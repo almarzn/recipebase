@@ -3,7 +3,7 @@ import type { Database } from "~/types/database.types";
 import { Recipes } from "~/lib/Recipes";
 import { useSupabaseClient } from "#imports";
 import PageLayout from "~/components/layout/PageLayout.vue";
-import EditPage from "~/components/recipe/wizard/EditPage.vue";
+import EditPage from "~/components/recipe/form/EditPage.vue";
 import { AdaptiveBreadcrumbs } from "~/components/layout";
 
 const route = useRoute("recipes-slug-edit");

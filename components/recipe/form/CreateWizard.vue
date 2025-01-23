@@ -3,11 +3,6 @@ import { toTypedSchema } from "@vee-validate/zod";
 import { type RecipePayload, recipePayload } from "~/types/recipe";
 import { Form } from "vee-validate";
 import {
-  GeneralForm,
-  IngredientsForm,
-  StepsForm,
-} from "~/components/recipe/wizard";
-import {
   ArrowRight,
   Check,
   Cog,
@@ -21,6 +16,9 @@ import { toast } from "vue-sonner";
 import { slugify } from "~/lib/utils";
 import LoadingButton from "~/components/ui/button/LoadingButton.vue";
 import { SpinnerButton } from "~/components/ui/button";
+import GeneralForm from "~/components/recipe/form/GeneralForm.vue";
+import IngredientsForm from "~/components/recipe/form/IngredientsForm.vue";
+import StepsForm from "~/components/recipe/form/steps/StepsForm.vue";
 
 const emits = defineEmits(["create"]);
 

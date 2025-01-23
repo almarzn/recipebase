@@ -102,7 +102,6 @@ const apiKey = await useAsyncData(async () =>
 );
 
 const hasApiKey = computed(() => {
-  console.log(apiKey.data.value);
   return apiKey.data.value;
 });
 </script>

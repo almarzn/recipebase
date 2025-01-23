@@ -7,12 +7,7 @@ import {
   CollapsibleRoot,
   CollapsibleTrigger,
 } from "radix-vue";
-import {
-  ChevronsUpDown,
-  LucideTags,
-  CheckIcon,
-  SlidersHorizontal,
-} from "lucide-vue-next";
+import { CheckIcon, ChevronsUpDown, SlidersHorizontal } from "lucide-vue-next";
 import Input from "~/components/ui/input/Input.vue";
 import TagIcon from "~/components/recipe/TagIcon.vue";
 import { useVModel } from "@vueuse/core";
@@ -32,7 +27,7 @@ const vModel = useVModel(props, "modelValue", emit, {
 
 const client = useSupabaseClient();
 
-const { data: allTags, status } = await useAsyncData("tagsWithCount", () =>
+const { data: allTags } = await useAsyncData("tagsWithCount", () =>
   Tags.using(client).findAllWithRecipeCount(),
 );
 

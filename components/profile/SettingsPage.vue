@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { AdaptiveBreadcrumbs } from "~/components/layout";
 import { SpinnerButton } from "~/components/ui/button";
-import { Form, useForm } from "vee-validate";
+import { useForm } from "vee-validate";
 import { Settings, settingsSchema } from "~/lib/Settings";
 import { toTypedSchema } from "@vee-validate/zod";
 import { toast } from "vue-sonner";

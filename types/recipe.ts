@@ -32,6 +32,13 @@ export const ingredientUnitSchema = z.enum([
   "arbitrary",
 ]);
 
+export const servingsSchema = z.object({
+  amount: z.number().positive(),
+  notes: z.string().optional(),
+});
+
+export type RecipeServings = z.infer<typeof servingsSchema>;
+
 export type IngredientUnit = z.infer<typeof ingredientUnitSchema>;
 
 export const ingredientSchema = z.object({
@@ -69,6 +76,7 @@ export const recipePayload = z.object({
   ingredients: ingredientFieldSchema,
   steps: z.array(stepSchema),
   tags: z.array(z.string()),
+  servings: servingsSchema.or(z.null()),
 });
 
 export const existingRecipeSchema = recipePayload.extend({

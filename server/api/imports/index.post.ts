@@ -48,6 +48,10 @@ const responseFormat = z.object({
             }),
           ),
       ),
+      servings: z.object({
+        amount: z.number(),
+        notes: z.string().or(z.null()),
+      }),
       steps: z.array(
         z.object({
           text: z.string(),
@@ -108,11 +112,12 @@ const extractRecipesFromMarkdown = async (
   ) as z.infer<typeof responseFormat>;
   return recipes;
 };
+
 const addIds = (
   recipes: Awaited<ReturnType<typeof extractRecipesFromMarkdown>>,
 ) => {
   return recipes.map(
-    ({ ingredients, steps, ...recipe }): RecipePayload => ({
+    ({ ingredients, steps, servings, ...recipe }): RecipePayload => ({
       ingredients: ingredients.map((ingredient) => ({
         id: v4(),
         ...("separate" in ingredient
@@ -128,6 +133,10 @@ const addIds = (
       })),
       steps: steps.map((step) => ({ ...step, id: v4() })),
       tags: [],
+      servings: {
+        amount: servings.amount,
+        notes: servings.notes ?? undefined,
+      },
       ...recipe,
     }),
   );

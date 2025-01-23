@@ -1,4 +1,5 @@
 import type { IngredientUnit } from "~/types/recipe";
+
 type Format = Record<Style, string>;
 
 const defaultF = (unit: { long: string; short: string }): Format => ({
@@ -185,7 +186,13 @@ export const getUnitByShort = (short: string) => {
   return allUnits.find((it) => it.format.short === short)?.name;
 };
 
-export class UnitFormatter {
+interface IUnitFormatter {
+  formatUnit(name: IngredientUnit): string;
+
+  formatQuantity(quantity: number, name: IngredientUnit | undefined): string;
+}
+
+export class UnitFormatter implements IUnitFormatter {
   constructor(
     private readonly options: {
       style: Style;
@@ -237,5 +244,20 @@ export class UnitFormatter {
     }
 
     return quantity.toLocaleString();
+  }
+}
+
+export class ScalingFormatter implements IUnitFormatter {
+  constructor(
+    private readonly formatter: IUnitFormatter,
+    private readonly multiplier: number,
+  ) {}
+
+  formatQuantity(quantity: number, name: IngredientUnit | undefined): string {
+    return this.formatter.formatQuantity(quantity * this.multiplier, name);
+  }
+
+  formatUnit(name: IngredientUnit): string {
+    return this.formatter.formatUnit(name);
   }
 }

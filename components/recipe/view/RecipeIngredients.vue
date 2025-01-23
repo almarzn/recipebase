@@ -1,7 +1,11 @@
 <template>
   <div class="flex h-full min-w-56 basis-56 flex-col gap-6">
     <h3 class="heading-3 max-lg:hidden">Ingredients</h3>
-
+    <RecipeServingsFragment
+      v-if="recipe.servings !== null"
+      v-model="quantityMultiplier"
+      :servings="recipe.servings"
+    />
     <div class="sticky top-4 flex flex-col gap-6">
       <CollapsibleRoot
         v-for="group in groupedBySeparators"
@@ -13,7 +17,7 @@
           v-if="group.label"
           class="flex items-center justify-between"
         >
-          <div class="text-xs uppercase text-muted-foreground">
+          <div class="text-start text-xs uppercase text-muted-foreground">
             {{ group.label }}
           </div>
           <ChevronsUpDown
@@ -55,7 +59,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { UnitFormatter } from "~/lib/Unit";
+import { ScalingFormatter, UnitFormatter } from "~/lib/Unit";
 import type { Ingredient, RecipeDetails } from "~/types/recipe";
 import { v4 } from "uuid";
 import { initial, last } from "lodash";
@@ -65,14 +69,23 @@ import {
   CollapsibleTrigger,
 } from "radix-vue";
 import { ChevronsUpDown } from "lucide-vue-next";
+import RecipeServingsFragment from "~/components/recipe/view/RecipeServingsFragment.vue";
 
 const props = defineProps<{
-  recipe: Pick<RecipeDetails, "ingredients">;
+  recipe: Pick<RecipeDetails, "ingredients" | "servings">;
 }>();
 
-const formatter = new UnitFormatter({
-  style: "short",
-});
+const quantityMultiplier = ref(props.recipe.servings?.amount ?? 1);
+
+const formatter = computed(
+  () =>
+    new ScalingFormatter(
+      new UnitFormatter({
+        style: "short",
+      }),
+      quantityMultiplier.value / (props.recipe.servings?.amount ?? 1),
+    ),
+);
 
 const groupedBySeparators = computed(() =>
   props.recipe.ingredients.reduce(

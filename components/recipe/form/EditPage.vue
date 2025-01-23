@@ -8,18 +8,25 @@ import {
   type RecipePayload,
   recipePayload,
 } from "~/types/recipe";
-import { Check, Cog, CookingPot, ShoppingBasket } from "lucide-vue-next";
+import {
+  Check,
+  Cog,
+  CookingPot,
+  ShoppingBasket,
+  Utensils,
+} from "lucide-vue-next";
 import { toast } from "vue-sonner";
 import { toTypedSchema } from "@vee-validate/zod";
 import {
   GeneralForm,
   IngredientsForm,
   StepsForm,
-} from "~/components/recipe/wizard/index";
+} from "~/components/recipe/form/index";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Form } from "vee-validate";
 import { slugify } from "~/lib/utils";
 import { SpinnerButton } from "~/components/ui/button";
+import ServingsForm from "~/components/recipe/form/ServingsForm.vue";
 
 const { recipe } = defineProps<{ recipe: ExistingRecipe }>();
 
@@ -62,6 +69,14 @@ const pages = computed(() => {
         ingredients: true,
       }),
       icon: ShoppingBasket,
+    },
+    {
+      key: "servings",
+      title: "Servings",
+      schema: recipePayload.pick({
+        servings: true,
+      }),
+      icon: Utensils,
     },
     {
       key: "steps",
@@ -139,6 +154,7 @@ const submit = async (
           <GeneralForm v-if="page.key === 'general'" />
           <IngredientsForm v-if="page.key === 'ingredients'" />
           <StepsForm v-if="page.key === 'steps'" />
+          <ServingsForm v-if="page.key === 'servings'" />
 
           <div class="flex gap-2">
             <SpinnerButton
