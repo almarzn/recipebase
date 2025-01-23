@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { UserCog, LogOut } from "lucide-vue-next";
+import SearchRecipe from "~/components/recipe/SearchRecipe.vue";
 
 const user = useSupabaseUser();
 
@@ -10,13 +11,15 @@ const signOut = async () => {
   if (error) console.log(error);
 };
 const avatarUrl = user.value?.user_metadata.avatar_url;
+
+const route = useRoute();
 </script>
 
 <template>
   <div
     class="px-5 py-3 text-sm max-md:border-b max-md:bg-gray-50/5 max-md:backdrop-blur-2xl md:px-7 md:py-5"
   >
-    <div class="flex items-center justify-start gap-4">
+    <div class="flex items-center justify-start gap-3 md:gap-8">
       <NuxtLink to="/" class="flex items-center justify-start gap-4">
         <img src="/icon_white.svg" class="size-6" alt="Log" />
         <div class="max-sm:hidden">Recipebase.co</div>
@@ -25,6 +28,8 @@ const avatarUrl = user.value?.user_metadata.avatar_url;
       <NuxtLink to="/recipes">Recipes</NuxtLink>
 
       <div class="grow" />
+
+      <SearchRecipe v-if="route.name !== 'index'" />
 
       <template v-if="user">
         <Sheet>

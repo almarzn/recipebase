@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import type { ButtonProps } from "~/components/ui/button/Button.vue";
 import SpinnerButton from "~/components/ui/button/SpinnerButton.vue";
+import type { Props } from "~/components/ui/button/Button.vue";
 
 const { action, ...props } = defineProps<
   {
     action: () => Promise<unknown>;
-  } & Omit<ButtonProps, "loading">
+  } & Omit<Props, "loading">
 >();
 const loading = ref(false);
 </script>

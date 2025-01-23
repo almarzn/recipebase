@@ -33,6 +33,15 @@ export class Recipes {
     return response.data ?? [];
   }
 
+  async findAllRecipeItems() {
+    const response = await this.client
+      .from("recipes")
+      .select("id, slug, name")
+      .throwOnError();
+
+    return response.data ?? [];
+  }
+
   async findAllWithTags(
     query: RecipeQuery = {},
   ): Promise<ManyRecipeWithTags[] | null> {
