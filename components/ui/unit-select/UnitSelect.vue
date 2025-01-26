@@ -37,7 +37,7 @@ const formatter = computed(
   <Popover v-model:open="open">
     <PopoverTrigger as-child>
       <FormControl>
-        <SpinnerButton
+        <Button
           variant="outline"
           :classes="{
             base: 'place-content-stretch',
@@ -52,7 +52,7 @@ const formatter = computed(
             }}
           </div>
           <ChevronsUpDown />
-        </SpinnerButton>
+        </Button>
       </FormControl>
     </PopoverTrigger>
     <PopoverContent class="p-0">

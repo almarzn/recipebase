@@ -5,13 +5,20 @@ import type { RecipePayload } from "~/types/recipe";
 import { ingredientUnitSchema } from "~/types/recipe";
 import TurndownService from "turndown";
 import { v4 } from "uuid";
-import { serverSupabaseClient } from "#supabase/server";
 import type { H3Event } from "h3";
 import { Settings } from "~/lib/Settings";
+import { serverSupabaseClient } from "#supabase/server";
+import type { ChatCompletionContentPart } from "openai/resources/chat/completions";
 
-const payloadSchema = z.object({
-  url: z.string().url(),
-});
+const payloadSchema = z
+  .object({
+    url: z.string().url(),
+  })
+  .or(
+    z.object({
+      text: z.string(),
+    }),
+  );
 
 const turndownService = new TurndownService();
 turndownService.remove("nav");
@@ -62,14 +69,47 @@ const responseFormat = z.object({
   ),
 });
 
-const getMarkdownFromUrl = async (event: H3Event) => {
-  const payload = await readValidatedBody(event, (val) =>
-    payloadSchema.parse(val),
+const getInputContent = async (
+  event: H3Event,
+): Promise<ChatCompletionContentPart> => {
+  if (
+    getRequestHeader(event, "content-type")?.startsWith("multipart/form-data")
+  ) {
+    const [file] = (await readMultipartFormData(event))!;
+
+    if (file.data.length > 5_000_000) {
+      throw new Error("Max file size 5MB");
+    }
+
+    if (file.name !== "image") {
+      throw new Error("Can only form data image");
+    }
+
+    return {
+      type: "image_url",
+      image_url: {
+        url: `data:${file.type};base64,` + file.data.toString("base64"),
+      },
+    };
+  }
+
+  const payload = await readValidatedBody(event, (data) =>
+    payloadSchema.parse(data),
   );
+
+  if ("text" in payload) {
+    return {
+      type: "text",
+      text: payload.text,
+    };
+  }
 
   const body = await $fetch<string>(payload.url);
 
-  return turndownService.turndown(body);
+  return {
+    type: "text",
+    text: turndownService.turndown(body),
+  };
 };
 
 const getOpenAi = async (event: H3Event) => {
@@ -89,20 +129,21 @@ const getOpenAi = async (event: H3Event) => {
   });
 };
 
-const extractRecipesFromMarkdown = async (
+const extractRecipes = async (
   openai: OpenAI,
-  markdownBody: string,
+  model: string,
+  content: ChatCompletionContentPart,
 ) => {
   const storage = useStorage("data");
 
   const completion = await openai.beta.chat.completions.parse({
-    model: "gpt-4o",
+    model,
     messages: [
       {
         role: "system",
         content: (await storage.getItem("prompt.md")) as string,
       },
-      { role: "user", content: markdownBody },
+      { role: "user", content: [content] },
     ],
     response_format: zodResponseFormat(responseFormat, "recipe_extraction"),
   });
@@ -110,12 +151,11 @@ const extractRecipesFromMarkdown = async (
   const { recipes } = JSON.parse(
     completion.choices[0].message.content!,
   ) as z.infer<typeof responseFormat>;
+
   return recipes;
 };
 
-const addIds = (
-  recipes: Awaited<ReturnType<typeof extractRecipesFromMarkdown>>,
-) => {
+const addIds = (recipes: Awaited<ReturnType<typeof extractRecipes>>) => {
   return recipes.map(
     ({ ingredients, steps, servings, ...recipe }): RecipePayload => ({
       ingredients: ingredients.map((ingredient) => ({
@@ -143,11 +183,15 @@ const addIds = (
 };
 
 export default defineEventHandler(async (event) => {
-  const markdownBody = await getMarkdownFromUrl(event);
+  const content = await getInputContent(event);
 
   const openai = await getOpenAi(event);
 
-  const recipes = await extractRecipesFromMarkdown(openai, markdownBody);
+  const recipes = await extractRecipes(
+    openai,
+    getQuery(event).model ?? "gpt-4o-mini",
+    content,
+  );
 
   return {
     recipes: addIds(recipes),

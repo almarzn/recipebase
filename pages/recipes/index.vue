@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { Database } from "~/types/database.types";
-import { BadgePlus, Globe, Image, Plus } from "lucide-vue-next";
+import { BadgePlus, Globe, ScanText, PencilLine, Plus } from "lucide-vue-next";
 import { type RecipeQuery, Recipes } from "~/lib/Recipes";
 import PageLayout from "~/components/layout/PageLayout.vue";
 import { AdaptiveBreadcrumbs } from "~/components/layout";
 import { ErrorStatus } from "~/components/ui/status";
-import ImportUrlModal from "~/components/recipe/ImportUrlModal.vue";
+import ImportUrlModal from "~/components/recipe/import/ImportPage.vue";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,8 +34,6 @@ const { data: recipes, status } = await useAsyncData(
     watch: [query],
   },
 );
-
-const importing = ref<"url" | "image">();
 </script>
 
 <template>
@@ -53,11 +51,6 @@ const importing = ref<"url" | "image">();
         ]"
       />
       <div class="flex flex-wrap items-stretch gap-3">
-        <ImportUrlModal
-          :model-value="importing === 'url'"
-          @update:model-value="importing = undefined"
-          @create="refreshNuxtData('recipes')"
-        />
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Button>
@@ -72,7 +65,7 @@ const importing = ref<"url" | "image">();
               }"
             >
               <DropdownMenuItem>
-                <BadgePlus />
+                <PencilLine />
                 <div class="flex flex-col">
                   <div class="flex items-center">Create manually</div>
                   <div class="text-xs text-muted-foreground">
@@ -82,25 +75,24 @@ const importing = ref<"url" | "image">();
                 </div>
               </DropdownMenuItem>
             </NuxtLink>
-            <DropdownMenuItem @click="importing = 'url'">
-              <Globe />
-              <div class="flex flex-col">
-                <div class="flex items-center">Import from webpage</div>
-                <div class="text-xs text-muted-foreground">
-                  Paste any link pointing to a recipe and add it to your
-                  recipes. You will then be able to edit it.
+            <NuxtLink
+              :to="{
+                name: 'import',
+              }"
+            >
+              <DropdownMenuItem>
+                <ScanText />
+                <div class="flex flex-col">
+                  <div class="flex items-center">
+                    Import from an image, a text or a webpage
+                  </div>
+                  <div class="text-xs text-muted-foreground">
+                    Add your recipes directly from an external source right
+                    here. We use a LLM to scan the page and import these.
+                  </div>
                 </div>
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuItem @click="importing = 'image'">
-              <Image />
-              <div class="flex flex-col">
-                <div class="flex items-center">Import from image</div>
-                <div class="text-xs text-muted-foreground">
-                  Upload a picture from a book and use it to get started!
-                </div>
-              </div>
-            </DropdownMenuItem>
+              </DropdownMenuItem>
+            </NuxtLink>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

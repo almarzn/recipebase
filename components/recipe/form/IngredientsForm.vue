@@ -38,11 +38,11 @@ const newIngredient = (props: Partial<Ingredient> = {}) => {
   <FieldArray v-slot="{ fields, push, remove, move }" name="ingredients">
     <Label>Ingredients</Label>
     <div
-      class="flex flex-col gap-2 rounded-md border bg-card/10 text-card-foreground backdrop-blur"
+      class="flex flex-col gap-2 border bg-card/10 text-card-foreground backdrop-blur max-md:-mx-4 md:rounded-md"
     >
       <div
         v-if="fields.length === 0"
-        class="flex min-h-64 grow flex-col items-center justify-center gap-2"
+        class="lex min-h-64 grow flex-col items-center justify-center gap-2"
       >
         <div
           class="max-w-44 text-center text-base font-semibold text-muted-foreground"
@@ -65,7 +65,7 @@ const newIngredient = (props: Partial<Ingredient> = {}) => {
         :list="fields"
         item-key="id"
         handle=".handle"
-        class="grid min-h-64 grid-cols-[auto_auto_auto_1fr_auto_20px_auto] place-items-center content-start gap-2 px-4 pt-4"
+        class="grid min-h-64 grid-cols-[auto_auto_auto_1fr_auto_20px_auto] place-items-center content-start gap-2 overflow-auto px-4 pt-4"
         :animation="300"
         ghost-class="opacity-50"
         drag-class="bg-[#060715]"
@@ -130,7 +130,6 @@ const newIngredient = (props: Partial<Ingredient> = {}) => {
               </div>
 
               <IngredientInput
-                class=""
                 :name="`ingredients[${index}]`"
                 @delete="remove(index)"
               />

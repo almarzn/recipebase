@@ -1,6 +1,11 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "~/types/database.types";
-import type { RecipeDetails, RecipePayload, TagProps } from "~/types/recipe";
+import type {
+  RecipeDetails,
+  RecipeDetailsSaved,
+  RecipePayload,
+  TagProps,
+} from "~/types/recipe";
 import {
   ingredientFieldSchema,
   servingsSchema,
@@ -8,7 +13,7 @@ import {
 } from "~/types/recipe";
 import { slugify } from "~/lib/utils";
 import { z } from "zod";
-import { omit } from "lodash";
+import { head, omit } from "lodash";
 
 export interface RecipeQuery {
   tags?: string[];
@@ -107,17 +112,17 @@ export class Recipes {
     };
   }
 
-  async getBySlugWithTags(slug: string): Promise<RecipeDetails | null> {
-    const { data } = await this.client
+  async getBySlugWithTags(slug: string): Promise<RecipeDetailsSaved | null> {
+    const { data: result } = await this.client
       .from("recipes")
-      .select("*, tags(id, text, color, icon)")
-      .eq("slug", slug);
+      .select("*, tags(id, text, color, icon), last_recipe_servings(value)")
+      .eq("slug", slug)
+      .throwOnError()
+      .maybeSingle();
 
-    if (!data || data?.length === 0) {
+    if (!result) {
       return null;
     }
-
-    const result = data[0];
 
     return {
       id: result.id,
@@ -127,6 +132,9 @@ export class Recipes {
       description: result.description ?? undefined,
       servings: servingsSchema.or(z.null()).parse(result.servings),
       tags: result.tags,
+      saved: {
+        servings: head(result.last_recipe_servings)?.value ?? undefined,
+      },
     };
   }
 
@@ -167,13 +175,18 @@ export class Recipes {
   }
 
   async create(props: RecipePayload) {
-    await this.client.from("recipes").insert({
-      name: props.name,
-      slug: slugify(props.name),
-      description: props.description,
-      steps: props.steps,
-      ingredients: props.ingredients,
-      servings: props.servings,
-    });
+    await this.client
+      .from("recipes")
+      .insert({
+        name: props.name,
+        slug: slugify(props.name),
+        description: props.description,
+        steps: props.steps,
+        ingredients: props.ingredients,
+        servings: props.servings,
+      })
+      .throwOnError();
+
+    return slugify(props.name);
   }
 }

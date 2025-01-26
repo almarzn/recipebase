@@ -11,11 +11,13 @@ export interface SpinnerButtonProps extends Props {
   disabled?: boolean;
 }
 
-defineProps<SpinnerButtonProps>();
+const { classes, loading, disabled, ...props } =
+  defineProps<SpinnerButtonProps>();
 </script>
 
 <template>
   <Button
+    v-bind="props"
     :class="
       cn(
         `grid-stack inline-grid place-content-center group`,

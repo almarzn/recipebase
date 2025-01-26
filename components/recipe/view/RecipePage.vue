@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import type { RecipeDetails } from "~/types/recipe";
+import type { RecipeDetails, RecipeDetailsSaved } from "~/types/recipe";
 import RecipeTag from "~/components/recipe/RecipeTag.vue";
 import RecipeStep from "~/components/recipe/view/RecipeStep.vue";
 import RecipeIngredients from "~/components/recipe/view/RecipeIngredients.vue";
 import { useComments } from "~/components/recipe/view/useComments";
-import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
+import {
+  breakpointsTailwind,
+  debouncedWatch,
+  useBreakpoints,
+} from "@vueuse/core";
 import AdaptiveSheet from "~/components/ui/sheet/AdaptiveSheet.vue";
 import { ShoppingBasket } from "lucide-vue-next";
 
 const props = defineProps<{
-  recipe: RecipeDetails;
+  recipe: RecipeDetailsSaved;
 }>();
 
 const commentContainer = useTemplateRef("commentContainer");
@@ -24,12 +28,35 @@ const breakpoints = useBreakpoints(breakpointsTailwind);
 const commentLayout = computed(() =>
   breakpoints.greaterOrEqual("lg").value ? "side" : "none",
 );
+
+const quantityMultiplier = ref(
+  props.recipe.saved.servings ?? props.recipe.servings?.amount ?? 1,
+);
+
+const client = useSupabaseClient();
+
+debouncedWatch(
+  quantityMultiplier,
+  (value) => {
+    client
+      .from("last_recipe_servings")
+      .upsert({
+        recipe_id: props.recipe.id,
+        value: value,
+      })
+      .throwOnError()
+      .then(() => {});
+  },
+  {
+    debounce: 1000,
+  },
+);
 </script>
 
 <template>
   <div class="flex grow gap-4 max-md:flex-col md:gap-6 lg:gap-12 2xl:gap-14">
     <AdaptiveSheet sheet-title="Ingredients" :icon="ShoppingBasket">
-      <RecipeIngredients :recipe />
+      <RecipeIngredients v-model="quantityMultiplier" :recipe />
     </AdaptiveSheet>
 
     <div

@@ -35,6 +35,7 @@
     "prettier": "^3.4.2",
     "radix-vue": "^1.9.11",
     "shadcn-nuxt": "^0.11.3",
+    "show-open-file-picker": "^0.2.2",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "turndown": "^7.2.0",

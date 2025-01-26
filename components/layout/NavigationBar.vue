@@ -5,5 +5,5 @@ const user = useSupabaseUser();
 </script>
 
 <template>
-  <UserNavigationBar v-if="!user" />
+  <UserNavigationBar v-if="user" />
 </template>

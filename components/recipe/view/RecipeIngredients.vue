@@ -60,7 +60,7 @@
 </template>
 <script setup lang="ts">
 import { ScalingFormatter, UnitFormatter } from "~/lib/Unit";
-import type { Ingredient, RecipeDetails } from "~/types/recipe";
+import type { Ingredient, RecipeDetailsSaved } from "~/types/recipe";
 import { v4 } from "uuid";
 import { initial, last } from "lodash";
 import {
@@ -71,11 +71,13 @@ import {
 import { ChevronsUpDown } from "lucide-vue-next";
 import RecipeServingsFragment from "~/components/recipe/view/RecipeServingsFragment.vue";
 
-const props = defineProps<{
-  recipe: Pick<RecipeDetails, "ingredients" | "servings">;
-}>();
+const quantityMultiplier = defineModel<number>({
+  default: 1,
+});
 
-const quantityMultiplier = ref(props.recipe.servings?.amount ?? 1);
+const props = defineProps<{
+  recipe: Pick<RecipeDetailsSaved, "ingredients" | "servings" | "saved" | "id">;
+}>();
 
 const formatter = computed(
   () =>

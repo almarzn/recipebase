@@ -6,6 +6,7 @@ import { NotepadText, Trash2 } from "lucide-vue-next";
 import { UnitSelect } from "~/components/ui/unit-select";
 import { Textarea } from "~/components/ui/textarea";
 import IconBadge from "~/components/ui/icon-badge/IconBadge.vue";
+import { IngredientInput } from "~/components/ui/ingredient-input/index";
 
 defineEmits(["delete"]);
 defineProps<{ name: string; as?: string }>();
@@ -22,7 +23,11 @@ defineProps<{ name: string; as?: string }>();
     <Field v-slot="{ componentField }" :name="`${name}.name`">
       <FormItem class="space-y-0">
         <FormControl class="group">
-          <Input v-bind="componentField" placeholder="Name of the ingredient" />
+          <Input
+            v-bind="componentField"
+            placeholder="Name of the ingredient"
+            class="min-w-52"
+          />
         </FormControl>
         <FormMessage />
       </FormItem>

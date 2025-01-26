@@ -13,10 +13,10 @@ import {
 } from "radix-vue";
 import type { RecipeServings } from "~/types/recipe";
 import {
-  HashIcon,
-  PercentIcon,
   ChevronRightIcon,
   ChevronUpIcon,
+  HashIcon,
+  PercentIcon,
 } from "lucide-vue-next";
 import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
 import type { NumberFormatOptions } from "@internationalized/number";
@@ -66,7 +66,7 @@ const currentType = () => typeOptions[type.value];
 <template>
   <CollapsibleRoot
     v-slot="{ open }"
-    class="group rounded-md border border-gray-700/20 px-3 py-2 data-[active=true]:border-gray-700/20 data-[active=true]:bg-gray-900"
+    class="group rounded-md border px-3 py-2 data-[active=true]:border-gray-700/20 data-[active=true]:bg-gray-900"
     :data-active="modelValue !== servings.amount"
   >
     <CollapsibleTrigger class="flex w-full gap-1 text-xs">
@@ -122,6 +122,15 @@ const currentType = () => typeOptions[type.value];
       </NumberField>
 
       <p class="text-xs text-muted-foreground">{{ servings.notes }}</p>
+
+      <Button
+        variant="outline"
+        class="h-auto self-end bg-transparent p-1 text-xs"
+        :disabled="model === props.servings.amount"
+        @click="model = props.servings.amount"
+      >
+        Reset
+      </Button>
     </CollapsibleContent>
   </CollapsibleRoot>
 </template>

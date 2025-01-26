@@ -9,7 +9,8 @@ export const settingsSchema = z.object({
   openai_api_key: z
     .string()
     .startsWith("sk-", "API key should start with sk-")
-    .optional(),
+    .optional()
+    .or(z.literal("")),
 });
 
 export class Settings {

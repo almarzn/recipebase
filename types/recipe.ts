@@ -94,4 +94,13 @@ export type RecipeDetails = Omit<RecipePayload, "tags"> & {
   id: string;
   tags: TagProps[];
 };
+
+export type RecipeDetailsSaved = Omit<RecipePayload, "tags"> & {
+  id: string;
+  tags: TagProps[];
+  saved: {
+    servings?: number;
+  };
+};
+
 export type ExistingRecipe = z.infer<typeof existingRecipeSchema>;

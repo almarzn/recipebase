@@ -71,9 +71,6 @@ const route = useRoute();
           </SheetContent>
         </Sheet>
       </template>
-      <Button variant="default" as-child>
-        <NuxtLink to="/login">Login</NuxtLink>
-      </Button>
     </div>
   </div>
 </template>

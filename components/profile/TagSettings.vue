@@ -184,7 +184,7 @@ const deleteTag = async (id: string) => {
           />
           <SmilePlusIcon
             v-else
-            class="size-4 stroke-muted-foreground opacity-0 group-hover/tag-row:opacity-100"
+            class="size-4 stroke-muted-foreground hover-hover:opacity-0 hover-hover:group-hover/tag-row:opacity-100"
           />
         </PopoverTrigger>
         <PopoverContent class="flex flex-col gap-4">
