@@ -122,4 +122,8 @@ const latestRecipes = await useAsyncData(
   async () => await Recipes.using(client).lastRecipes(),
   { lazy: true },
 );
+
+useHead({
+  title: "Welcome",
+});
 </script>

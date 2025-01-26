@@ -49,4 +49,8 @@ const breakpoints = useBreakpoints(breakpointsTailwind);
 
 const router = useRouter();
 const currentPageText = computed(() => last(props.items)?.text);
+
+useHead({
+  title: computed(() => currentPageText.value ?? ""),
+});
 </script>

@@ -13,4 +13,8 @@
 <script setup lang="ts">
 import { Toaster } from "@/components/ui/sonner";
 import NavigationBar from "~/components/layout/NavigationBar.vue";
+
+useHead({
+  titleTemplate: (str) => (str ? `${str} | Recipebase` : "Recipebase"),
+});
 </script>
