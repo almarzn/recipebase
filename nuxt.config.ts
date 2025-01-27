@@ -34,4 +34,14 @@ export default defineNuxtConfig({
     },
   },
   components: false,
+  runtimeConfig: {
+    public: {
+      turnstileKey: "1x00000000000000000000AA",
+    },
+  },
+  supabase: {
+    cookieOptions: {
+      secure: process.env.NODE_ENV === "production",
+    },
+  },
 });

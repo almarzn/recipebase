@@ -133,6 +133,10 @@
   .skeleton-h5 {
     @apply rounded-md my-2 h-2;
   }
+
+  .surface-1 {
+    @apply backdrop-blur-2xl bg-gray-800/20;
+  }
 }
 
 @layer utilities {

@@ -65,41 +65,50 @@
       <Button
         class="flex h-auto items-center gap-3 whitespace-normal px-5 py-3 text-start"
         variant="outline"
+        as-child
       >
-        <TabletSmartphone />
-        <div class="flex flex-col">
-          <h5>Import a recipe from webpage</h5>
-          <p class="text-xs text-muted-foreground">
-            Create a new recipe by importing it from any webpage. Recipebase
-            will extract the details and add them right here!
-          </p>
-        </div>
+        <NuxtLink to="/import">
+          <TabletSmartphone />
+          <div class="flex flex-col">
+            <h5>Import a recipe from webpage</h5>
+            <p class="text-xs text-muted-foreground">
+              Create a new recipe by importing it from any webpage. Recipebase
+              will extract the details and add them right here!
+            </p>
+          </div>
+        </NuxtLink>
       </Button>
       <Button
         class="flex h-auto items-center gap-3 whitespace-normal px-5 py-3 text-start"
         variant="outline"
+        as-child
       >
-        <BookImage />
-        <div class="flex grow flex-col">
-          <h5>Import a recipe from a picture</h5>
-          <p class="text-xs text-muted-foreground">
-            Found an awesome recipe in a book? Just take a picture and import it
-            into your recipes!
-          </p>
-        </div>
+        <NuxtLink to="/import">
+          <BookImage />
+          <div class="flex grow flex-col">
+            <h5>Import a recipe from a picture</h5>
+            <p class="text-xs text-muted-foreground">
+              Found an awesome recipe in a book? Just take a picture and import
+              it into your recipes!
+            </p>
+          </div>
+        </NuxtLink>
       </Button>
       <Button
         class="flex h-auto items-center gap-3 whitespace-normal px-5 py-3 text-start"
         variant="outline"
+        as-child
       >
-        <PencilLine />
-        <div class="flex grow flex-col">
-          <h5>Create a new recipe step-by-step</h5>
-          <p class="text-xs text-muted-foreground">
-            Have a recipe in your mind? Create it by following our user-friendly
-            wizard.
-          </p>
-        </div>
+        <NuxtLink to="/create-recipe">
+          <PencilLine />
+          <div class="flex grow flex-col">
+            <h5>Create a new recipe step-by-step</h5>
+            <p class="text-xs text-muted-foreground">
+              Have a recipe in your mind? Create it by following our
+              user-friendly wizard.
+            </p>
+          </div>
+        </NuxtLink>
       </Button>
     </div>
   </div>

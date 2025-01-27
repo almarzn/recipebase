@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { UserCog, LogOut } from "lucide-vue-next";
+import { UserCog, LogOut, User } from "lucide-vue-next";
 import SearchRecipe from "~/components/recipe/SearchRecipe.vue";
 
 const user = useSupabaseUser();
@@ -39,6 +39,7 @@ const route = useRoute();
                 <div v-if="avatarUrl" class="w-6 overflow-hidden rounded-full">
                   <NuxtImg :src="avatarUrl" />
                 </div>
+                <User v-else class="size-5" />
               </div>
 
               <div class="text-muted-foreground max-sm:hidden">
