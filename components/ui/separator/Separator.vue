@@ -19,23 +19,31 @@ const delegatedProps = computed(() => {
     v-bind="delegatedProps"
     :class="
       cn(
-        'shrink-0 bg-border relative',
-        props.orientation === 'vertical' ? 'w-px h-full' : 'h-px w-full',
+        'shrink-0 flex items-center',
+        props.orientation === 'vertical' ? 'flex-col' : '',
         props.class,
       )
     "
   >
     <span
+      :class="
+        cn('grow bg-border', props.orientation === 'vertical' ? 'w-px' : 'h-px')
+      "
+    ></span>
+    <span
       v-if="props.label"
       :class="
         cn(
-          'text-xs text-muted-foreground bg-background absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center',
-          props.orientation === 'vertical'
-            ? 'w-[1px] px-1 py-2'
-            : 'h-[1px] py-1 px-2',
+          'text-xs text-muted-foreground flex justify-center items-center',
+          props.orientation === 'vertical' ? 'px-1 py-2' : 'py-1 px-2',
         )
       "
       >{{ props.label }}</span
     >
+    <span
+      :class="
+        cn('grow bg-border', props.orientation === 'vertical' ? 'w-px' : 'h-px')
+      "
+    ></span>
   </Separator>
 </template>

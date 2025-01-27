@@ -58,12 +58,6 @@
 
         <div class="self-stretch">
           <TabsContent value="signup" class="flex flex-col gap-1">
-            <p
-              v-if="signUpInternal.data.value?.error"
-              class="text-sm text-destructive"
-            >
-              {{ signUpInternal.data.value?.error.message }}
-            </p>
             <SpinnerButton
               variant="secondary"
               :loading="signUpInternal.status.value === 'pending'"
@@ -74,12 +68,6 @@
           </TabsContent>
 
           <TabsContent value="login" class="flex flex-col gap-1">
-            <p
-              v-if="logInInternal.data.value?.error"
-              class="text-sm text-destructive"
-            >
-              {{ logInInternal.data.value?.error.message }}
-            </p>
             <SpinnerButton
               variant="secondary"
               :loading="logInInternal.status.value === 'pending'"
@@ -91,7 +79,7 @@
         </div>
       </div>
 
-      <Separator label="Or" />
+      <Separator label="Or" class="self-stretch" />
 
       <div class="flex flex-col gap-3 self-stretch">
         <Button variant="secondary" @click="signInWithOAuth()">
@@ -142,13 +130,23 @@ const logInInternal = useAsyncData(
 
     const { email, password, captcha } = schema.parse(res.values!);
 
-    return supabase.auth.signInWithPassword({
+    const result = await supabase.auth.signInWithPassword({
       email,
       password,
       options: {
         captchaToken: captcha,
       },
     });
+
+    if (result.error) {
+      toast.error(result.error.message);
+
+      window.turnstile.reset();
+
+      return;
+    }
+
+    navigateTo("/");
   },
   {
     immediate: false,
@@ -167,13 +165,21 @@ const signUpInternal = useAsyncData(
 
     const { email, password, captcha } = schema.parse(res.values!);
 
-    await supabase.auth.signUp({
+    const result = await supabase.auth.signUp({
       email,
       password,
       options: {
         captchaToken: captcha,
       },
     });
+
+    if (result.error) {
+      toast.error(result.error.message);
+
+      window.turnstile.reset();
+
+      return;
+    }
 
     toast.success(
       "Account created. Please confirm your email before logging in.",
