@@ -14,11 +14,12 @@ defineProps<{
   sheetTitle: string;
   icon: LucideIcon;
   class?: string;
+  defaultOpen?: boolean;
 }>();
 </script>
 
 <template>
-  <Sheet v-if="breakpoints.smallerOrEqual('md').value">
+  <Sheet v-if="breakpoints.smallerOrEqual('md').value" :default-open>
     <SheetTrigger as-child>
       <div class="fixed bottom-4 right-4 z-50">
         <Button

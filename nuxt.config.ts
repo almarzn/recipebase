@@ -40,6 +40,11 @@ export default defineNuxtConfig({
     },
   },
   supabase: {
+    redirectOptions: {
+      login: "/login",
+      callback: "/confirm",
+      exclude: ["/", "/privacy"],
+    },
     cookieOptions: {
       secure: process.env.NODE_ENV === "production",
     },

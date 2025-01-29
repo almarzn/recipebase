@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { RecipeDetails, RecipeDetailsSaved } from "~/types/recipe";
+import type { RecipeDetailsSaved } from "~/types/recipe";
 import RecipeTag from "~/components/recipe/RecipeTag.vue";
 import RecipeStep from "~/components/recipe/view/RecipeStep.vue";
 import RecipeIngredients from "~/components/recipe/view/RecipeIngredients.vue";
@@ -13,6 +13,7 @@ import AdaptiveSheet from "~/components/ui/sheet/AdaptiveSheet.vue";
 import { ShoppingBasket } from "lucide-vue-next";
 
 const props = defineProps<{
+  hideComments?: true;
   recipe: RecipeDetailsSaved;
 }>();
 
@@ -83,7 +84,7 @@ debouncedWatch(
             :key="step.id"
             :index="index"
             :step="step"
-            :comment-to="commentContainer"
+            :comment-to="!hideComments ? commentContainer : null"
             :comments="commentsForStep(step.id)"
             :comment-layout
             @add-comment="addCommentToStep(step.id)"
@@ -94,6 +95,7 @@ debouncedWatch(
       </div>
     </div>
     <div
+      v-if="!hideComments"
       ref="commentContainer"
       class="relative min-w-56 basis-56 max-lg:hidden"
     ></div>

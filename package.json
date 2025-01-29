@@ -38,6 +38,7 @@
     "show-open-file-picker": "^0.2.2",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
+    "taos": "^1.0.5",
     "turndown": "^7.2.0",
     "uuid": "^11.0.5",
     "vee-validate": "^4.15.0",
@@ -50,6 +51,7 @@
   },
   "devDependencies": {
     "@nuxt/eslint": "^0.7.4",
+    "@savvywombat/tailwindcss-grid-areas": "^4.0.0",
     "@types/eslint-plugin-tailwindcss": "^3.17.0",
     "@types/turndown": "^5.0.5",
     "eslint": "^9.17.0",

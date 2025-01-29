@@ -15,6 +15,15 @@ module.exports = {
       },
     },
     extend: {
+      gridTemplateAreas: {
+        "responsive-tabs": ["tab1 content", "tab2 content", "tab3 content"],
+        "responsive-tabs-slim-1": ["tab1", "content", "tab2", "tab3"],
+        "responsive-tabs-slim-2": ["tab1", "tab2", "content", "tab3"],
+        "responsive-tabs-slim-3": ["tab1", "tab2", "tab3", "content"],
+      },
+      gridTemplateColumns: {
+        "responsive-tabs": "minmax(100px, 400px) 1fr",
+      },
       aria: {
         invalid: 'invalid="true"',
       },
@@ -98,5 +107,7 @@ module.exports = {
     animate,
     require("tailwind-gradient-mask-image"),
     require("tailwindcss-touch")(),
+    require("@savvywombat/tailwindcss-grid-areas"),
+    require("taos/plugin"),
   ],
 };

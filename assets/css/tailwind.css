@@ -137,6 +137,32 @@
   .surface-1 {
     @apply backdrop-blur-2xl bg-gray-800/20;
   }
+
+  @property --tw-gradient-from {
+    syntax: "<color>";
+    initial-value: transparent;
+    inherits: false;
+  }
+  @property --tw-gradient-to {
+    syntax: "<color>";
+    initial-value: transparent;
+    inherits: false;
+  }
+
+  .bg-product-tab {
+    transition:
+      --tw-gradient-from 0.3s,
+      --tw-gradient-to 0.3s;
+    background-image: radial-gradient(
+      circle at right center,
+      var(--tw-gradient-from) -40%,
+      var(--tw-gradient-to) 50%,
+      var(--tw-gradient-to) 100%
+    );
+  }
+  .product-tab {
+    @apply bg-product-tab from-gray-950 to-gray-950 data-[state=active]:from-gray-700 data-[state=active]:to-gray-900;
+  }
 }
 
 @layer utilities {
@@ -151,6 +177,7 @@
   .handle {
     user-select: none;
     cursor: move;
+
     & > svg {
       pointer-events: none;
     }
