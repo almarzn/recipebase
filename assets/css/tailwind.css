@@ -145,3 +145,14 @@ body {
     pointer-events: none;
   }
 }
+
+@custom-variant hover-hover (@media (hover: hover));
+@custom-variant hover-none (@media (hover: none));
+
+@utility gradient-mask-b-* {
+  mask-image: linear-gradient(
+    to bottom,
+    #000 calc(--value(integer) * 1%),
+    transparent 100%
+  );
+}

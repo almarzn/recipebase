@@ -43,7 +43,7 @@
 
         <TabsContent value="recipe" class="bg-gray-950 grid-in-content">
           <div
-            class="relative m-4 size-[calc(100%_-_2rem)] h-full overflow-hidden gradient-mask-b-10 max-md:h-96"
+            class="relative m-4 size-[calc(100%_-_2rem)] h-full overflow-hidden gradient-mask-b-60 max-md:h-96"
           >
             <div
               class="pointer-events-none absolute inset-0 -left-1/4 size-[150%] min-w-container origin-[top_center] scale-[66.66%]"
@@ -54,7 +54,7 @@
         </TabsContent>
         <TabsContent value="import" class="bg-gray-950 grid-in-content">
           <div
-            class="relative m-4 size-[calc(100%_-_2rem)] h-full overflow-hidden gradient-mask-b-10 max-md:h-72"
+            class="relative m-4 size-[calc(100%_-_2rem)] h-full overflow-hidden gradient-mask-b-60 max-md:h-72"
           >
             <div
               class="pointer-events-none absolute -left-1/4 size-[150%] origin-[top_center] scale-[66.66%]"
@@ -65,7 +65,7 @@
         </TabsContent>
         <TabsContent value="organize" class="bg-gray-950 grid-in-content">
           <div
-            class="relative m-4 size-[calc(100%_-_2rem)] h-full overflow-hidden gradient-mask-b-10 max-md:h-72"
+            class="relative m-4 size-[calc(100%_-_2rem)] h-full overflow-hidden gradient-mask-b-60 max-md:h-72"
           >
             <div
               class="pointer-events-none absolute -left-1/4 size-[150%] origin-[top_center] scale-[66.66%]"
@@ -104,6 +104,9 @@ const selectedTab = ref("recipe");
     }
     @variant data-[selected=import] {
       grid-template-areas: "tab1" "tab2" "content" "tab3";
+    }
+    @variant data-[selected=organize] {
+      grid-template-areas: "tab1" "tab2" "tab3" "content";
     }
   }
 }

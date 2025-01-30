@@ -1,6 +1,5 @@
 <template>
-  <!--  eslint-disable-next-line tailwindcss/no-custom-classname-->
-  <div class="html-content">
+  <div>
     <h2 id="privacy-policy-for-recipebase-co">Privacy Policy</h2>
     <p><strong>Effective Date</strong>: January 28, 2024</p>
     <p>
@@ -166,28 +165,26 @@
 </template>
 
 <style scoped>
-@reference "../../assets/css/tailwind.css"
+@reference "../../assets/css/tailwind.css";
 
 @layer base {
-  .html-content {
-    p {
-      @apply text-sm leading-7 [&:not(:first-child)]:mt-6;
-    }
-    li {
-      @apply text-sm;
-    }
-    ul {
-      @apply my-6 ml-6 list-disc [&>li]:mt-2;
-    }
-    h2 {
-      @apply mt-10 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0;
-    }
-    h3 {
-      @apply mt-8 scroll-m-20 text-2xl font-semibold tracking-tight;
-    }
-    h4 {
-      @apply scroll-m-20 text-xl font-semibold tracking-tight;
-    }
+  p {
+    @apply text-sm leading-7 [&:not(:first-child)]:mt-6;
+  }
+  li {
+    @apply text-sm;
+  }
+  ul {
+    @apply my-6 ml-6 list-disc [&>li]:mt-2;
+  }
+  h2 {
+    @apply mt-10 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0;
+  }
+  h3 {
+    @apply mt-8 scroll-m-20 text-2xl font-semibold tracking-tight;
+  }
+  h4 {
+    @apply scroll-m-20 text-xl font-semibold tracking-tight;
   }
 }
 </style>
