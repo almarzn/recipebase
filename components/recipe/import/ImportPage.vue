@@ -11,8 +11,8 @@ import {
   sourceSchema,
   type SourceValue,
 } from "~/components/recipe/import/SourceValue";
-import { useExtraction } from "~/components/recipe/import/useExtraction";
 import ExtractionResult from "~/components/recipe/import/ExtractionResult.vue";
+import { useRealtimeExtraction } from "~/components/recipe/import/useRealtimeExtraction";
 
 const client = useSupabaseClient();
 
@@ -78,7 +78,7 @@ const sourceValid = computed(
   () => sourceSchema.safeParse(sourceValue.value).success,
 );
 
-const extraction = useExtraction(currentModel, sourceValue);
+const extraction = useRealtimeExtraction(currentModel, sourceValue);
 </script>
 
 <template>
@@ -170,12 +170,19 @@ const extraction = useExtraction(currentModel, sourceValue);
             </div>
           </template>
           <template v-if="extraction.status.value === 'pending'">
-            <div class="flex flex-col items-center gap-4 self-center p-8">
-              <ScanSearch class="size-24 stroke-muted" stroke-width="1" />
-              <div class="text-center text-sm text-muted">
-                Please wait while we are asking ChatGPT to work for us. This can
-                take up to a few minutes.
-              </div>
+            <div
+              class="flex grow flex-col items-center justify-center gap-4 self-center"
+            >
+              <p class="text-base">
+                {{ extraction.progress.value.name }}
+              </p>
+              <Progress
+                :model-value="extraction.progress.value.progress * 100"
+                class="h-1 w-64"
+              />
+              <p class="text-xs text-muted-foreground">
+                This may take a few minutes
+              </p>
             </div>
           </template>
           <div v-if="extraction.status.value === 'error'" class="p-6">
@@ -183,7 +190,7 @@ const extraction = useExtraction(currentModel, sourceValue);
           </div>
           <template v-if="extraction.status.value === 'success'">
             <div
-              v-if="extraction.data.value?.recipes.length === 0"
+              v-if="extraction.data.value?.length === 0"
               class="flex flex-col items-center gap-4 self-center p-8"
             >
               <Bird class="size-24 stroke-muted" stroke-width="1" />
@@ -191,7 +198,7 @@ const extraction = useExtraction(currentModel, sourceValue);
             </div>
             <div v-else class="flex flex-col gap-2">
               <ExtractionResult
-                v-for="(result, index) in extraction.data.value?.recipes"
+                v-for="(result, index) in extraction.data.value"
                 :key="index"
                 :result="result"
               />

@@ -11,7 +11,7 @@ const props = withDefaults(
   defineProps<
     ProgressRootProps & {
       class?: HTMLAttributes["class"];
-      indeterminate: boolean;
+      indeterminate?: true;
     }
   >(),
   {
@@ -37,8 +37,8 @@ const delegatedProps = computed(() => {
     "
   >
     <ProgressIndicator
-      class="size-full flex-1 bg-primary transition-all data-[indeterminate=true]:origin-left data-[indeterminate=true]:animate-progress"
-      :style="`transform: translateX(-${100 - (props.modelValue ?? 0)}%);`"
+      class="size-full flex-1 bg-primary transition-transform data-[indeterminate=true]:origin-left data-[indeterminate=true]:animate-progress"
+      :style="`transform: translateX(-${100 - (props.modelValue ?? 0)}%); transition-duration: 1s;`"
       :data-indeterminate="indeterminate"
     />
   </ProgressRoot>
