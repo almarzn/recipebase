@@ -29,7 +29,7 @@ turndownService.remove("noscript");
 turndownService.remove("style");
 turndownService.addRule("striplinks", {
   filter: "a",
-  replacement: (content, node, options) => {
+  replacement: (content) => {
     return content;
   },
 });

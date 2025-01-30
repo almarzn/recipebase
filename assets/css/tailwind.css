@@ -43,7 +43,7 @@ body {
 }
 
 @utility heading-3 {
-  @apply scroll-m-20 text-lg md:text-2xl font-semibold;
+  @apply scroll-m-20 text-lg font-semibold md:text-2xl;
 }
 
 @utility heading-4 {
@@ -59,31 +59,31 @@ body {
 }
 
 @utility skeleton-3 {
-  @apply bg-gray-100 dark:bg-gray-800 animate-pulse text-transparent;
+  @apply animate-pulse bg-gray-100 text-transparent dark:bg-gray-800;
 }
 
 @utility skeleton-2 {
-  @apply bg-gray-200 dark:bg-gray-700 animate-pulse text-transparent;
+  @apply animate-pulse bg-gray-200 text-transparent dark:bg-gray-700;
 }
 
 @utility skeleton-1 {
-  @apply bg-gray-300 dark:bg-gray-600 animate-pulse text-transparent;
+  @apply animate-pulse bg-gray-300 text-transparent dark:bg-gray-600;
 }
 
 @utility skeleton-xs {
-  @apply rounded-md my-1 h-2;
+  @apply my-1 h-2 rounded-md;
 }
 
 @utility skeleton-base {
-  @apply rounded-md my-1.5 h-2;
+  @apply my-1.5 h-2 rounded-md;
 }
 
 @utility skeleton-lg {
-  @apply rounded-md my-3.5 h-3;
+  @apply my-3.5 h-3 rounded-md;
 }
 
 @utility skeleton-3xl {
-  @apply rounded-md my-2.5 h-4;
+  @apply my-2.5 h-4 rounded-md;
 }
 
 @utility skeleton-h2 {
@@ -91,15 +91,15 @@ body {
 }
 
 @utility skeleton-h3 {
-  @apply rounded-md my-2.5 h-3;
+  @apply my-2.5 h-3 rounded-md;
 }
 
 @utility skeleton-h5 {
-  @apply rounded-md my-2 h-2;
+  @apply my-2 h-2 rounded-md;
 }
 
 @utility surface-1 {
-  @apply backdrop-blur-2xl bg-gray-800/20;
+  @apply bg-gray-800/20 backdrop-blur-2xl;
 }
 
 @property --tw-gradient-from {

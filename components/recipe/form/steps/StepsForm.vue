@@ -43,7 +43,7 @@ const newStep = () => {
         :list="fields"
         handle=".handle"
         item-key="id"
-        class="grid max-h-container min-h-64 grid-cols-[auto_1fr_auto_20px_auto] place-items-center content-start gap-2 overflow-scroll p-4"
+        class="max-h-container grid min-h-64 grid-cols-[auto_1fr_auto_20px_auto] place-items-center content-start gap-2 overflow-scroll p-4"
         :animation="300"
         ghost-class="opacity-50"
         drag-class="bg-[#060715]"

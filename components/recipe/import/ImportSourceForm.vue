@@ -18,11 +18,14 @@ const model = useVModel(props, "modelValue", emit, {
   deep: true,
 });
 
+declare global {
+  interface Window {
+    showOpenFilePicker?: typeof showOpenFilePicker;
+  }
+}
+
 const pickImage = async () => {
-  const file = await (
-    ((window as any).showOpenFilePicker as typeof showOpenFilePicker) ??
-    showOpenFilePicker
-  )({
+  const file = await (window.showOpenFilePicker ?? showOpenFilePicker)({
     types: [
       {
         description: "Images",

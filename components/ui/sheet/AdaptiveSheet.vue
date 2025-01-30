@@ -21,7 +21,7 @@ defineProps<{
 <template>
   <Sheet v-if="breakpoints.smallerOrEqual('md').value" :default-open>
     <SheetTrigger as-child>
-      <div class="fixed bottom-4 right-4 z-50">
+      <div class="fixed right-4 bottom-4 z-50">
         <Button
           class="h-auto rounded-full border p-3 shadow-lg"
           variant="secondary"

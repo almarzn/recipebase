@@ -56,7 +56,7 @@ const updateTag = (id: string, value: boolean) => {
         <div class="size-3 text-muted-foreground">
           <div class="size-3" />
         </div>
-        <div class="text-xs uppercase text-muted-foreground">Tags</div>
+        <div class="text-xs text-muted-foreground uppercase">Tags</div>
         <div class="grow"></div>
         <ChevronsUpDown
           class="size-3.5 stroke-muted-foreground opacity-0 transition-opacity group-hover/collapsible:opacity-100"

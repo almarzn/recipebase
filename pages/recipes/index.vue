@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import type { Database } from "~/types/database.types";
-import { BadgePlus, Globe, ScanText, PencilLine, Plus } from "lucide-vue-next";
+import { PencilLine, Plus, ScanText } from "lucide-vue-next";
 import { type RecipeQuery, Recipes } from "~/lib/Recipes";
 import PageLayout from "~/components/layout/PageLayout.vue";
 import { AdaptiveBreadcrumbs } from "~/components/layout";
 import { ErrorStatus } from "~/components/ui/status";
-import ImportUrlModal from "~/components/recipe/import/ImportPage.vue";
 import {
   DropdownMenu,
   DropdownMenuContent,

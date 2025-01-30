@@ -12,36 +12,36 @@ clarifications:
 - **Original Language**: Preserve each ingredient’s exact wording as it appears. **Do not translate**, and **do not
   remove brand references** if they are integral to the recipe’s identity.
 - **Structure**:
-    1. **name**:
-        - Use the ingredient name exactly as in the source.
-        - If the recipe mentions a brand, keep it unless it’s truly irrelevant.
-        - If it references sachets/bags/sheets, keep the wording (“Sheet of gelatin,” “Bag of chips,” etc.).
-    2. **quantity**:
-        - The amount specified. If no amount is given, set **`quantity`** to **`undefined`**.
-        - If ambiguous forms like “1 sachet,” “1 bag,” or “1 sheet” are present, use **`quantity = 1`**.
-    3. **units**:
-        - Must follow your predefined schema (e.g., “g,” “ml,” “cup”).
-        - If no specific unit is stated, use **“arbitrary”**.
-    4. **notes**:
-        - Include **only actionable** usage notes (e.g., “finely chopped,” “room temperature,” “optional,” “substitute
-          with margarine”).
-        - **If optional or parenthetical details appear** (e.g., “(optional) chopped nuts”), **move that reference
-          to `notes`** instead of keeping it in the `name`.
-        - Avoid explanatory or background commentary.
+  1. **name**:
+     - Use the ingredient name exactly as in the source.
+     - If the recipe mentions a brand, keep it unless it’s truly irrelevant.
+     - If it references sachets/bags/sheets, keep the wording (“Sheet of gelatin,” “Bag of chips,” etc.).
+  2. **quantity**:
+     - The amount specified. If no amount is given, set **`quantity`** to **`undefined`**.
+     - If ambiguous forms like “1 sachet,” “1 bag,” or “1 sheet” are present, use **`quantity = 1`**.
+  3. **units**:
+     - Must follow your predefined schema (e.g., “g,” “ml,” “cup”).
+     - If no specific unit is stated, use **“arbitrary”**.
+  4. **notes**:
+     - Include **only actionable** usage notes (e.g., “finely chopped,” “room temperature,” “optional,” “substitute
+       with margarine”).
+     - **If optional or parenthetical details appear** (e.g., “(optional) chopped nuts”), **move that reference
+       to `notes`** instead of keeping it in the `name`.
+     - Avoid explanatory or background commentary.
 
 ---
 
 ### **Additional Clarifications**
 
 1. **Stay True to the Original Wording**:
-    - If multiple synonyms appear (e.g., “heavy cream” / “whipping cream”), keep exactly what the recipe states.
-    - If brand names are part of the recipe’s identity, retain them.
+   - If multiple synonyms appear (e.g., “heavy cream” / “whipping cream”), keep exactly what the recipe states.
+   - If brand names are part of the recipe’s identity, retain them.
 2. **Multiple Possible Measurements**:
-    - If the source provides multiple units (e.g., “1 cup or 200 g”), choose the one most consistent with the rest of
-      the recipe.
+   - If the source provides multiple units (e.g., “1 cup or 200 g”), choose the one most consistent with the rest of
+     the recipe.
 3. **Optional or Parenthetical**:
-    - If the ingredient is listed as “(optional)” or has a parenthetical phrase, move that note to `notes` (e.g.,
-      `notes: "optional"`).
+   - If the ingredient is listed as “(optional)” or has a parenthetical phrase, move that note to `notes` (e.g.,
+     `notes: "optional"`).
 
 ---
 

@@ -1,6 +1,6 @@
 <template>
   <Select v-model="currentModel" :disabled>
-    <SelectTrigger class="flex w-auto select-none gap-2 border-none px-0">
+    <SelectTrigger class="flex w-auto gap-2 border-none px-0 select-none">
       <template v-if="currentModel">
         <span class="text-muted-foreground">Model:</span>
 

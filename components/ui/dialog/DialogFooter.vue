@@ -8,7 +8,7 @@ const props = defineProps<{ class?: HTMLAttributes["class"] }>();
 <template>
   <div
     :class="
-      cn('flex flex-col-reverse sm:flex-row sm:justify-end gap-2', props.class)
+      cn('flex flex-col-reverse gap-2 sm:flex-row sm:justify-end', props.class)
     "
   >
     <slot />

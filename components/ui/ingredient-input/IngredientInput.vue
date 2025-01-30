@@ -6,7 +6,6 @@ import { NotepadText, Trash2 } from "lucide-vue-next";
 import { UnitSelect } from "~/components/ui/unit-select";
 import { Textarea } from "~/components/ui/textarea";
 import IconBadge from "~/components/ui/icon-badge/IconBadge.vue";
-import { IngredientInput } from "~/components/ui/ingredient-input/index";
 
 defineEmits(["delete"]);
 defineProps<{ name: string; as?: string }>();

@@ -20,7 +20,7 @@ const { classes, loading, disabled, ...props } =
     v-bind="props"
     :class="
       cn(
-        `grid-stack inline-grid place-content-center group`,
+        `group inline-grid place-content-center grid-stack`,
         $props.class,
         $props.classes?.base,
       )

@@ -135,7 +135,7 @@ const deleteTag = async (id: string) => {
       v-for="tag in tags ?? []"
       v-slot="{ isEditing }"
       :key="tag.id"
-      class="group/tag-row col-span-4 grid grid-cols-subgrid items-center rounded-md border bg-gray-950 py-1 pl-3 pr-2 data-[rights=readonly]:pointer-events-none data-[rights=readonly]:opacity-50"
+      class="group/tag-row col-span-4 grid grid-cols-subgrid items-center rounded-md border bg-gray-950 py-1 pr-2 pl-3 data-[rights=readonly]:pointer-events-none data-[rights=readonly]:opacity-50"
       :data-rights="tag.user_id === null ? 'readonly' : 'editable'"
       :default-value="tag.text"
       submit-mode="both"

@@ -1,5 +1,5 @@
 <template>
-  <div class="surface-1 mt-8 flex flex-col items-center border-t p-6">
+  <div class="mt-8 flex flex-col items-center border-t surface-1 p-6">
     <div
       class="relative flex w-full max-w-screen-md items-center justify-center gap-8"
     >

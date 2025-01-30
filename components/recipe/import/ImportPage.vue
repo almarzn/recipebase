@@ -116,7 +116,7 @@ const extraction = useRealtimeExtraction(currentModel, sourceValue);
       <div
         class="flex max-w-2xl flex-col gap-4 overflow-hidden border max-md:-mx-4 max-md:self-stretch md:w-full md:rounded-xl"
       >
-        <div class="surface-1 flex flex-col gap-5 border-b p-6">
+        <div class="flex flex-col gap-5 border-b surface-1 p-6">
           <ImportSourceForm
             v-model="sourceValue"
             :disabled="extraction.status.value === 'pending'"
@@ -129,7 +129,7 @@ const extraction = useRealtimeExtraction(currentModel, sourceValue);
 
             <div
               v-else-if="models.status.value === 'pending'"
-              class="skeleton-2 h-3 w-36 rounded-full"
+              class="h-3 w-36 skeleton-2 rounded-full"
             ></div>
 
             <template v-else-if="models.status.value === 'success'">

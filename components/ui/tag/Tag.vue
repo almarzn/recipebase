@@ -39,7 +39,7 @@ const props = defineProps<{
     :as-child
     :class="
       cn(
-        'rounded-sm inline-flex items-center gap-1 px-2 py-0.5 text-xs border-[1px] border-solid',
+        'inline-flex items-center gap-1 rounded-sm border-[1px] border-solid px-2 py-0.5 text-xs',
         props.class,
       )
     "

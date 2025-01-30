@@ -35,7 +35,7 @@ const route = useRoute();
         <Sheet>
           <SheetTrigger>
             <div class="flex items-center gap-3">
-              <div class="text-clip rounded-full">
+              <div class="rounded-full text-clip">
                 <div v-if="avatarUrl" class="w-6 overflow-hidden rounded-full">
                   <NuxtImg :src="avatarUrl" />
                 </div>

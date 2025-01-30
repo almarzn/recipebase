@@ -19,7 +19,7 @@ const delegatedProps = computed(() => {
     v-bind="delegatedProps"
     :class="
       cn(
-        'shrink-0 flex items-center',
+        'flex shrink-0 items-center',
         props.orientation === 'vertical' ? 'flex-col' : '',
         props.class,
       )
@@ -34,8 +34,8 @@ const delegatedProps = computed(() => {
       v-if="props.label"
       :class="
         cn(
-          'text-xs text-muted-foreground flex justify-center items-center',
-          props.orientation === 'vertical' ? 'px-1 py-2' : 'py-1 px-2',
+          'flex items-center justify-center text-xs text-muted-foreground',
+          props.orientation === 'vertical' ? 'px-1 py-2' : 'px-2 py-1',
         )
       "
       >{{ props.label }}</span

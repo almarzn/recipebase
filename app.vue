@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-radial flex min-h-lvh w-lvw flex-col items-stretch">
+  <div class="flex min-h-lvh w-lvw flex-col items-stretch bg-radial">
     <NuxtLoadingIndicator />
 
     <NavigationBar />

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="surface-1 mt-16 flex w-full max-w-96 grow-0 flex-col gap-6 self-center rounded-xl border p-8 pt-6 shadow-lg"
+    class="mt-16 flex w-full max-w-96 grow-0 flex-col gap-6 self-center rounded-xl border surface-1 p-8 pt-6 shadow-lg"
   >
     <Tabs default-value="login" class="flex flex-col items-center gap-5">
       <TabsList>

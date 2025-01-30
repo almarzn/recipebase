@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { FormControl } from "~/components/ui/form";
 import { imperialUnits, metricUnits, UnitFormatter } from "~/lib/Unit";
-import { ChevronsUpDown, Check } from "lucide-vue-next";
+import { Check, ChevronsUpDown } from "lucide-vue-next";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ingredientUnitSchema } from "~/types/recipe";
-import { SpinnerButton } from "~/components/ui/button";
 import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 
 const model = defineModel<string>();
@@ -44,7 +43,7 @@ const formatter = computed(
             content: 'justify-between',
           }"
         >
-          <div class="overflow-hidden text-ellipsis text-start lg:w-20">
+          <div class="overflow-hidden text-start text-ellipsis lg:w-20">
             {{
               parsedValue
                 ? formatter.formatUnit(parsedValue)

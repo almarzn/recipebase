@@ -44,14 +44,14 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
     v-slot="slotProps"
     :class="
       cn(
-        'flex max-md:flex-col gap-10 mx-auto items-start w-full p-4 max-w-screen-lg',
+        'mx-auto flex w-full max-w-screen-lg items-start gap-10 p-4 max-md:flex-col',
         props.class,
       )
     "
     v-bind="forwarded"
   >
     <div
-      class="flex w-full flex-col justify-start gap-7 rounded-lg bg-cyan-800/15 px-6 pb-10 pt-4 md:max-w-xs"
+      class="flex w-full flex-col justify-start gap-7 rounded-lg bg-cyan-800/15 px-6 pt-4 pb-10 md:max-w-xs"
     >
       <div class="flex gap-2 max-md:items-center md:flex-col">
         <NuxtLink :to="backLinkTo">
@@ -79,7 +79,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
         >
           <StepperSeparator
             v-if="step.step !== steps[steps.length - 1].step"
-            class="absolute left-[18px] top-[36px] block h-[105%] w-0.5 shrink-0 rounded-full bg-muted group-data-[state=completed]:bg-cyan-600 max-md:hidden"
+            class="absolute top-[36px] left-[18px] block h-[105%] w-0.5 shrink-0 rounded-full bg-muted group-data-[state=completed]:bg-cyan-600 max-md:hidden"
           />
 
           <StepperTrigger as-child>

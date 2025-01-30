@@ -17,7 +17,7 @@
           v-if="group.label"
           class="flex items-center justify-between"
         >
-          <div class="text-start text-xs uppercase text-muted-foreground">
+          <div class="text-start text-xs text-muted-foreground uppercase">
             {{ group.label }}
           </div>
           <ChevronsUpDown

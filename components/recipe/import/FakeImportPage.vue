@@ -10,7 +10,7 @@ import exampleRecile from "~/components/homepage/product/exampleRecipe";
     <div
       class="flex max-w-2xl flex-col gap-4 overflow-hidden border max-md:-mx-4 max-md:self-stretch md:w-full md:rounded-xl"
     >
-      <div class="surface-1 flex flex-col gap-5 border-b p-6">
+      <div class="flex flex-col gap-5 border-b surface-1 p-6">
         <ImportSourceForm
           :model-value="{
             current: 'url',

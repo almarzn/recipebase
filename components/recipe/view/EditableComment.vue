@@ -3,7 +3,7 @@
     v-slot="{ isEditing, modelValue }"
     :default-value="comment.content"
     placeholder="Enter text..."
-    class="group/comment flex flex-col gap-0 rounded-md border px-3 pb-3 pt-2 group-data-[hover=true]/comment-container:bg-gray-900"
+    class="group/comment flex flex-col gap-0 rounded-md border px-3 pt-2 pb-3 group-data-[hover=true]/comment-container:bg-gray-900"
     auto-resize
     :start-with-edit-mode="defaultEditing"
     submit-mode="enter"

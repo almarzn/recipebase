@@ -12,18 +12,18 @@
         <div class="flex w-max gap-4">
           <template v-if="latestRecipes.status.value === 'pending'">
             <div class="flex flex-col gap-2 rounded-md border px-5 py-4">
-              <div class="skeleton-1 skeleton-h5 w-32" />
+              <div class="skeleton-h5 w-32 skeleton-1" />
               <ul class="flex gap-1">
-                <li class="skeleton-2 m-1 size-3 rounded-full"></li>
-                <li class="skeleton-2 m-1 size-3 rounded-full"></li>
-                <li class="skeleton-3 m-1 size-3 rounded-full"></li>
+                <li class="m-1 size-3 skeleton-2 rounded-full"></li>
+                <li class="m-1 size-3 skeleton-2 rounded-full"></li>
+                <li class="m-1 size-3 skeleton-3 rounded-full"></li>
               </ul>
             </div>
             <div class="flex flex-col gap-2 rounded-md border px-5 py-4">
-              <div class="skeleton-1 skeleton-h5 w-44" />
+              <div class="skeleton-h5 w-44 skeleton-1" />
               <ul class="flex gap-1">
-                <li class="skeleton-3 m-1 size-3 rounded-full"></li>
-                <li class="skeleton-2 m-1 size-3 rounded-full"></li>
+                <li class="m-1 size-3 skeleton-3 rounded-full"></li>
+                <li class="m-1 size-3 skeleton-2 rounded-full"></li>
               </ul>
             </div>
           </template>
@@ -64,7 +64,7 @@
 
       <div class="grid place-items-stretch gap-3 md:grid-cols-3">
         <Button
-          class="flex h-auto items-center gap-3 whitespace-normal px-5 py-3 text-start"
+          class="flex h-auto items-center gap-3 px-5 py-3 text-start whitespace-normal"
           variant="outline"
           as-child
         >
@@ -80,7 +80,7 @@
           </NuxtLink>
         </Button>
         <Button
-          class="flex h-auto items-center gap-3 whitespace-normal px-5 py-3 text-start"
+          class="flex h-auto items-center gap-3 px-5 py-3 text-start whitespace-normal"
           variant="outline"
           as-child
         >
@@ -96,7 +96,7 @@
           </NuxtLink>
         </Button>
         <Button
-          class="flex h-auto items-center gap-3 whitespace-normal px-5 py-3 text-start"
+          class="flex h-auto items-center gap-3 px-5 py-3 text-start whitespace-normal"
           variant="outline"
           as-child
         >

@@ -4,12 +4,12 @@
   >
     <TabsRoot v-model="selectedTab">
       <TabsList
-        class="grid gap-px bg-border responsive-tabs"
+        class="responsive-tabs grid gap-px bg-border"
         :data-selected="selectedTab"
       >
         <TabsTrigger
           value="recipe"
-          class="product-tab flex flex-col justify-center gap-1 p-5 text-start grid-in-tab1"
+          class="product-tab grid-in-tab1 flex flex-col justify-center gap-1 p-5 text-start"
         >
           <h3 class="text-base">Focus on your skills</h3>
           <p class="text-xs text-muted-foreground">
@@ -20,7 +20,7 @@
         </TabsTrigger>
         <TabsTrigger
           value="import"
-          class="product-tab flex flex-col justify-center gap-1 p-5 text-start grid-in-tab2"
+          class="product-tab grid-in-tab2 flex flex-col justify-center gap-1 p-5 text-start"
         >
           <h3 class="text-base">Aggregate recipes from anywhere</h3>
           <p class="text-xs text-muted-foreground">
@@ -32,7 +32,7 @@
         </TabsTrigger>
         <TabsTrigger
           value="organize"
-          class="product-tab flex flex-col justify-center gap-1 p-5 text-start grid-in-tab3"
+          class="product-tab grid-in-tab3 flex flex-col justify-center gap-1 p-5 text-start"
         >
           <h3 class="text-base">Organize your recipes</h3>
           <p class="text-xs text-muted-foreground">
@@ -41,18 +41,18 @@
           </p>
         </TabsTrigger>
 
-        <TabsContent value="recipe" class="bg-gray-950 grid-in-content">
+        <TabsContent value="recipe" class="grid-in-content bg-gray-950">
           <div
             class="relative m-4 size-[calc(100%_-_2rem)] h-full overflow-hidden gradient-mask-b-60 max-md:h-96"
           >
             <div
-              class="pointer-events-none absolute inset-0 -left-1/4 size-[150%] min-w-container origin-[top_center] scale-[66.66%]"
+              class="min-w-container pointer-events-none absolute inset-0 -left-1/4 size-[150%] origin-[top_center] scale-[66.66%]"
             >
               <RecipePage :recipe="exampleRecipe" hide-comments />
             </div>
           </div>
         </TabsContent>
-        <TabsContent value="import" class="bg-gray-950 grid-in-content">
+        <TabsContent value="import" class="grid-in-content bg-gray-950">
           <div
             class="relative m-4 size-[calc(100%_-_2rem)] h-full overflow-hidden gradient-mask-b-60 max-md:h-72"
           >
@@ -63,7 +63,7 @@
             </div>
           </div>
         </TabsContent>
-        <TabsContent value="organize" class="bg-gray-950 grid-in-content">
+        <TabsContent value="organize" class="grid-in-content bg-gray-950">
           <div
             class="relative m-4 size-[calc(100%_-_2rem)] h-full overflow-hidden gradient-mask-b-60 max-md:h-72"
           >

@@ -19,7 +19,7 @@ const forwarded = useForwardProps(delegatedProps);
 </script>
 
 <template>
-  <StepperTrigger v-bind="forwarded" :class="cn('p-1 rounded-md', props.class)">
+  <StepperTrigger v-bind="forwarded" :class="cn('rounded-md p-1', props.class)">
     <slot />
   </StepperTrigger>
 </template>

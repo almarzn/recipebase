@@ -3,10 +3,7 @@ import { serverSupabaseClient } from "#supabase/server";
 import { Settings } from "~/lib/Settings";
 import OpenAI from "openai";
 import type { z } from "zod";
-import type {
-  ChatCompletionContentPart,
-  ChatCompletionMessageParam,
-} from "openai/resources/chat/completions";
+import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import { zodResponseFormat } from "openai/helpers/zod";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "~/types/database.types";
