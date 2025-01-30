@@ -4,7 +4,7 @@
   >
     <TabsRoot v-model="selectedTab">
       <TabsList
-        class="grid grid-cols-responsive-tabs gap-px bg-border grid-areas-responsive-tabs max-md:grid-cols-1 data-[selected=recipe]:max-md:grid-areas-responsive-tabs-slim-1 data-[selected=import]:max-md:grid-areas-responsive-tabs-slim-2 data-[selected=organize]:max-md:grid-areas-responsive-tabs-slim-3"
+        class="grid gap-px bg-border responsive-tabs"
         :data-selected="selectedTab"
       >
         <TabsTrigger
@@ -89,3 +89,38 @@ import { recipeList } from "~/components/homepage/product/exampleRecipeList";
 
 const selectedTab = ref("recipe");
 </script>
+
+<style scoped>
+@reference "../../../assets/css/tailwind.css";
+
+.responsive-tabs {
+  grid-template-areas: "tab1 content" "tab2 content" "tab3 content";
+  grid-template-columns: minmax(100px, 400px) 1fr;
+
+  @variant max-md {
+    @apply grid-cols-1;
+    @variant data-[selected=recipe] {
+      grid-template-areas: "tab1" "content" "tab2" "tab3";
+    }
+    @variant data-[selected=import] {
+      grid-template-areas: "tab1" "tab2" "content" "tab3";
+    }
+  }
+}
+
+.grid-in-tab1 {
+  grid-area: tab1;
+}
+
+.grid-in-tab2 {
+  grid-area: tab2;
+}
+
+.grid-in-tab3 {
+  grid-area: tab3;
+}
+
+.grid-in-content {
+  grid-area: content;
+}
+</style>
