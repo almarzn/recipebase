@@ -166,7 +166,7 @@
 </template>
 
 <style scoped>
-@tailwind base;
+@reference "../../assets/css/tailwind.css"
 
 @layer base {
   .html-content {

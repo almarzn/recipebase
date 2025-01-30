@@ -1,185 +1,147 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 224 71.4% 4.1%;
+@theme {
+  --color-background: hsl(224 71.4% 4.1%);
+  --color-foreground: hsl(210 20% 98%);
 
-    --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
+  --color-card: hsl(224 71.4% 4.1%);
+  --color-card-foreground: hsl(210 20% 98%);
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
+  --color-popover: hsl(224 71.4% 4.1%);
+  --color-popover-foreground: hsl(210 20% 98%);
 
-    --primary: 262.1 83.3% 57.8%;
-    --primary-foreground: 210 20% 98%;
+  --color-primary: hsl(263.4 70% 50.4%);
+  --color-primary-foreground: hsl(210 20% 98%);
 
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220.9 39.3% 11%;
+  --color-secondary: hsl(215 27.9% 16.9%);
+  --color-secondary-foreground: hsl(210 20% 98%);
 
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
+  --color-muted: hsl(215 27.9% 16.9%);
+  --color-muted-foreground: hsl(217.9 10.6% 64.9%);
 
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
+  --color-accent: hsl(215 27.9% 16.9%);
+  --color-accent-foreground: hsl(210 20% 98%);
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 20% 98%;
+  --color-destructive: hsl(0 62.8% 60.6%);
+  --color-destructive-foreground: hsl(210 20% 98%);
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 262.1 83.3% 57.8%;
-    --radius: 0.5rem;
-  }
+  --color-border: hsl(215 27.9% 16.9%);
+  --color-input: hsl(215 27.9% 16.9%);
+  --color-ring: hsl(263.4 70% 50.4%);
+}
 
-  .dark {
-    --background: 224 71.4% 4.1%;
-    --foreground: 210 20% 98%;
+* {
+  @apply box-border border-border;
+}
 
-    --card: 224 71.4% 4.1%;
-    --card-foreground: 210 20% 98%;
+body {
+  @apply bg-background text-foreground;
+}
 
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
+@utility heading-2 {
+  @apply text-3xl font-semibold transition-colors first:mt-0;
+}
 
-    --primary: 263.4 70% 50.4%;
-    --primary-foreground: 210 20% 98%;
+@utility heading-3 {
+  @apply scroll-m-20 text-lg md:text-2xl font-semibold;
+}
 
-    --secondary: 215 27.9% 16.9%;
-    --secondary-foreground: 210 20% 98%;
+@utility heading-4 {
+  @apply scroll-m-20 text-base font-medium;
+}
 
-    --muted: 215 27.9% 16.9%;
-    --muted-foreground: 217.9 10.6% 64.9%;
+@utility bg-radial {
+  background-image: radial-gradient(
+    ellipse 80% 50% at 50% -20%,
+    rgba(48, 82, 120, 0.5),
+    rgba(25, 8, 43, 0.1)
+  );
+}
 
-    --accent: 215 27.9% 16.9%;
-    --accent-foreground: 210 20% 98%;
+@utility skeleton-3 {
+  @apply bg-gray-100 dark:bg-gray-800 animate-pulse text-transparent;
+}
 
-    --destructive: 0 62.8% 60.6%;
-    --destructive-foreground: 210 20% 98%;
+@utility skeleton-2 {
+  @apply bg-gray-200 dark:bg-gray-700 animate-pulse text-transparent;
+}
 
-    --border: 215 27.9% 16.9%;
-    --input: 215 27.9% 16.9%;
-    --ring: 263.4 70% 50.4%;
+@utility skeleton-1 {
+  @apply bg-gray-300 dark:bg-gray-600 animate-pulse text-transparent;
+}
+
+@utility skeleton-xs {
+  @apply rounded-md my-1 h-2;
+}
+
+@utility skeleton-base {
+  @apply rounded-md my-1.5 h-2;
+}
+
+@utility skeleton-lg {
+  @apply rounded-md my-3.5 h-3;
+}
+
+@utility skeleton-3xl {
+  @apply rounded-md my-2.5 h-4;
+}
+
+@utility skeleton-h2 {
+  @apply skeleton-3xl;
+}
+
+@utility skeleton-h3 {
+  @apply rounded-md my-2.5 h-3;
+}
+
+@utility skeleton-h5 {
+  @apply rounded-md my-2 h-2;
+}
+
+@utility surface-1 {
+  @apply backdrop-blur-2xl bg-gray-800/20;
+}
+
+@property --tw-gradient-from {
+  syntax: "<color>";
+  initial-value: transparent;
+  inherits: false;
+}
+@property --tw-gradient-to {
+  syntax: "<color>";
+  initial-value: transparent;
+  inherits: false;
+}
+
+@utility bg-product-tab {
+  transition:
+    --tw-gradient-from 0.3s,
+    --tw-gradient-to 0.3s;
+  background-image: radial-gradient(
+    circle at right center,
+    var(--tw-gradient-from) -40%,
+    var(--tw-gradient-to) 50%,
+    var(--tw-gradient-to) 100%
+  );
+}
+
+@utility grid-stack {
+  grid-template-areas: "stack";
+
+  & > * {
+    grid-area: stack;
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-  }
-
-  .heading-2 {
-    @apply text-3xl font-semibold transition-colors first:mt-0;
-  }
-
-  .heading-3 {
-    @apply scroll-m-20 text-lg md:text-2xl font-semibold;
-  }
-
-  .heading-4 {
-    @apply scroll-m-20 text-base font-medium;
-  }
-
-  .bg-radial {
-    background-image: radial-gradient(
-      ellipse 80% 50% at 50% -20%,
-      rgba(48, 82, 120, 0.5),
-      rgba(25, 8, 43, 0.1)
-    );
-  }
-
-  .skeleton-3 {
-    @apply bg-gray-100 dark:bg-gray-800 animate-pulse text-transparent;
-  }
-
-  .skeleton-2 {
-    @apply bg-gray-200 dark:bg-gray-700 animate-pulse text-transparent;
-  }
-
-  .skeleton-1 {
-    @apply bg-gray-300 dark:bg-gray-600 animate-pulse text-transparent;
-  }
-
-  .skeleton-xs {
-    @apply rounded-md my-1 h-2;
-  }
-
-  .skeleton-base {
-    @apply rounded-md my-1.5 h-2;
-  }
-
-  .skeleton-lg {
-    @apply rounded-md my-3.5 h-3;
-  }
-
-  .skeleton-3xl {
-    @apply rounded-md my-2.5 h-4;
-  }
-
-  .skeleton-h2 {
-    @apply skeleton-3xl;
-  }
-
-  .skeleton-h3 {
-    @apply rounded-md my-2.5 h-3;
-  }
-
-  .skeleton-h5 {
-    @apply rounded-md my-2 h-2;
-  }
-
-  .surface-1 {
-    @apply backdrop-blur-2xl bg-gray-800/20;
-  }
-
-  @property --tw-gradient-from {
-    syntax: "<color>";
-    initial-value: transparent;
-    inherits: false;
-  }
-  @property --tw-gradient-to {
-    syntax: "<color>";
-    initial-value: transparent;
-    inherits: false;
-  }
-
-  .bg-product-tab {
-    transition:
-      --tw-gradient-from 0.3s,
-      --tw-gradient-to 0.3s;
-    background-image: radial-gradient(
-      circle at right center,
-      var(--tw-gradient-from) -40%,
-      var(--tw-gradient-to) 50%,
-      var(--tw-gradient-to) 100%
-    );
-  }
-  .product-tab {
-    @apply bg-product-tab from-gray-950 to-gray-950 data-[state=active]:from-gray-700 data-[state=active]:to-gray-900;
-  }
+.product-tab {
+  @apply bg-product-tab from-gray-950 to-gray-950 data-[state=active]:from-gray-700 data-[state=active]:to-gray-900;
 }
 
-@layer utilities {
-  .grid-stack {
-    grid-template-areas: "stack";
+.handle {
+  user-select: none;
+  cursor: move;
 
-    & > * {
-      grid-area: stack;
-    }
-  }
-
-  .handle {
-    user-select: none;
-    cursor: move;
-
-    & > svg {
-      pointer-events: none;
-    }
+  & > svg {
+    pointer-events: none;
   }
 }

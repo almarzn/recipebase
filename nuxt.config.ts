@@ -1,16 +1,20 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import tailwindcss from "@tailwindcss/vite";
+
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
   modules: [
-    "@nuxtjs/tailwindcss",
-    "shadcn-nuxt",
     "@nuxtjs/color-mode",
     "@nuxtjs/supabase",
     "@nuxt/eslint",
     "@nuxt/image",
     "nuxt-typed-router",
   ],
+  css: ["~/assets/css/tailwind.css"],
+  vite: {
+    plugins: [tailwindcss()],
+  },
   app: {
     head: {
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.svg" }],
@@ -33,7 +37,12 @@ export default defineNuxtConfig({
       scrollBehaviorType: "smooth",
     },
   },
-  components: false,
+  components: [
+    {
+      path: "~/components/ui",
+      pathPrefix: false,
+    },
+  ],
   runtimeConfig: {
     public: {
       turnstileKey: "1x00000000000000000000AA",
