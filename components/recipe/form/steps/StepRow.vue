@@ -3,6 +3,7 @@ import { GripVertical, NotepadText, Trash2 } from "lucide-vue-next";
 import { Textarea } from "~/components/ui/textarea";
 import IconBadge from "~/components/ui/icon-badge/IconBadge.vue";
 import { Field } from "vee-validate";
+import { FormField } from "~/components/ui/form";
 
 defineProps<{ name: string }>();
 defineEmits(["delete"]);

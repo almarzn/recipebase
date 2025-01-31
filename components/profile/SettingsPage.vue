@@ -5,6 +5,7 @@ import { Settings, settingsSchema } from "~/lib/Settings";
 import { toTypedSchema } from "@vee-validate/zod";
 import { toast } from "vue-sonner";
 import TagSettingSheet from "~/components/profile/TagSettingSheet.vue";
+import { FormField } from "~/components/ui/form";
 
 const client = useSupabaseClient();
 

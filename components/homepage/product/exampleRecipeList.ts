@@ -7,7 +7,7 @@ export const recipeList: ManyRecipeWithTags[] = [
     name: "Chocolate Royal cake (“Trianon”)",
     description:
       "A luxurious cake featuring chocolate mousse layered with dacquoise, praline, and a shiny chocolate mirror glaze.",
-    tags: [
+    tag_ids: [
       {
         id: "853727c2-7f0c-4371-874e-a4ce34af2f0f",
         icon: "dessert",
@@ -28,7 +28,7 @@ export const recipeList: ManyRecipeWithTags[] = [
     name: "Bûche de Noël with Pears and Chocolate",
     description:
       "A classic French Christmas Yule log featuring hazelnut dacquoise, caramelized pears, and chocolate ganache.",
-    tags: [
+    tag_ids: [
       {
         id: "853727c2-7f0c-4371-874e-a4ce34af2f0f",
         icon: "dessert",
@@ -54,7 +54,7 @@ export const recipeList: ManyRecipeWithTags[] = [
     description:
       "This classic italian dessert makes for a savoury culinary experience.",
     name: "Tiramisù",
-    tags: [
+    tag_ids: [
       {
         id: "dessert",
         text: "Dessert",

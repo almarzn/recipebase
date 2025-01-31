@@ -19,7 +19,7 @@
   --color-muted: hsl(215 27.9% 16.9%);
   --color-muted-foreground: hsl(217.9 10.6% 64.9%);
 
-  --color-accent: hsl(215 27.9% 16.9%);
+  --color-accent: hsla(213, 38%, 20%, 0.63);
   --color-accent-foreground: hsl(210 20% 98%);
 
   --color-destructive: hsl(0 62.8% 60.6%);
@@ -59,15 +59,15 @@ body {
 }
 
 @utility skeleton-3 {
-  @apply animate-pulse bg-gray-100 text-transparent dark:bg-gray-800;
+  @apply animate-pulse text-transparent bg-gray-800;
 }
 
 @utility skeleton-2 {
-  @apply animate-pulse bg-gray-200 text-transparent dark:bg-gray-700;
+  @apply animate-pulse text-transparent bg-gray-700;
 }
 
 @utility skeleton-1 {
-  @apply animate-pulse bg-gray-300 text-transparent dark:bg-gray-600;
+  @apply animate-pulse text-transparent bg-gray-600;
 }
 
 @utility skeleton-xs {

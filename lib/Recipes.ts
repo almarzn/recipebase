@@ -1,10 +1,6 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { PostgrestResponse, SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "~/types/database.types";
-import type {
-  RecipeDetailsSaved,
-  RecipePayload,
-  TagProps,
-} from "~/types/recipe";
+import type { RecipeDetailsSaved, RecipePayload } from "~/types/recipe";
 import {
   ingredientFieldSchema,
   servingsSchema,
@@ -24,7 +20,7 @@ export type ManyRecipeWithTags = {
   name: string;
   slug: string;
   description: string;
-  tags: TagProps[];
+  tag_ids: string[];
 };
 
 export class Recipes {
@@ -52,15 +48,29 @@ export class Recipes {
 
   async findAllWithTags(
     query: RecipeQuery = {},
-  ): Promise<ManyRecipeWithTags[] | null> {
-    const response = await this.client
-      .rpc("get_recipes", {
-        tags: query.tags ?? [],
-        text: query.text ?? "",
-      })
+    pagination: {
+      page: number;
+      rowsPerPage: number;
+    },
+  ) {
+    let builder = this.client
+      .from("recipes_with_tags")
+      .select("id, name, description, slug, tag_ids", {
+        count: pagination.page > 0 ? "exact" : "estimated",
+      });
+
+    if (query.tags && query.tags.length > 0)
+      builder = builder.overlaps("tag_ids", query.tags);
+    if (query.text) builder = builder.textSearch("text", query.text);
+
+    const result = await builder
+      .range(
+        pagination.page * pagination.rowsPerPage,
+        (pagination.page + 1) * pagination.rowsPerPage - 1,
+      )
       .throwOnError();
 
-    return response.data as ManyRecipeWithTags[];
+    return result as PostgrestResponse<ManyRecipeWithTags>;
   }
 
   async findAllByCollectionId(collectionId: string) {

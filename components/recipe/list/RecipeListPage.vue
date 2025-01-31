@@ -2,10 +2,20 @@
 import { CookingPot, Plus } from "lucide-vue-next";
 import RecipeTag from "~/components/recipe/RecipeTag.vue";
 import type { ManyRecipeWithTags } from "~/lib/Recipes";
+import type { TagProps } from "~/types/recipe";
+import { keyBy } from "lodash";
 
-defineProps<{
+const props = defineProps<{
   recipes: ManyRecipeWithTags[] | null;
+  allTags: TagProps[] | null;
+  loading?: boolean;
 }>();
+
+const tagsById = computed(() => {
+  const newVar = props.allTags ? keyBy(props.allTags, "id") : null;
+  console.log(props.allTags, newVar);
+  return newVar;
+});
 </script>
 
 <template>
@@ -30,7 +40,8 @@ defineProps<{
 
   <div
     v-else
-    class="flex flex-col items-stretch gap-2 self-stretch backdrop-blur-3xl"
+    class="flex flex-col items-stretch gap-2 self-stretch backdrop-blur-3xl data-[loading=true]:opacity-50 data-[loading=true]:pointer-events-none transition-opacity"
+    :data-loading="loading"
   >
     <NuxtLink
       v-for="recipe in recipes"
@@ -47,8 +58,12 @@ defineProps<{
           {{ recipe.description }}
         </div>
       </div>
-      <div v-if="recipe.tags?.length > 0" class="flex flex-wrap gap-2">
-        <RecipeTag v-for="tag in recipe.tags" :key="tag.id" :tag />
+      <div v-if="recipe.tag_ids?.length > 0" class="flex flex-wrap gap-2">
+        <template v-for="(tag, index) in recipe.tag_ids" :key="index">
+          <RecipeTag v-if="tagsById !== null" :tag="tagsById[tag]" />
+
+          <div v-else class="h-[22px] w-20 skeleton-3 rounded-sm"></div>
+        </template>
       </div>
     </NuxtLink>
   </div>

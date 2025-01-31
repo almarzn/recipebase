@@ -96,6 +96,12 @@ import { z } from "zod";
 import { toTypedSchema } from "@vee-validate/zod";
 import VueTurnstile from "vue-turnstile";
 import { toast } from "vue-sonner";
+import {
+  FormControl,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
 
 const config = useRuntimeConfig();
 

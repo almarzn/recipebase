@@ -65,7 +65,7 @@ const goTo = (name: Parameters<(typeof router)["push"]>[0]) => {
     variant="outline"
     :class="
       cn(
-        'flex items-center justify-stretch gap-2 overflow-hidden rounded-full border-2 bg-gray-500/5 text-muted-foreground backdrop-blur-xl max-md:self-stretch md:self-center',
+        'flex items-center justify-stretch gap-2 overflow-hidden rounded-full border-2 bg-gray-500/5 text-muted-foreground backdrop-blur-2xl max-md:self-stretch md:self-center',
         $props.class,
       )
     "

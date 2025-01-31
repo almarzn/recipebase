@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { UserCog, LogOut, User } from "lucide-vue-next";
+import { LogOut, User, UserCog } from "lucide-vue-next";
 import SearchRecipe from "~/components/recipe/SearchRecipe.vue";
 
 const user = useSupabaseUser();
@@ -33,8 +33,11 @@ const route = useRoute();
 
       <template v-if="user">
         <Sheet>
-          <SheetTrigger>
-            <div class="flex items-center gap-3">
+          <SheetTrigger as-child>
+            <Button
+              variant="ghost"
+              class="flex items-center gap-3 rounded-full p-2 pr-3"
+            >
               <div class="rounded-full text-clip">
                 <div v-if="avatarUrl" class="w-6 overflow-hidden rounded-full">
                   <NuxtImg :src="avatarUrl" />
@@ -45,7 +48,7 @@ const route = useRoute();
               <div class="text-muted-foreground max-sm:hidden">
                 {{ user.email }}
               </div>
-            </div>
+            </Button>
           </SheetTrigger>
           <SheetContent>
             <p class="text-muted-foreground">{{ user.email }}</p>

@@ -14,13 +14,20 @@ import { useVModel } from "@vueuse/core";
 import AdaptiveSheet from "~/components/ui/sheet/AdaptiveSheet.vue";
 
 const props = defineProps<{
-  modelValue: RecipeQuery;
+  text: string;
+  tags: string[];
 }>();
 const emit = defineEmits<{
-  "update:model-value": [RecipeQuery];
+  "update:text": [string];
+  "update:tags": [string[]];
 }>();
 
-const vModel = useVModel(props, "modelValue", emit, {
+const tagsModel = useVModel(props, "tags", emit, {
+  deep: true,
+  passive: true,
+});
+
+const textModel = useVModel(props, "text", emit, {
   deep: true,
   passive: true,
 });
@@ -33,9 +40,9 @@ const { data: allTags } = await useAsyncData("tagsWithCount", () =>
 
 const updateTag = (id: string, value: boolean) => {
   if (value) {
-    vModel.value.tags = [...(vModel.value?.tags ?? []), id];
+    tagsModel.value = [...(tagsModel.value ?? []), id];
   } else {
-    vModel.value.tags = vModel!.value.tags!.filter((it) => it !== id);
+    tagsModel.value = tagsModel.value.filter((it) => it !== id);
   }
 };
 </script>
@@ -46,7 +53,7 @@ const updateTag = (id: string, value: boolean) => {
     :icon="SlidersHorizontal"
     sheet-title="Filter results"
   >
-    <Input v-model="vModel!.text" placeholder="Search recipes" />
+    <Input v-model="textModel" placeholder="Search recipes" />
 
     <CollapsibleRoot
       class="group/collapsible flex flex-col gap-3 rounded-md"
@@ -69,7 +76,7 @@ const updateTag = (id: string, value: boolean) => {
           v-for="tag in allTags"
           :key="tag.id"
           v-slot="{ checked }"
-          :checked="vModel?.tags?.includes(tag.id)"
+          :checked="tagsModel.includes(tag.id)"
           class="flex items-center gap-2 rounded-full px-3 py-1 text-start text-sm data-[state=checked]:bg-gray-800"
           @update:checked="(value) => updateTag(tag.id, value)"
         >
@@ -80,7 +87,7 @@ const updateTag = (id: string, value: boolean) => {
 
           {{ tag.text }}
           <div class="md:grow"></div>
-          <div class="text-muted-foreground">({{ tag.recipes }})</div>
+          <div class="text-muted-foreground">{{ tag.recipes }}</div>
         </CheckboxRoot>
       </CollapsibleContent>
     </CollapsibleRoot>

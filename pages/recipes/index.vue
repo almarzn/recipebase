@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Database } from "~/types/database.types";
 import { PencilLine, Plus, ScanText } from "lucide-vue-next";
-import { type RecipeQuery, Recipes } from "~/lib/Recipes";
+import { Recipes } from "~/lib/Recipes";
 import PageLayout from "~/components/layout/PageLayout.vue";
 import { AdaptiveBreadcrumbs } from "~/components/layout";
 import { ErrorStatus } from "~/components/ui/status";
@@ -14,25 +14,44 @@ import {
 import RecipeListPage from "~/components/recipe/list/RecipeListPage.vue";
 import RecipeListSkeleton from "~/components/recipe/list/RecipeListSkeleton.vue";
 import RecipeFilters from "~/components/recipe/list/RecipeFilters.vue";
-import { useDebounceFn } from "@vueuse/core";
 
+import {
+  Pagination,
+  PaginationEllipsis,
+  PaginationFirst,
+  PaginationLast,
+  PaginationList,
+  PaginationListItem,
+  PaginationNext,
+  PaginationPrev,
+} from "@/components/ui/pagination";
+import { useSearchResults } from "~/pages/recipes/useSearchResults";
+import { Tags } from "~/lib/Tags";
+
+const rowsPerPage = 10;
+
+const searchResults = await useSearchResults(rowsPerPage);
 const client = useSupabaseClient<Database>();
 
-const query = reactive<RecipeQuery>({
-  tags: [],
-  text: "",
-});
-
-const { data: recipes, status } = await useAsyncData(
-  "recipes",
-  useDebounceFn(() => {
-    return Recipes.using(client).findAllWithTags(query);
-  }, 500),
+const tags = await useAsyncData(
+  async () => {
+    return Tags.using(client).findAll();
+  },
   {
     lazy: true,
-    watch: [query],
   },
 );
+
+watch([searchResults.tags, searchResults.text], () => {
+  searchResults.currentPage.value = 1;
+});
+
+watch(searchResults.recipes, () => {
+  window.document.scrollingElement?.scrollTo({
+    behavior: "smooth",
+    top: 0,
+  });
+});
 </script>
 
 <template>
@@ -98,12 +117,59 @@ const { data: recipes, status } = await useAsyncData(
     </div>
 
     <div class="flex grow gap-4 max-md:flex-col md:gap-6 lg:gap-12 2xl:gap-14">
-      <RecipeFilters v-model="query" />
+      <RecipeFilters
+        v-model:text="searchResults.text.value"
+        v-model:tags="searchResults.tags.value"
+      />
 
       <div class="flex grow flex-col items-stretch justify-stretch">
-        <RecipeListPage v-if="status === 'success'" :recipes />
-        <RecipeListSkeleton v-if="status === 'pending'" />
-        <ErrorStatus v-if="status === 'error'" />
+        <ErrorStatus v-if="searchResults.status.value === 'error'" />
+
+        <RecipeListPage
+          v-else-if="searchResults.recipes.value?.data"
+          :recipes="searchResults.recipes.value.data"
+          :loading="searchResults.status.value === 'pending'"
+          :all-tags="tags.data.value"
+        />
+
+        <RecipeListSkeleton v-else-if="!searchResults.recipes.value?.data" />
+
+        <div class="h-8"></div>
+
+        <Pagination
+          v-if="searchResults.recipes.value?.data"
+          v-slot="{ page }"
+          v-model:page="searchResults.currentPage.value"
+          :total="searchResults.recipes.value.count ?? 0"
+          :sibling-count="1"
+          :items-per-page="rowsPerPage"
+          show-edges
+        >
+          <PaginationList v-slot="{ items }" class="flex items-center gap-1">
+            <PaginationFirst />
+            <PaginationPrev />
+
+            <template v-for="(item, index) in items">
+              <PaginationListItem
+                v-if="item.type === 'page'"
+                :key="index"
+                :value="item.value"
+                as-child
+              >
+                <Button
+                  class="size-9 p-0"
+                  :variant="item.value === page ? 'default' : 'outline'"
+                >
+                  {{ item.value }}
+                </Button>
+              </PaginationListItem>
+              <PaginationEllipsis v-else :key="item.type" :index="index" />
+            </template>
+
+            <PaginationNext />
+            <PaginationLast />
+          </PaginationList>
+        </Pagination>
       </div>
     </div>
   </PageLayout>
