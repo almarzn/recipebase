@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { Database } from "~/types/database.types";
 import { PencilLine, Plus, ScanText } from "lucide-vue-next";
-import { Recipes } from "~/lib/Recipes";
 import PageLayout from "~/components/layout/PageLayout.vue";
 import { AdaptiveBreadcrumbs } from "~/components/layout";
 import { ErrorStatus } from "~/components/ui/status";

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Tags } from "~/lib/Tags";
-import type { RecipeQuery } from "~/lib/Recipes";
 import {
   CheckboxRoot,
   CollapsibleContent,

@@ -59,15 +59,15 @@ body {
 }
 
 @utility skeleton-3 {
-  @apply animate-pulse text-transparent bg-gray-800;
+  @apply animate-pulse bg-gray-800 text-transparent;
 }
 
 @utility skeleton-2 {
-  @apply animate-pulse text-transparent bg-gray-700;
+  @apply animate-pulse bg-gray-700 text-transparent;
 }
 
 @utility skeleton-1 {
-  @apply animate-pulse text-transparent bg-gray-600;
+  @apply animate-pulse bg-gray-600 text-transparent;
 }
 
 @utility skeleton-xs {

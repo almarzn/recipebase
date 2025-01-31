@@ -40,7 +40,7 @@ const tagsById = computed(() => {
 
   <div
     v-else
-    class="flex flex-col items-stretch gap-2 self-stretch backdrop-blur-3xl data-[loading=true]:opacity-50 data-[loading=true]:pointer-events-none transition-opacity"
+    class="flex flex-col items-stretch gap-2 self-stretch backdrop-blur-3xl transition-opacity data-[loading=true]:pointer-events-none data-[loading=true]:opacity-50"
     :data-loading="loading"
   >
     <NuxtLink
