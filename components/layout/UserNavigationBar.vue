@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { LogOut, User, UserCog } from "lucide-vue-next";
 import SearchRecipe from "~/components/recipe/SearchRecipe.vue";
+import { toast } from "vue-sonner";
 
 const user = useSupabaseUser();
 
@@ -8,7 +9,11 @@ const supabase = useSupabaseClient();
 
 const signOut = async () => {
   const { error } = await supabase.auth.signOut();
-  if (error) console.log(error);
+  if (error) {
+    return toast.error("Unable to logout: " + error.message);
+  }
+
+  navigateTo("/");
 };
 const avatarUrl = user.value?.user_metadata.avatar_url;
 

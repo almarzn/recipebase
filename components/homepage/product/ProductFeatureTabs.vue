@@ -1,3 +1,17 @@
+<script setup lang="ts">
+import exampleRecipe from "~/components/homepage/product/exampleRecipe";
+import FakeImportPage from "~/components/recipe/import/FakeImportPage.vue";
+import { RecipePage } from "~/components/recipe/view";
+import RecipeListPage from "~/components/recipe/list/RecipeListPage.vue";
+import { TabsContent, TabsList, TabsRoot, TabsTrigger } from "radix-vue";
+import {
+  recipeList,
+  tagList,
+} from "~/components/homepage/product/exampleRecipeList";
+
+const selectedTab = ref("recipe");
+</script>
+
 <template>
   <div
     class="w-full self-center overflow-hidden border border-b-0 max-md:border-x-0 md:rounded-t-xl"
@@ -70,7 +84,7 @@
             <div
               class="pointer-events-none absolute -left-1/4 size-[150%] origin-[top_center] scale-[66.66%]"
             >
-              <RecipeListPage :recipes="recipeList" />
+              <RecipeListPage :recipes="recipeList" :all-tags="tagList" />
             </div>
           </div>
         </TabsContent>
@@ -78,17 +92,6 @@
     </TabsRoot>
   </div>
 </template>
-
-<script setup lang="ts">
-import exampleRecipe from "~/components/homepage/product/exampleRecipe";
-import FakeImportPage from "~/components/recipe/import/FakeImportPage.vue";
-import { RecipePage } from "~/components/recipe/view";
-import RecipeListPage from "~/components/recipe/list/RecipeListPage.vue";
-import { TabsContent, TabsList, TabsRoot, TabsTrigger } from "radix-vue";
-import { recipeList } from "~/components/homepage/product/exampleRecipeList";
-
-const selectedTab = ref("recipe");
-</script>
 
 <style scoped>
 @reference "../../../assets/css/tailwind.css";
