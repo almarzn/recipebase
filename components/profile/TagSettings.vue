@@ -94,6 +94,7 @@ const addNewTag = async () => {
 };
 
 const updateProps = async (id: string, props: Partial<TagProps>) => {
+  console.log("updateProps", id, props);
   tags.value = tags.value!.map((el) =>
     el.id === id
       ? {
@@ -166,7 +167,7 @@ const deleteTag = async (id: string) => {
                   name="color"
                   class="peer absolute inset-0 cursor-pointer appearance-none"
                   :checked="tag.color === color"
-                  @change="() => updateProps(tag.id, { color })"
+                  @click="() => updateProps(tag.id, { color })"
                 />
                 <CheckIcon class="hidden size-3 peer-checked:block" />
               </PopoverClose>
@@ -203,7 +204,7 @@ const deleteTag = async (id: string) => {
                   name="icon"
                   class="peer absolute inset-0 cursor-pointer appearance-none"
                   :checked="tag.icon === icon"
-                  @change="() => updateProps(tag.id, { icon })"
+                  @click="() => updateProps(tag.id, { icon })"
                 />
               </PopoverClose>
               <TagIcon :tag="{ icon }" class="size-4" />
