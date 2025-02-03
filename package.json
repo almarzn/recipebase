@@ -12,7 +12,7 @@
     "lintfix": "eslint . --fix && prettier --write --list-different .",
     "postinstall": "nuxt prepare && npm run generate:types",
     "preview": "nuxt preview",
-    "generate:types": "supabase gen types typescript --project-id jxjfojsbhdnkpgldapgk > types/database.types.ts"
+    "generate:types": "supabase gen types typescript --local > types/database.types.ts"
   },
   "dependencies": {
     "@nuxt/image": "^1.8.1",

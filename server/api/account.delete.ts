@@ -1,5 +1,7 @@
-import {serverSupabaseClient, serverSupabaseServiceRole, serverSupabaseUser} from "#supabase/server";
-import { log } from "effect/Console";
+import {
+  serverSupabaseServiceRole,
+  serverSupabaseUser,
+} from "#supabase/server";
 import type { Database } from "~/types/database.types";
 
 export default defineEventHandler(async (event) => {
@@ -14,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
   const service = serverSupabaseServiceRole<Database>(event);
 
-  const result = await service.auth.admin.deleteUser(user!.id!, false)
+  const result = await service.auth.admin.deleteUser(user!.id!, false);
 
   if (result.error) {
     console.error(result.error);

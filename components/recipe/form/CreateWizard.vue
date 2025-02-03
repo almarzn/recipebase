@@ -35,6 +35,7 @@ const steps = computed(() => {
           description: true,
           name: true,
           tags: true,
+          metadata: true,
         })
         .refine(
           async ({ name }) => {

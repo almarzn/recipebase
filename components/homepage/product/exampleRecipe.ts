@@ -286,4 +286,7 @@ export default {
     },
   ],
   saved: {},
+  metadata: {
+    original_url: "/",
+  },
 } satisfies RecipeDetailsSaved;

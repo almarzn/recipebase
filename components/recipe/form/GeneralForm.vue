@@ -32,6 +32,7 @@ import { Tags } from "~/lib/Tags";
 import RecipeTag from "~/components/recipe/RecipeTag.vue";
 import { keyBy } from "lodash";
 import TagSettingSheet from "~/components/profile/TagSettingSheet.vue";
+import RecipeTagsInput from "~/components/recipe/form/RecipeTagsInput.vue";
 
 const open = ref(false);
 const searchTerm = ref("");
@@ -80,79 +81,15 @@ const tagsById = computed(() => keyBy(tags.data.value, "id"));
       <FormMessage />
     </FormItem>
   </FormField>
-  <FormField v-slot="{ value, setValue }" name="tags">
+  <FormField v-slot="{ componentField }" name="tags">
     <FormItem>
       <FormLabel>Tags</FormLabel>
       <FormControl>
-        <TagsInput
-          :model-value="value"
-          class="w-80 gap-0 px-0"
-          @update:model-value="setValue($event)"
-        >
-          <div class="flex flex-wrap items-center gap-2 px-3">
-            <TagsInputItem v-for="item in value" :key="item" :value="item">
-              <RecipeTag v-if="tagsById[item]" :tag="tagsById[item]">
-                <TagsInputItemDelete class="mr-0" />
-              </RecipeTag>
-            </TagsInputItem>
-          </div>
-
-          <ComboboxRoot
-            v-model:open="open"
-            v-model:search-term="searchTerm"
-            :model-value="value"
-            class="w-full"
-          >
-            <ComboboxAnchor as-child>
-              <ComboboxInput placeholder="Tags..." as-child>
-                <TagsInputInput
-                  class="w-full px-3"
-                  :class="value.length > 0 ? 'mt-2' : ''"
-                  @keydown.enter.prevent
-                  @focus="open = true"
-                />
-              </ComboboxInput>
-            </ComboboxAnchor>
-
-            <ComboboxPortal>
-              <ComboboxContent>
-                <CommandList
-                  position="popper"
-                  class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 mt-2 w-[--radix-popper-anchor-width] rounded-md border bg-popover text-popover-foreground shadow-md outline-none"
-                >
-                  <CommandEmpty />
-                  <CommandGroup>
-                    <CommandItem
-                      v-for="tag in filteredTags?.filter(
-                        (it) => !value?.includes(it.id),
-                      )"
-                      :key="tag.id"
-                      :value="tag.text"
-                      @select.prevent="
-                        (ev) => {
-                          if (typeof ev.detail.value === 'string') {
-                            searchTerm = '';
-                            value.push(tag.id);
-                          }
-
-                          if (filteredTags?.length === 0) {
-                            open = false;
-                          }
-                        }
-                      "
-                    >
-                      {{ tag.text }}
-                    </CommandItem>
-                  </CommandGroup>
-                </CommandList>
-              </ComboboxContent>
-            </ComboboxPortal>
-          </ComboboxRoot>
-        </TagsInput>
+        <RecipeTagsInput ref="tagsInput" v-bind="componentField" />
       </FormControl>
       <FormDescription>
         Tag this recipe to help you organize them. Click
-        <TagSettingSheet @close-sheet="tags.refresh()">
+        <TagSettingSheet @close-sheet="$refs.tagsInput?.refreshTags()">
           <span
             class="cursor-pointer text-foreground underline underline-offset-4"
           >
@@ -161,6 +98,30 @@ const tagsById = computed(() => keyBy(tags.data.value, "id"));
         </TagSettingSheet>
       </FormDescription>
       <FormMessage />
+    </FormItem>
+  </FormField>
+  <FormField v-slot="{ componentField }" name="metadata.original_url">
+    <FormItem>
+      <FormLabel>Original URL</FormLabel>
+      <FormControl>
+        <Input type="text" v-bind="componentField" />
+      </FormControl>
+      <FormMessage />
+      <FormDescription>
+        The original URL of the recipe. Optional.
+      </FormDescription>
+    </FormItem>
+  </FormField>
+  <FormField v-slot="{ componentField }" name="metadata.original_author">
+    <FormItem>
+      <FormLabel>Original author</FormLabel>
+      <FormControl>
+        <Input type="text" v-bind="componentField" />
+      </FormControl>
+      <FormMessage />
+      <FormDescription>
+        The original author of the recipe. Optional.
+      </FormDescription>
     </FormItem>
   </FormField>
 </template>

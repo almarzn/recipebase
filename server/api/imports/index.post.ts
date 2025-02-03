@@ -36,9 +36,10 @@ export default defineEventHandler(async (event) => {
       client,
       {
         role: "user",
-        content: [content],
+        content: [content.completion],
       },
       scanningContent,
+      content.metadata,
     );
 
     event.node.res.write(`response:${JSON.stringify(recipes)}\n`);

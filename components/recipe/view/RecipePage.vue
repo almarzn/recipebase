@@ -10,7 +10,7 @@ import {
   useBreakpoints,
 } from "@vueuse/core";
 import AdaptiveSheet from "~/components/ui/sheet/AdaptiveSheet.vue";
-import { ShoppingBasket } from "lucide-vue-next";
+import { ShoppingBasket, Link } from "lucide-vue-next";
 
 const props = defineProps<{
   hideComments?: true;
@@ -71,6 +71,13 @@ debouncedWatch(
           <h2 class="heading-2">{{ recipe.name }}</h2>
         </div>
         <p class="text-muted-foreground">{{ recipe.description }}</p>
+        <div v-if="recipe.metadata?.original_url">
+          <Button size="sm" variant="outline" class="rounded-full" as-child>
+            <NuxtLink :to="recipe.metadata?.original_url" target="_blank">
+              <Link /> Source
+            </NuxtLink>
+          </Button>
+        </div>
       </div>
 
       <div class="flex flex-col gap-4">

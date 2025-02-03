@@ -4,6 +4,7 @@ import type { ChatClient } from "~/server/api/imports/getChatClient";
 import {
   ingredientSchema,
   ingredientUnitSchema,
+  type Metadata,
   type RecipePayload,
 } from "~/types/recipe";
 import { Array } from "effect";
@@ -173,10 +174,12 @@ export const extractRecipes = async (
   chatClient: ChatClient,
   content: ChatCompletionMessageParam,
   top: TrackerGroup,
+  metadata: Metadata,
 ): Promise<RecipePayload[]> => {
   const recipePartsUnit = top.newItem(
     "Listing all recipes and their respective parts",
   );
+
   const recipeContentGroup = top.newGroup(
     "Fetching the content for each recipe",
     8,
@@ -205,6 +208,7 @@ export const extractRecipes = async (
         amount: servings.amount,
         notes: servings.notes ?? undefined,
       },
+      metadata,
     };
   });
 };

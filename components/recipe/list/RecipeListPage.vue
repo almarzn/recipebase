@@ -11,17 +11,15 @@ const props = defineProps<{
   loading?: boolean;
 }>();
 
-const tagsById = computed(() => {
-  const newVar = props.allTags ? keyBy(props.allTags, "id") : null;
-  console.log(props.allTags, newVar);
-  return newVar;
-});
+const tagsById = computed(() =>
+  props.allTags ? keyBy(props.allTags, "id") : null,
+);
 </script>
 
 <template>
   <div
     v-if="!recipes || recipes?.length === 0"
-    class="flex items-center gap-8 self-center"
+    class="flex grow items-center gap-8 self-center"
   >
     <CookingPot :size="64" class="stroke-muted-foreground" />
     <div class="flex max-w-96 flex-col items-start gap-4 self-center">
@@ -40,8 +38,8 @@ const tagsById = computed(() => {
 
   <div
     v-else
-    class="flex flex-col items-stretch gap-2 self-stretch backdrop-blur-3xl transition-opacity data-[loading=true]:pointer-events-none data-[loading=true]:opacity-50"
-    :data-loading="loading"
+    class="flex grow flex-col items-stretch gap-2 self-stretch backdrop-blur-3xl transition-opacity data-loading:pointer-events-none data-loading:opacity-50"
+    :data-loading="loading || undefined"
   >
     <NuxtLink
       v-for="recipe in recipes"

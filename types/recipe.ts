@@ -1,6 +1,15 @@
 import { z } from "zod";
 import type { Database } from "~/types/database.types";
 
+const zEmptyStrToUndefined = (schema: z.ZodType) =>
+  z.preprocess((arg: unknown) => {
+    if (arg === "") {
+      return undefined;
+    }
+
+    return arg;
+  }, schema);
+
 export const ingredientUnitSchema = z.enum([
   "teaspoon",
   "tablespoon",
@@ -70,6 +79,13 @@ export const ingredientFieldSchema = z.array(
   ingredientSchema.or(separatorSchema),
 );
 
+export const metadataSchema = z.object({
+  original_url: zEmptyStrToUndefined(z.string().url().optional()),
+  original_author: zEmptyStrToUndefined(z.string().optional()),
+});
+
+export type Metadata = z.infer<typeof metadataSchema>;
+
 export const recipePayload = z.object({
   name: z.string().max(500).trim().nonempty(),
   description: z.string().max(1000).optional(),
@@ -77,6 +93,7 @@ export const recipePayload = z.object({
   steps: z.array(stepSchema),
   tags: z.array(z.string()),
   servings: servingsSchema.or(z.null()),
+  metadata: metadataSchema.or(z.null()),
 });
 
 export const existingRecipeSchema = recipePayload.extend({

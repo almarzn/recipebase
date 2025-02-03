@@ -1,6 +1,10 @@
 import type { PostgrestResponse, SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "~/types/database.types";
-import type { RecipeDetailsSaved, RecipePayload } from "~/types/recipe";
+import {
+  metadataSchema,
+  type RecipeDetailsSaved,
+  type RecipePayload,
+} from "~/types/recipe";
 import {
   ingredientFieldSchema,
   servingsSchema,
@@ -144,6 +148,7 @@ export class Recipes {
       saved: {
         servings: head(result.last_recipe_servings)?.value ?? undefined,
       },
+      metadata: metadataSchema.parse(result.metadata),
     };
   }
 
@@ -193,6 +198,7 @@ export class Recipes {
         steps: props.steps,
         ingredients: props.ingredients,
         servings: props.servings,
+        metadata: props.metadata,
       })
       .throwOnError();
 
