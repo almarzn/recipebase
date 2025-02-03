@@ -2,7 +2,7 @@ import type { Subscription } from "@supabase/auth-js/src/lib/types";
 
 const client = useSupabaseClient();
 
-export const useRedirectToLoginAfterMounter = () => {
+export const useRedirectToLoginAfterMount = () => {
   let subscription: Subscription | undefined = undefined;
 
   onMounted(() => {

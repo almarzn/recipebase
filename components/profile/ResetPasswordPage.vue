@@ -7,7 +7,7 @@ import { toast } from "vue-sonner";
 import { ArrowRight } from "lucide-vue-next";
 import type { AuthError } from "@supabase/auth-js";
 import ReauthenticateUser from "~/components/profile/ReauthenticateUser.vue";
-import { useRedirectToLoginAfterMounter } from "~/components/profile/UseRedirectToLoginAfterMounter";
+import { useRedirectToLoginAfterMount } from "~/components/profile/useRedirectToLoginAfterMount";
 
 const { handleSubmit, isSubmitting, values } = useForm({
   validationSchema: toTypedSchema(
@@ -71,7 +71,7 @@ const submitWithNonce = async (nonce: string) => {
   await updatePassword(values.password!, nonce);
 };
 
-useRedirectToLoginAfterMounter();
+useRedirectToLoginAfterMount();
 </script>
 
 <template>
