@@ -202,9 +202,21 @@ const forgotPassword = useAsyncData(
     const captcha = await form.validateField("captcha");
 
     if (email.valid && captcha.valid) {
-      await supabase.auth.resetPasswordForEmail(email.value!, {
-        captchaToken: captcha.value,
-      });
+      const result = await supabase.auth.resetPasswordForEmail(
+        form.values.email!,
+        {
+          captchaToken: form.values.captcha,
+          redirectTo: window.location.origin + "/reset",
+        },
+      );
+
+      if (result.error) {
+        console.log(result.error);
+
+        toast.error("Unable to send recovery email. Please try again.");
+
+        return;
+      }
 
       toast.success("Please check your emails.");
     }

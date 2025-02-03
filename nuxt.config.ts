@@ -52,7 +52,7 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: "/login",
       callback: "/confirm",
-      exclude: ["/", "/privacy"],
+      exclude: ["/", "/privacy", "/reset"],
     },
     cookieOptions: {
       secure: process.env.NODE_ENV === "production",
