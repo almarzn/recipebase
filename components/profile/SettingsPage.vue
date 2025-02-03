@@ -33,6 +33,23 @@ const submitForm = handleSubmit(async (data) => {
     toast.error("An error occurred while trying to save settings");
   }
 });
+
+const deleteAccount = useAsyncData(async () => {
+  try {
+    const response = await $fetch("/api/account", {
+      method: "DELETE",
+    });
+    await client.auth.signOut();
+
+    toast.success("Account deleted successfully");
+
+    navigateTo("/");
+  } catch (e) {
+    console.error(e);
+
+    toast.error("An error occurred while trying to delete account");
+  }
+}, { immediate: false });
 </script>
 
 <template>
@@ -83,10 +100,32 @@ const submitForm = handleSubmit(async (data) => {
             Change password
           </NuxtLink>
         </Button>
-        <Button variant="ghost" class="text-destructive hover:text-destructive">
-          <Trash2 />
-          Delete account
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger as-child>
+            <Button
+              variant="ghost"
+              class="text-destructive hover:text-destructive"
+            >
+              <Trash2 />
+              Delete account
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete your
+                account and remove your data from our servers.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction @click="deleteAccount.execute()">
+                Delete my account
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   </div>

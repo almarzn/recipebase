@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { loaderButtonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { AlertDialogAction, type AlertDialogActionProps } from "radix-vue";
 import { computed, type HTMLAttributes } from "vue";
@@ -18,7 +18,7 @@ const delegatedProps = computed(() => {
 <template>
   <AlertDialogAction
     v-bind="delegatedProps"
-    :class="cn(loaderButtonVariants(), props.class)"
+    :class="cn(buttonVariants(), props.class)"
   >
     <slot />
   </AlertDialogAction>
