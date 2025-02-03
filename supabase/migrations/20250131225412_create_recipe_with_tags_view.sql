@@ -14,4 +14,4 @@ FROM recipes r
                              FROM jsonb_array_elements(r.ingredients) ingredient(value)) ing ON true
 GROUP BY r.id;
 
-
+ALTER VIEW public.recipes_with_tags SET (security_invoker = on);
