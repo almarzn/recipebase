@@ -19,8 +19,6 @@ jobs:
           cache: "npm"
 
       - run: npm ci
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - uses: supabase/setup-cli@v1
         with:
@@ -30,7 +28,8 @@ jobs:
 
       - run: supabase link --project-ref zrthjvdlyijueqygqcmn
         env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET: ${{ secrets.SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET }}
+
       - run: supabase db push
