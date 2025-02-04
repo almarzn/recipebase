@@ -69,3 +69,10 @@ create table public.free_ai_trials
 
 alter table "public"."free_ai_trials" enable row level security;
 
+create policy "Read-only their own data " on public.free_ai_trials
+    as permissive
+    for select
+    to authenticated
+    using ((SELECT auth.uid() AS uid) = user_id);
+
+

@@ -15,7 +15,9 @@
     </div>
 
     <Button class="h-auto self-center rounded-full px-5 py-2 text-lg" as-child>
-      <NuxtLink to="/login"> Get started</NuxtLink>
+      <NuxtLink v-umami="{ name: 'Signup', source: 'Hero' }" to="/login">
+        Get started
+      </NuxtLink>
     </Button>
   </div>
 </template>

@@ -146,6 +146,7 @@ const extraction = useRealtimeExtraction(currentModel, sourceValue);
             <div class="grow"></div>
 
             <SpinnerButton
+              v-umami="{ name: 'Import', type: sourceValue.current }"
               :loading="extraction.status.value === 'pending'"
               :disabled="
                 !(

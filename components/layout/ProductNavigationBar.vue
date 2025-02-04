@@ -10,7 +10,11 @@
 
       <div class="h-9 grow" />
 
-      <Button as-child variant="secondary">
+      <Button
+        v-umami="{ name: 'Signup', source: 'Navigation' }"
+        as-child
+        variant="secondary"
+      >
         <NuxtLink to="/login"> Sign In </NuxtLink>
       </Button>
     </div>

@@ -10,7 +10,13 @@ export default defineNuxtConfig({
     "@nuxt/eslint",
     "@nuxt/image",
     "nuxt-typed-router",
+    "nuxt-umami",
   ],
+  routeRules: {
+    "/": {
+      prerender: true,
+    },
+  },
   css: ["~/assets/css/tailwind.css"],
   vite: {
     plugins: [tailwindcss()],
@@ -57,5 +63,11 @@ export default defineNuxtConfig({
     cookieOptions: {
       secure: process.env.NODE_ENV === "production",
     },
+  },
+  umami: {
+    id: import.meta.env.UMAMI_ID,
+    host: import.meta.env.UMAMI_HOST,
+    autoTrack: true,
+    useDirective: true,
   },
 });
