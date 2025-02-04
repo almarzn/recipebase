@@ -23,13 +23,19 @@ import { Tags } from "~/lib/Tags";
 import RecipeTag from "~/components/recipe/RecipeTag.vue";
 import { keyBy } from "lodash";
 
-const props = defineProps<{
-  modelValue: string[]
+defineProps<{
+  modelValue?: string[];
 }>();
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string[]]
+  "update:modelValue": [value: string[]];
 }>();
+
+defineExpose({
+  refreshTags: () => {
+    tags.refresh();
+  },
+});
 
 const open = ref(false);
 const searchTerm = ref("");
@@ -49,17 +55,13 @@ const filteredTags = computed(() => {
 });
 
 const tagsById = computed(() => keyBy(tags.data.value, "id"));
-
-const refreshTags = () => {
-  tags.refresh();
-};
 </script>
 
 <template>
   <TagsInput
     :model-value="modelValue"
     class="w-80 gap-0 px-0"
-    @update:model-value="emit('update:modelValue', $event)"
+    @update:model-value="emit('update:modelValue', $event as string[])"
   >
     <div class="flex flex-wrap items-center gap-2 px-3">
       <TagsInputItem v-for="item in modelValue" :key="item" :value="item">
@@ -79,7 +81,7 @@ const refreshTags = () => {
         <ComboboxInput placeholder="Tags..." as-child>
           <TagsInputInput
             class="w-full px-3"
-            :class="modelValue.length > 0 ? 'mt-2' : ''"
+            :class="(modelValue?.length ?? 0) > 0 ? 'mt-2' : ''"
             @keydown.enter.prevent
             @focus="open = true"
           />
@@ -90,7 +92,7 @@ const refreshTags = () => {
         <ComboboxContent>
           <CommandList
             position="popper"
-            class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 mt-2 w-[--radix-popper-anchor-width] rounded-md border bg-popover text-popover-foreground shadow-md outline-none"
+            class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 mt-2 w-[var(--radix-popper-anchor-width)] rounded-md border bg-popover text-popover-foreground shadow-md outline-none"
           >
             <CommandEmpty />
             <CommandGroup>
@@ -104,7 +106,10 @@ const refreshTags = () => {
                   (ev) => {
                     if (typeof ev.detail.value === 'string') {
                       searchTerm = '';
-                      emit('update:modelValue', [...modelValue, tag.id]);
+                      emit('update:modelValue', [
+                        ...(modelValue ?? []),
+                        tag.id,
+                      ]);
                     }
 
                     if (filteredTags?.length === 0) {
@@ -121,4 +126,4 @@ const refreshTags = () => {
       </ComboboxPortal>
     </ComboboxRoot>
   </TagsInput>
-</template> 
+</template>

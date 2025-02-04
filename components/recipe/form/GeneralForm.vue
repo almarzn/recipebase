@@ -33,6 +33,7 @@ import RecipeTag from "~/components/recipe/RecipeTag.vue";
 import { keyBy } from "lodash";
 import TagSettingSheet from "~/components/profile/TagSettingSheet.vue";
 import RecipeTagsInput from "~/components/recipe/form/RecipeTagsInput.vue";
+import type { ComponentFieldBindingObject } from "vee-validate";
 
 const open = ref(false);
 const searchTerm = ref("");
@@ -85,7 +86,10 @@ const tagsById = computed(() => keyBy(tags.data.value, "id"));
     <FormItem>
       <FormLabel>Tags</FormLabel>
       <FormControl>
-        <RecipeTagsInput ref="tagsInput" v-bind="componentField" />
+        <RecipeTagsInput
+          ref="tagsInput"
+          v-bind="componentField as ComponentFieldBindingObject<string[]>"
+        />
       </FormControl>
       <FormDescription>
         Tag this recipe to help you organize them. Click

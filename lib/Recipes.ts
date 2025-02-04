@@ -204,4 +204,8 @@ export class Recipes {
 
     return slugify(props.name);
   }
+
+  async deleteById(id: string) {
+    await this.client.from("recipes").delete().eq("id", id).throwOnError();
+  }
 }
