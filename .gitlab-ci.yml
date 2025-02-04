@@ -32,10 +32,9 @@ prerelease:
   stage: prerelease
   before_script:
     - npm ci
-    - curl -s https://raw.githubusercontent.com/supabase/cli/main/install.sh | bash
   script:
-    - supabase link --project-ref zrthjvdlyijueqygqcmn
-    - supabase db push
+    - npx supabase link --project-ref zrthjvdlyijueqygqcmn
+    - npx supabase db push
   variables:
     SUPABASE_ACCESS_TOKEN: $SUPABASE_ACCESS_TOKEN
     SUPABASE_DB_PASSWORD: $DB_PASSWORD
