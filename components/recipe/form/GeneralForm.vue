@@ -8,51 +8,9 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import {
-  TagsInput,
-  TagsInputInput,
-  TagsInputItemDelete,
-} from "~/components/ui/tags-input";
-import {
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  ComboboxAnchor,
-  ComboboxContent,
-  ComboboxInput,
-  ComboboxPortal,
-  ComboboxRoot,
-  TagsInputItem,
-} from "radix-vue";
-import { computed, ref } from "vue";
-import { Tags } from "~/lib/Tags";
-import RecipeTag from "~/components/recipe/RecipeTag.vue";
-import { keyBy } from "lodash-es";
 import TagSettingSheet from "~/components/profile/TagSettingSheet.vue";
 import RecipeTagsInput from "~/components/recipe/form/RecipeTagsInput.vue";
 import type { ComponentFieldBindingObject } from "vee-validate";
-
-const open = ref(false);
-const searchTerm = ref("");
-const client = useSupabaseClient();
-
-const tags = await useAsyncData(() => Tags.using(client).findAll(), {
-  lazy: true,
-});
-
-const filteredTags = computed(() => {
-  const filter = searchTerm.value ?? "";
-  return (
-    tags.data.value?.filter((it) =>
-      it.text.toLowerCase().includes(filter.toLowerCase()),
-    ) ?? []
-  );
-});
-
-const tagsById = computed(() => keyBy(tags.data.value, "id"));
 </script>
 
 <template>

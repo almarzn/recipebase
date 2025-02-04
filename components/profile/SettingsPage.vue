@@ -34,22 +34,25 @@ const submitForm = handleSubmit(async (data) => {
   }
 });
 
-const deleteAccount = useAsyncData(async () => {
-  try {
-    const response = await $fetch("/api/account", {
-      method: "DELETE",
-    });
-    await client.auth.signOut();
+const deleteAccount = useAsyncData(
+  async () => {
+    try {
+      await $fetch("/api/account", {
+        method: "DELETE",
+      });
+      await client.auth.signOut();
 
-    toast.success("Account deleted successfully");
+      toast.success("Account deleted successfully");
 
-    navigateTo("/");
-  } catch (e) {
-    console.error(e);
+      navigateTo("/");
+    } catch (e) {
+      console.error(e);
 
-    toast.error("An error occurred while trying to delete account");
-  }
-}, { immediate: false });
+      toast.error("An error occurred while trying to delete account");
+    }
+  },
+  { immediate: false },
+);
 </script>
 
 <template>
