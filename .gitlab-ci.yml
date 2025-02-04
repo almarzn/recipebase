@@ -1,0 +1,44 @@
+image: node:22
+
+variables:
+  # Use NPM's cache directory
+  NPM_CONFIG_CACHE: "$CI_PROJECT_DIR/.npm"
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .npm/
+    - node_modules/
+
+# Define stages
+stages:
+  - test
+  - prerelease
+
+# Regular build and test job (equivalent to node.js.yml)
+build-test:
+  stage: test
+  script:
+    - npm ci
+    - npm run build --if-present
+    - npm run lint
+  variables:
+    SUPABASE_ACCESS_TOKEN: $SUPABASE_ACCESS_TOKEN
+  rules:
+    - if: $CI_COMMIT_BRANCH
+
+# Prerelease job (equivalent to prerelease.yml)
+prerelease:
+  stage: prerelease
+  before_script:
+    - npm ci
+    - curl -s https://raw.githubusercontent.com/supabase/cli/main/install.sh | bash
+  script:
+    - supabase link --project-ref zrthjvdlyijueqygqcmn
+    - supabase db push
+  variables:
+    SUPABASE_ACCESS_TOKEN: $SUPABASE_ACCESS_TOKEN
+    SUPABASE_DB_PASSWORD: $DB_PASSWORD
+    SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET: $SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /^rc\/.*/ 
