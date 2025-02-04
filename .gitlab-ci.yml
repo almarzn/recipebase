@@ -38,9 +38,9 @@ prerelease:
     - npx supabase link --project-ref zrthjvdlyijueqygqcmn
     - npx supabase db push
   variables:
-    SUPABASE_ACCESS_TOKEN: $SUPABASE_ACCESS_TOKEN
-    SUPABASE_DB_PASSWORD: $DB_PASSWORD
-    SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET: $SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET
+    SUPABASE_ACCESS_TOKEN: "Access token"
+    SUPABASE_DB_PASSWORD: "Database password"
+    SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET: "Google secret"
   rules:
     - if: $CI_COMMIT_BRANCH =~ /^rc\/.*/
   environment: Staging
