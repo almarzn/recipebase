@@ -1,0 +1,35 @@
+name: Pre-release
+
+on:
+  push:
+    branches: ["rc/*"]
+  pull_request:
+    branches: ["rc/*"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "npm"
+
+      - run: npm ci
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - uses: supabase/setup-cli@v1
+
+      - run: supabase link --project-ref zrthjvdlyijueqygqcmn
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      - run: supabase db push

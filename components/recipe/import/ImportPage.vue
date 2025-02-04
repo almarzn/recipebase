@@ -2,7 +2,7 @@
 import { Bird, ScanSearch } from "lucide-vue-next";
 import { Settings } from "~/lib/Settings";
 import OpenAI from "openai";
-import { head } from "lodash";
+import { head } from "lodash-es";
 import NoModelAvailable from "~/components/recipe/import/NoModelAvailable.vue";
 import ModelSelect from "~/components/recipe/import/ModelSelect.vue";
 import FreeTrialsCounter from "~/components/recipe/import/FreeTrialsCounter.vue";

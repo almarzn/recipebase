@@ -62,7 +62,7 @@
 import { ScalingFormatter, UnitFormatter } from "~/lib/Unit";
 import type { Ingredient, RecipeDetailsSaved } from "~/types/recipe";
 import { v4 } from "uuid";
-import { initial, last } from "lodash";
+import { initial, last } from "lodash-es";
 import {
   CollapsibleContent,
   CollapsibleRoot,

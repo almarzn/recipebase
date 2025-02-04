@@ -30,7 +30,7 @@ import {
 import { computed, ref } from "vue";
 import { Tags } from "~/lib/Tags";
 import RecipeTag from "~/components/recipe/RecipeTag.vue";
-import { keyBy } from "lodash";
+import { keyBy } from "lodash-es";
 import TagSettingSheet from "~/components/profile/TagSettingSheet.vue";
 import RecipeTagsInput from "~/components/recipe/form/RecipeTagsInput.vue";
 import type { ComponentFieldBindingObject } from "vee-validate";

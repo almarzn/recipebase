@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "~/types/database.types";
-import { head } from "lodash";
+import { head } from "lodash-es";
 import type { TagProps } from "~/types/recipe";
 
 export class Tags {

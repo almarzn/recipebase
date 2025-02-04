@@ -12,11 +12,7 @@ export default defineNuxtConfig({
     "nuxt-typed-router",
     "nuxt-umami",
   ],
-  routeRules: {
-    "/": {
-      prerender: true,
-    },
-  },
+  routeRules: {},
   css: ["~/assets/css/tailwind.css"],
   vite: {
     plugins: [tailwindcss()],

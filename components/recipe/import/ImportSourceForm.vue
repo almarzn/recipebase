@@ -2,7 +2,7 @@
 import { useDropZone, useVModel } from "@vueuse/core";
 import type { SourceValue } from "~/components/recipe/import/SourceValue";
 import { showOpenFilePicker } from "show-open-file-picker";
-import { head } from "lodash";
+import { head } from "lodash-es";
 import { FileImage } from "lucide-vue-next";
 
 const props = defineProps<{

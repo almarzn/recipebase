@@ -3,7 +3,7 @@ import { CookingPot, Plus } from "lucide-vue-next";
 import RecipeTag from "~/components/recipe/RecipeTag.vue";
 import type { ManyRecipeWithTags } from "~/lib/Recipes";
 import type { TagProps } from "~/types/recipe";
-import { keyBy } from "lodash";
+import { keyBy } from "lodash-es";
 
 const props = defineProps<{
   recipes: ManyRecipeWithTags[] | null;

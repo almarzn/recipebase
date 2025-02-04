@@ -21,7 +21,7 @@ import {
 import { computed, ref } from "vue";
 import { Tags } from "~/lib/Tags";
 import RecipeTag from "~/components/recipe/RecipeTag.vue";
-import { keyBy } from "lodash";
+import { keyBy } from "lodash-es";
 
 defineProps<{
   modelValue?: string[];

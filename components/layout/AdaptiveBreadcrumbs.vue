@@ -39,7 +39,7 @@ import {
 import type { RouteLocationRaw } from "#vue-router";
 import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 import { ArrowLeft } from "lucide-vue-next";
-import { last } from "lodash";
+import { last } from "lodash-es";
 
 const props = defineProps<{
   items: { to?: RouteLocationRaw; text: string }[];

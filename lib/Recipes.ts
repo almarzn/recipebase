@@ -12,7 +12,7 @@ import {
 } from "~/types/recipe";
 import { slugify } from "~/lib/utils";
 import { z } from "zod";
-import { head, omit } from "lodash";
+import { head, omit } from "lodash-es";
 
 export interface RecipeQuery {
   tags?: string[];
