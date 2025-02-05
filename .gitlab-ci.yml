@@ -15,11 +15,18 @@ cache:
 # Define stages
 stages:
   - test
-  - prerelease
+  - deploy
 
 # Regular build and test job (equivalent to node.js.yml)
 build-test:
   stage: test
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+      - node_modules/
   script:
     - npm ci
     - npm run build --if-present
@@ -29,9 +36,16 @@ build-test:
   rules:
     - if: $CI_COMMIT_BRANCH
 
-# Prerelease job (equivalent to prerelease.yml)
-prerelease:
-  stage: prerelease
+# Prerelease job (equivalent to deploy.yml)
+supabase-push:
+  stage: deploy
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+      - node_modules/
   before_script:
     - npm ci
   script:
@@ -44,3 +58,21 @@ prerelease:
   rules:
     - if: $CI_COMMIT_BRANCH =~ /^rc\/.*/
   environment: Staging
+
+scw-push:
+  stage: deploy
+  environment: Staging
+  image: docker/docker:27.5.1-cli
+  services:
+    - name: docker/docker:27.5.1-dind
+      alias: docker
+  variables:
+    REGISTRY_ENDPOINT: "Registry endpoint"
+    SCW_SECRET_KEY: "Scaleway secret key"
+  script:
+    - export BUILD_VERSION=v$(sed 's|rc/||').rc-$CI_JOB_ID+$CI_COMMIT_SHORT_SHA
+    - echo "Building version $BUILD_VERSION"
+    - docker build . -t recipebase:$BUILD_VERSION -t recipebase:staging
+    - docker login $REGISTRY_ENDPOINT -u nologin --password-stdin <<< "$SCW_SECRET_KEY"
+    - docker tag recipebase:latest "$REGISTRY_ENDPOINT/recipebase:$BUILD_VERSION"
+    - docker push $REGISTRY_ENDPOINT/recipebase --all-tags
