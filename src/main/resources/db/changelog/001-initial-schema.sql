@@ -1,7 +1,7 @@
 --liquibase formatted sql
 
 -- ============================================================
--- Changeset 001 — recipe
+-- 001 — recipe
 -- ============================================================
 -- Core recipe entity. current_variant_id is nullable to break
 -- the circular dependency at insert time; the FK is added as
@@ -20,7 +20,7 @@ CREATE TABLE recipe (
 --rollback DROP TABLE recipe;
 
 -- ============================================================
--- Changeset 002 — recipe_variant
+-- 002 — recipe_variant
 -- ============================================================
 -- A recipe may have multiple variants (e.g. "chocolate" vs
 -- "vanilla" sponge). Slug is unique within a recipe.
@@ -41,7 +41,7 @@ CREATE INDEX idx_recipe_variant_recipe_id ON recipe_variant (recipe_id);
 --rollback DROP TABLE recipe_variant;
 
 -- ============================================================
--- Changeset 003 — recipe.current_variant_id FK (deferrable)
+-- 003 — recipe.current_variant_id FK (deferrable)
 -- ============================================================
 -- Must be deferrable so that a recipe and its first variant
 -- can be inserted in the same transaction without ordering
@@ -56,7 +56,7 @@ ALTER TABLE recipe
 --rollback ALTER TABLE recipe DROP CONSTRAINT fk_recipe_current_variant;
 
 -- ============================================================
--- Changeset 004 — recipe_component
+-- 004 — recipe_component
 -- ============================================================
 -- A component belongs to a variant and is ordered by position.
 --
@@ -91,7 +91,7 @@ CREATE INDEX idx_recipe_component_variant_id ON recipe_component (variant_id);
 --rollback DROP TABLE recipe_component;
 
 -- ============================================================
--- Changeset 005 — recipe_ingredient
+-- 005 — recipe_ingredient
 -- ============================================================
 -- Ingredients belong to a component and are ordered by
 -- position. Both self and snapshot components store their
@@ -128,7 +128,7 @@ CREATE INDEX idx_recipe_ingredient_component_id ON recipe_ingredient (component_
 --rollback DROP TABLE recipe_ingredient;
 
 -- ============================================================
--- Changeset 006 — recipe_step
+-- 006 — recipe_step
 -- ============================================================
 -- Steps belong to a component and are ordered by position.
 --
