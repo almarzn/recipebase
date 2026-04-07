@@ -120,6 +120,20 @@ class RecipeResourceControllerIT {
 	}
 
 	@Test
+	void list_returnsAllRecipesWithVariantSummaries() throws Exception {
+		mockMvc.perform(get("/api/recipes").accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$").isArray())
+			.andExpect(jsonPath("$.length()").value(1))
+			.andExpect(jsonPath("$[0].slug").value("chocolate-cake"))
+			.andExpect(jsonPath("$[0].title").value("Chocolate Cake"))
+			.andExpect(jsonPath("$[0].description").value("A rich chocolate cake"))
+			.andExpect(jsonPath("$[0].variants.length()").value(2))
+			.andExpect(jsonPath("$[0].variants[?(@.slug=='classic')].name").value("Classic"))
+			.andExpect(jsonPath("$[0].variants[?(@.slug=='molten')].name").value("Molten Center"));
+	}
+
+	@Test
 	void findBySlug_returnsRecipeWithTwoVariants() throws Exception {
 		mockMvc.perform(get("/api/recipes/chocolate-cake").accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())

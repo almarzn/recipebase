@@ -1,32 +1,35 @@
 package recipebase.server.recipe.resource;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import recipebase.server.recipe.FindAllRecipesUseCase;
 import recipebase.server.recipe.FindRecipeBySlugUseCase;
 
-import java.util.List;
-
-@Controller
 @RestController
 @RequestMapping("/api/recipes")
 public class RecipeResourceController {
-    private final FindRecipeBySlugUseCase findRecipeBySlugUseCase;
 
-    public RecipeResourceController(FindRecipeBySlugUseCase findRecipeBySlugUseCase) {
-        this.findRecipeBySlugUseCase = findRecipeBySlugUseCase;
-    }
+	private final FindAllRecipesUseCase findAllRecipesUseCase;
+	private final FindRecipeBySlugUseCase findRecipeBySlugUseCase;
 
-    @GetMapping
-    public List<RecipeResource> list() {
-        return List.of();
-    }
+	public RecipeResourceController(FindAllRecipesUseCase findAllRecipesUseCase, FindRecipeBySlugUseCase findRecipeBySlugUseCase) {
+		this.findAllRecipesUseCase = findAllRecipesUseCase;
+		this.findRecipeBySlugUseCase = findRecipeBySlugUseCase;
+	}
 
-    @GetMapping("{slug}")
-    public ResponseEntity<RecipeResource> findBySlug(@PathVariable String slug) {
-        return ResponseEntity.of(findRecipeBySlugUseCase.execute(slug));
-    }
+	@GetMapping
+	public List<RecipeSummaryResource> list() {
+		return findAllRecipesUseCase.execute();
+	}
+
+	@GetMapping("{slug}")
+	public ResponseEntity<RecipeResource> findBySlug(@PathVariable String slug) {
+		return ResponseEntity.of(findRecipeBySlugUseCase.execute(slug));
+	}
 }
