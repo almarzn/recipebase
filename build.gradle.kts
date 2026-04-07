@@ -1,4 +1,5 @@
 import io.zonky.test.db.postgres.embedded.EmbeddedPostgres
+import org.jooq.meta.jaxb.JSONConverterImplementation
 import liquibase.Contexts
 import liquibase.LabelExpression
 import liquibase.Liquibase
@@ -47,6 +48,7 @@ dependencies {
     implementation("org.springframework.ai:spring-ai-starter-model-anthropic")
     implementation("org.springframework.ai:spring-ai-starter-model-chat-memory-repository-jdbc")
     implementation("org.jooq:jooq:3.21.1")
+    implementation("org.jooq:jooq-jackson3-extensions:3.21.1")
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("org.xerial:sqlite-jdbc")
@@ -193,6 +195,27 @@ jooq {
       """
 
                 inputSchema = "public"
+
+                forcedTypes {
+                    forcedType {
+                        userType = "recipebase.server.recipe.model.Link"
+                        jsonConverter = true
+                        jsonConverterImplementation = JSONConverterImplementation.JACKSON_3
+                        includeExpression = "RECIPE_COMPONENT\\.LINK"
+                    }
+                    forcedType {
+                        userType = "recipebase.server.recipe.model.Quantity"
+                        jsonConverter = true
+                        jsonConverterImplementation = JSONConverterImplementation.JACKSON_3
+                        includeExpression = "RECIPE_INGREDIENT\\.QUANTITY"
+                    }
+                    forcedType {
+                        userType = "recipebase.server.recipe.model.TimerAttachment"
+                        jsonConverter = true
+                        jsonConverterImplementation = JSONConverterImplementation.JACKSON_3
+                        includeExpression = "RECIPE_STEP\\.ATTACHMENT"
+                    }
+                }
             }
 
             // Generation flags: See advanced configuration properties

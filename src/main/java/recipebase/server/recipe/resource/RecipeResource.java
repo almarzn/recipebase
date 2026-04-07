@@ -1,4 +1,4 @@
-package recipebase.server.model;
+package recipebase.server.recipe.resource;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -19,19 +19,10 @@ public record RecipeResource(
         @Nullable String description,
         OffsetDateTime createdAt,
         OffsetDateTime updatedAt,
-        VariantContent current,
-        List<VariantSummary> availableVariants
+        List<Variant> variants
 ) {
 
-    record VariantSummary(
-            String slug,
-            String name,
-            @Nullable String description,
-            OffsetDateTime createdAt,
-            OffsetDateTime updatedAt
-    ) {}
-
-    record VariantContent(
+    public record Variant(
             String slug,
             String name,
             @Nullable String description,
@@ -40,14 +31,14 @@ public record RecipeResource(
             List<Component> components
     ) {}
 
-    record Ingredient(
+    public record Ingredient(
             String slug,
             String name,
             @Nullable String notes,
             Quantity quantity
     ) {
         @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "unit")
-        sealed interface Quantity {
+        public sealed interface Quantity {
             sealed interface DecimalAmount extends Quantity {
                 @JsonTypeName("gram")
                 record Gram(BigDecimal amount) implements DecimalAmount {}
@@ -57,17 +48,13 @@ public record RecipeResource(
                 record Liter(BigDecimal amount) implements DecimalAmount {}
                 @JsonTypeName("milliliter")
                 record Milliliter(BigDecimal amount) implements DecimalAmount {}
-                @JsonTypeName("deciliter")
-                record Deciliter(BigDecimal amount) implements DecimalAmount {}
-                @JsonTypeName("centiliter")
-                record Centiliter(BigDecimal amount) implements DecimalAmount {}
             }
             @JsonTypeName("unspecified")
             record Unspecified(String notes) implements Quantity {}
         }
     }
 
-    record Component(
+    public record Component(
             UUID id,
             String title,
             Link link,
@@ -76,12 +63,12 @@ public record RecipeResource(
             List<Step> steps
     ) {
         @EnumNaming(EnumNamingStrategies.SnakeCaseStrategy.class)
-        enum ExternalLinkMode {
+        public enum ExternalLinkMode {
             SNAPSHOT, LINKED
         }
 
         @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "quality")
-        sealed interface Link {
+        public sealed interface Link {
             @JsonTypeName("external")
             record ExternalRecipe(String slug, String title, ExternalLinkMode link) implements Link {}
 
@@ -90,12 +77,12 @@ public record RecipeResource(
         }
     }
 
-    record Step(
+    public record Step(
             UUID id,
             String text,
             @Nullable String notes,
             @Nullable TimerAttachment attachment
     ) {
-        record TimerAttachment(Duration duration) {}
+        public record TimerAttachment(Duration duration) {}
     }
 }

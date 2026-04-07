@@ -1,3 +1,5 @@
 spring:
   application:
-    name: server
+    name: recipebase-server
+  jackson:
+    default-property-inclusion: non_null
