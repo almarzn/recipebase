@@ -3,3 +3,7 @@ spring:
     name: recipebase-server
   jackson:
     default-property-inclusion: non_null
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
