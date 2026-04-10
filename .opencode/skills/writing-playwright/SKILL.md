@@ -1,6 +1,6 @@
 ---
 name: writing-playwright
-description: Writing Playwright E2E tests — network mocking, podman-based execution, step-structured
+description: Use when writing or modifying Playwright E2E tests, page object models, or test helpers in the frontend/e2e/ directory
 license: MIT
 metadata:
   language: typescript
@@ -247,3 +247,13 @@ The `--network host` flag lets Playwright reach the Angular dev server running o
 - No comments — `test.step` blocks replace them.
 - No running Playwright directly — always via `podman run`.
 - No `test.slow()` — fix the test instead.
+
+## Common rationalizations
+
+| Excuse | Reality                                                           |
+|--------|-------------------------------------------------------------------|
+| "getByRole is more semantic" | `data-testid` only. Consistency over elegance.                    |
+| "A comment would clarify this step" | Use `test.step()` blocks instead. They serve as documentation.    |
+| "I'll capture the request with a let" | Use inline `waitForRequest` or `Promise.all` pattern.             |
+| "getByText is fine for this label" | `data-testid` exclusively. No exceptions.                         |
+| "I need to run Playwright directly" | Always via `npm run e2e:podman`. Never `npx playwright` directly. |

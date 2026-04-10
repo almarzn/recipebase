@@ -1,6 +1,6 @@
 ---
 name: writing-app-state
-description: Angular app state — view-model pattern, signals, computed, action methods
+description: Use when creating or modifying Angular view-models, managing component state with signals/computed, or implementing action methods
 license: MIT
 metadata:
   language: typescript
@@ -109,21 +109,23 @@ export class RecipeListViewModel {
   readonly hasRecipes = computed(() => this.recipes().length > 0);
   readonly recipeCount = computed(() => this.recipes().length);
 
-  private readonly _deleting = signal(false);
-  readonly deleting = this._deleting.asReadonly();
+  private readonly deleting = signal(false);
+  readonly deleting = this.deleting.asReadonly();
 
   async deleteRecipe(id: string): Promise<void> {
-    this._deleting.set(true);
+    this.deleting.set(true);
     try {
       await this.recipeService.delete(id);
     } finally {
-      this._deleting.set(false);
+      this.deleting.set(false);
     }
   }
 }
 ```
 
 ## Example: detail view-model (route-param driven)
+
+See `writing-data-fetching` for the full read+write integration pattern. Key structure:
 
 ```typescript
 @Injectable()
@@ -132,8 +134,8 @@ export class RecipeDetailViewModel {
   private readonly recipeService = inject(RecipeService);
   private readonly router = inject(Router);
 
+  // Read — driven by route param
   private readonly id = toSignal(this.route.paramMap.pipe(map(p => p.get('id')!)));
-
   private readonly recipeResource = httpResource<Recipe>(() => `/api/recipes/${this.id()}`);
 
   readonly recipe = computed(() => this.recipeResource.value() ?? null);
@@ -141,23 +143,17 @@ export class RecipeDetailViewModel {
   readonly error = computed(() => this.recipeResource.error() as string | null);
 
   // Write — manual state for mutation
-  private readonly _deleting = signal(false);
-  private readonly _deleteError = signal<string | null>(null);
-
-  readonly deleting = this._deleting.asReadonly();
-  readonly deleteError = this._deleteError.asReadonly();
+  private readonly deleting = signal(false);
+  readonly deleting = this.deleting.asReadonly();
 
   async delete(): Promise<void> {
     if (!this.recipe()) return;
-    this._deleting.set(true);
-    this._deleteError.set(null);
+    this.deleting.set(true);
     try {
       await this.recipeService.delete(this.recipe()!.id);
       this.router.navigate(['/recipes']);
-    } catch (e) {
-      this._deleteError.set(e instanceof Error ? e.message : 'Failed to delete');
     } finally {
-      this._deleting.set(false);
+      this.deleting.set(false);
     }
   }
 }
@@ -165,34 +161,22 @@ export class RecipeDetailViewModel {
 
 ## Write operation state
 
-For mutations triggered by user actions, manage state in the view-model:
+For mutations, manage loading/error in the view-model. See `writing-data-fetching` for full examples of submit state, error handling, and template integration.
 
 ```typescript
-@Injectable()
-export class RecipeFormViewModel {
-  private readonly recipeService = inject(RecipeService);
+private readonly submitting = signal(false);
+private readonly submitError = signal<string | null>(null);
 
-  private readonly _submitting = signal(false);
-  private readonly _submitError = signal<string | null>(null);
-  private readonly _savedRecipe = signal<Recipe | null>(null);
-
-  readonly submitting = this._submitting.asReadonly();
-  readonly submitError = this._submitError.asReadonly();
-  readonly savedRecipe = this._savedRecipe.asReadonly();
-
-  readonly canSubmit = computed(() => !this._submitting());
-
-  async save(data: CreateRecipeRequest): Promise<void> {
-    this._submitting.set(true);
-    this._submitError.set(null);
-    try {
-      const recipe = await this.recipeService.create(data);
-      this._savedRecipe.set(recipe);
-    } catch (e) {
-      this._submitError.set(e instanceof Error ? e.message : 'Failed to save');
-    } finally {
-      this._submitting.set(false);
-    }
+async save(data: CreateRecipeRequest): Promise<void> {
+  this.submitting.set(true);
+  this.submitError.set(null);
+  try {
+    const recipe = await this.recipeService.create(data);
+    this.savedRecipe.set(recipe);
+  } catch (e) {
+    this.submitError.set(e instanceof Error ? e.message : 'Failed to save');
+  } finally {
+    this.submitting.set(false);
   }
 }
 ```
@@ -204,23 +188,23 @@ For transient UI state (modals, selections, toggles), signals are sufficient:
 ```typescript
 @Injectable()
 export class RecipeListViewModel {
-  private readonly _selectedId = signal<string | null>(null);
-  private readonly _filterText = signal('');
+  private readonly selectedId = signal<string | null>(null);
+  private readonly filterText = signal('');
 
-  readonly selectedId = this._selectedId.asReadonly();
-  readonly filterText = this._filterText.asReadonly();
+  readonly selectedId = this.selectedId.asReadonly();
+  readonly filterText = this.filterText.asReadonly();
 
   readonly filteredRecipes = computed(() => {
-    const filter = this._filterText().toLowerCase();
+    const filter = this.filterText().toLowerCase();
     return this.recipes().filter(r => r.name.toLowerCase().includes(filter));
   });
 
   select(id: string | null): void {
-    this._selectedId.set(id);
+    this.selectedId.set(id);
   }
 
   setFilter(text: string): void {
-    this._filterText.set(text);
+    this.filterText.set(text);
   }
 }
 ```
@@ -236,12 +220,12 @@ Avoid global stores. When state must be shared:
 ```typescript
 @Injectable({ providedIn: 'root' })
 export class AuthState {
-  private readonly _user = signal<User | null>(null);
-  readonly user = this._user.asReadonly();
-  readonly isAuthenticated = computed(() => this._user() !== null);
+  private readonly user = signal<User | null>(null);
+  readonly user = this.user.asReadonly();
+  readonly isAuthenticated = computed(() => this.user() !== null);
 
   setUser(user: User | null): void {
-    this._user.set(user);
+    this.user.set(user);
   }
 }
 ```
@@ -261,3 +245,12 @@ export class AuthState {
 - No `signal.mutate()`.
 - No `setId()` methods — use route params via `toSignal` instead.
 - No business logic in components — it goes in the view-model.
+
+## Common rationalizations
+
+| Excuse | Reality |
+|--------|---------|
+| "I'll use BehaviorSubject for this" | Use signals. No RxJS for state. |
+| "A setId() method is simpler" | Read params via `toSignal` + `paramMap` in the view-model. |
+| "This state needs to be global" | Root-scoped service with signals, or route-level providers. |
+| "I'll manage loading manually" | `httpResource` handles loading/error for reads automatically. |

@@ -1,6 +1,6 @@
 ---
 name: writing-java
-description: Java coding conventions — records, Lombok, var, functional style, DDD-lite
+description: Use when writing or modifying Java code in the Spring Boot backend — controllers, services, repositories, records, or domain logic
 license: MIT
 metadata:
   language: java
@@ -8,6 +8,21 @@ metadata:
 ---
 
 ## Core style rules
+
+```dot
+digraph java_type {
+    "New type needed" [shape=ellipse];
+    "Is it a Spring component?" [shape=diamond];
+    "Use class + Lombok" [shape=box];
+    "Use record" [shape=box];
+    "STOP: No mutable entities" [shape=octagon, style=filled, fillcolor=red, fontcolor=white];
+
+    "New type needed" -> "Is it a Spring component?";
+    "Is it a Spring component?" -> "Use class + Lombok" [label="yes"];
+    "Is it a Spring component?" -> "Use record" [label="no"];
+    "Use record" -> "STOP: No mutable entities";
+}
+```
 
 ### Records everywhere
 - Use `record` for **all** data types: DTOs, entities, request/response objects, value objects, internal carriers.
@@ -114,3 +129,13 @@ for (var user : users) {
 - Java 25 toolchain — use modern features (switch expressions, pattern matching, sealed types).
 - Build: `./gradlew build`
 - Test: `./gradlew test`
+
+## Common rationalizations
+
+| Excuse | Reality                                                                   |
+|--------|---------------------------------------------------------------------------|
+| "This one needs a comment for clarity" | Refactor to self-documenting code. Extract method, use better name.       |
+| "A builder would be cleaner here" | Nested records are clearer. A builder means too many flat fields.         |
+| "The type is obvious, no need for var" | Use `var` unless the RHS type is genuinely ambiguous.                     |
+| "Optional is fine for this parameter" | Use `@Nullable` for params/fields. Optional is for return types only.     |
+| "Just one more parameter is fine" | Group into a record if it makes sense. 3 params max is the preferred way. |

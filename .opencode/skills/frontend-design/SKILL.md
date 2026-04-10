@@ -1,6 +1,6 @@
 ---
 name: frontend-design
-description: Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, or applications. Generates creative, polished UI that avoids generic AI aesthetics.
+description: Use when building web components, pages, or interfaces — creating new UI, styling existing components, or implementing visual designs
 license: Complete terms in LICENSE.txt
 ---
 
@@ -144,6 +144,4 @@ Focus on:
 
 Interpret creatively and make unexpected choices that feel genuinely designed for the context. No design should be the same. Vary between light and dark themes, different aesthetics — but always respect the project tokens above.
 
-**IMPORTANT**: Match implementation complexity to the aesthetic vision. Maximalist designs need elaborate Tailwind markup with gradients, shadows, and transforms. Minimalist or refined designs need restraint — generous spacing (`p-12`, `gap-8`), precise typography (`text-lg leading-relaxed`), and subtle borders (`border border-gray-100`). Elegance comes from executing the vision well.
-
-Remember: extraordinary creative work is possible. Don't hold back — show what can truly be created when thinking outside the box and committing fully to a distinctive vision.
+**IMPORTANT**: Match implementation complexity to the aesthetic vision. Maximalist designs need elaborate Tailwind markup with gradients, shadows, and transforms. Minimalist or refined designs need restraint — generous spacing (`p-12`, `gap-8`), precise typography (`text-lg leading-relaxed`), and subtle borders (`border border-gray-100`).

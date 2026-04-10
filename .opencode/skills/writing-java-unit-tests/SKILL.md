@@ -1,6 +1,6 @@
 ---
 name: writing-java-unit-tests
-description: Writing Java unit tests with JUnit 6, Mockito, and AssertJ
+description: Use when writing or modifying Java unit tests with JUnit 6, Mockito, or AssertJ in the Spring Boot backend
 license: MIT
 metadata:
   language: java

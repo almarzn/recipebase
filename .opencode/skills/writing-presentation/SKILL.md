@@ -1,6 +1,6 @@
 ---
 name: writing-presentation
-description: Angular presentation — components, templates, Zard UI, inputs/outputs, host bindings
+description: Use when creating or modifying Angular components, templates, presentational UI elements, or Zard UI integrations
 license: MIT
 metadata:
   language: typescript
@@ -33,6 +33,24 @@ src/app/
 - `shared/` holds cross-cutting concerns only.
 
 ## Component types
+
+```dot
+digraph component_type {
+    "New component needed" [shape=ellipse];
+    "Does it manage state or fetch data?" [shape=diamond];
+    "Does it inject a view-model?" [shape=diamond];
+    "Feature component" [shape=box];
+    "Presentational component" [shape=box];
+    "STOP: No business logic in components" [shape=octagon, style=filled, fillcolor=red, fontcolor=white];
+
+    "New component needed" -> "Does it manage state or fetch data?";
+    "Does it manage state or fetch data?" -> "Feature component" [label="yes"];
+    "Does it manage state or fetch data?" -> "Does it inject a view-model?" [label="no"];
+    "Does it inject a view-model?" -> "Feature component" [label="yes"];
+    "Does it inject a view-model?" -> "Presentational component" [label="no"];
+    "Feature component" -> "STOP: No business logic in components" [label="logic in template?"];
+}
+```
 
 ### Feature components
 

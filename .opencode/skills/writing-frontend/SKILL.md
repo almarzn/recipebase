@@ -1,6 +1,6 @@
 ---
 name: writing-frontend
-description: Angular frontend conventions — signals-first, feature-splitted architecture, TypeScript strict
+description: Use when writing or modifying Angular frontend code, components, services, or route configurations in the frontend/ directory
 license: MIT
 metadata:
   language: typescript
@@ -59,6 +59,16 @@ src/app/
 - No unit tests unless explicitly asked.
 - No `standalone: true` in decorators.
 - No global state management libraries (NgRx, Akita, Elf).
+
+## Common rationalizations
+
+| Excuse | Reality                                                                           |
+|--------|-----------------------------------------------------------------------------------|
+| "RxJS is simpler here" | Use signals. Exception: `firstValueFrom` in services, `toSignal` for route params. |
+| "An NgModule would organize this better" | Standalone components only. Lazy-load routes instead.                             |
+| "I need `standalone: true`" | Default in Angular 20+. Never add it.                                             |
+| "A global store would solve this" | Use root-scoped view-model with signals, or route params.                         |
+| "This logic belongs in the component" | Move to view-model. Components are thin shells.                                   |
 
 ## Commands
 

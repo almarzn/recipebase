@@ -1,6 +1,6 @@
 ---
 name: writing-data-fetching
-description: Angular data fetching — httpResource for reads, HttpClient for writes, signals-based state with loading/error handling
+description: Use when implementing data fetching, API calls, HTTP communication, or loading/error state management in Angular services or view-models
 license: MIT
 metadata:
   language: typescript
@@ -16,6 +16,21 @@ provideHttpClient(withFetch())
 ```
 
 ## Two-tier strategy
+
+```dot
+digraph datafetching {
+    "Need to fetch data?" [shape=diamond];
+    "Is it a GET request?" [shape=diamond];
+    "Use httpResource" [shape=box];
+    "Use HttpClient + firstValueFrom" [shape=box];
+    "STOP: httpResource is reads only" [shape=octagon, style=filled, fillcolor=red, fontcolor=white];
+
+    "Need to fetch data?" -> "Is it a GET request?";
+    "Is it a GET request?" -> "Use httpResource" [label="yes"];
+    "Is it a GET request?" -> "Use HttpClient + firstValueFrom" [label="no"];
+    "Use httpResource" -> "STOP: httpResource is reads only" [label="POST/PUT/PATCH?"];
+}
+```
 
 | Operation | API | Why |
 |-----------|-----|-----|
@@ -67,7 +82,7 @@ When the route param changes, `httpResource` automatically cancels the pending r
 
 ```typescript
 const resource = httpResource(() => ({
-  url: `/api/recipes/${this._id()}`,
+  url: `/api/recipes/${this.id()}`,
   method: 'GET',
   headers: { 'X-Request-Id': 'abc' },
   params: { include: 'ingredients' },
@@ -167,22 +182,22 @@ private formatError(err: unknown): string {
 For mutations triggered by user actions, manage state in the view-model:
 
 ```typescript
-private readonly _submitting = signal(false);
-private readonly _submitError = signal<string | null>(null);
+private readonly submitting = signal(false);
+private readonly submitError = signal<string | null>(null);
 
-readonly submitting = this._submitting.asReadonly();
-readonly submitError = this._submitError.asReadonly();
+readonly submitting = this.submitting.asReadonly();
+readonly submitError = this.submitError.asReadonly();
 
 async save(data: CreateRecipeRequest): Promise<void> {
-  this._submitting.set(true);
-  this._submitError.set(null);
+  this.submitting.set(true);
+  this.submitError.set(null);
   try {
     const recipe = await this.recipeService.create(data);
     // update local state, navigate, etc.
   } catch (e) {
-    this._submitError.set(e instanceof Error ? e.message : 'Failed to save');
+    this.submitError.set(e instanceof Error ? e.message : 'Failed to save');
   } finally {
-    this._submitting.set(false);
+    this.submitting.set(false);
   }
 }
 ```
@@ -254,23 +269,23 @@ export class RecipeDetailViewModel {
   readonly error = computed(() => this.recipeResource.error() as string | null);
 
   // --- Write ---
-  private readonly _deleting = signal(false);
-  private readonly _deleteError = signal<string | null>(null);
+  private readonly deleting = signal(false);
+  private readonly deleteError = signal<string | null>(null);
 
-  readonly deleting = this._deleting.asReadonly();
-  readonly deleteError = this._deleteError.asReadonly();
+  readonly deleting = this.deleting.asReadonly();
+  readonly deleteError = this.deleteError.asReadonly();
 
   async delete(): Promise<void> {
     if (!this.recipe()) return;
-    this._deleting.set(true);
-    this._deleteError.set(null);
+    this.deleting.set(true);
+    this.deleteError.set(null);
     try {
       await this.recipeService.delete(this.recipe()!.id);
       this.router.navigate(['/recipes']);
     } catch (e) {
-      this._deleteError.set(e instanceof Error ? e.message : 'Failed to delete');
+      this.deleteError.set(e instanceof Error ? e.message : 'Failed to delete');
     } finally {
-      this._deleting.set(false);
+      this.deleting.set(false);
     }
   }
 }
