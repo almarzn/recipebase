@@ -8,7 +8,7 @@ import { RecipeCardComponent } from './recipe-card';
   providers: [RecipeListViewModel],
   imports: [RecipeCardComponent],
   template: `
-    <div class="px-24 py-12">
+    <div class="px-6 py-8 md:px-24 md:py-12">
       <h1 class="text-4xl font-serif">My recipes</h1>
     </div>
     <div class="px-24 py-12">

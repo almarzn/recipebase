@@ -31,7 +31,7 @@ Then implement working code (HTML/CSS/JS, React, Vue, Angular, etc.) that is:
 **EVERYTHING is Tailwind utility classes.** No raw CSS, no inline styles, no CSS custom properties, no `px`/`rem`/`em` values. If you can't express it with a Tailwind class, rethink the approach.
 
 - Colors → Tailwind color classes (`bg-teal-500`, `text-orange-600`, `border-gray-200`)
-- Spacing → Tailwind spacing scale (`p-4`, `gap-2`, `mt-8`, `mx-auto`)
+- Spacing → Tailwind spacing scale (`p-4`, `gap-2`, `mx-auto`). **Never use margin utilities (`mt-*`, `mb-*`, `ml-*`, `mr-*`, `mx-*`, `my-*`) to space elements apart.** Wrap elements in `flex` or `grid` and use `gap-*` instead. `mx-auto` for centering is fine.
 - Typography → Tailwind type classes (`text-lg`, `font-bold`, `leading-relaxed`, `tracking-wide`)
 - Layout → Tailwind layout utilities (`grid-cols-3`, `flex-col`, `items-center`, `gap-6`)
 - Effects → Tailwind effect utilities (`shadow-lg`, `opacity-75`, `blur-sm`)
@@ -121,7 +121,7 @@ All legibility enforced through Tailwind classes:
 - **Font size**: Body text → `text-base` (16px) minimum. Secondary text → `text-sm` (14px) minimum. Never `text-xs` for readable content.
 - **Line height**: Body copy → `leading-relaxed` (1.625) or `leading-7` (1.75). Headings → `leading-tight` (1.25) or `leading-none` (1).
 - **Measure**: Limit body text width with `max-w-prose` (65ch) or `max-w-2xl` (672px).
-- **Spacing**: Paragraphs → `mb-4` or `mb-6`. Sections → `py-12` to `py-24`. Never cramp content — use `space-y-4`+ for stacked elements.
+- **Spacing**: Sections → `py-12` to `py-24`. Never cramp content — wrap children in `flex flex-col gap-4`+ for stacked elements.
 - **Heading hierarchy**: `font-serif text-4xl` for heroes, `font-serif text-2xl` for sections, `font-serif text-xl` for cards. Always `font-semibold` or `font-bold` for headings. Body stays `font-sans font-normal`.
 
 ## Frontend Aesthetics Guidelines
@@ -131,7 +131,7 @@ Focus on:
 - **Typography**: Leverage `font-serif` for headings — combine with `tracking-tight`, `text-4xl`/`text-5xl` for dramatic scale. Use `font-sans` body text with weight range: `font-light` for elegance, `font-medium` for emphasis, `font-bold` for strong CTAs.
 - **Color & Theme**: Teal base (`bg-teal-600`, `text-teal-700`) provides calm trust. Orange accents (`bg-orange-500`, `text-orange-500`) inject energy. Don't blend evenly — let teal dominate surfaces and orange punctuate interactive moments.
 - **Motion**: Use Tailwind's `transition-*` utilities (`transition-all duration-300`, `transition-colors duration-200`), `hover:scale-105`, `hover:shadow-xl`, `animate-pulse`, `animate-spin`. For staggered reveals, use `animate-[fadeSlideUp_0.5s_ease-out]` with `animation-delay-[100ms]` etc. via arbitrary values. Keep it CSS-only — no JS animation libraries unless the effect truly demands it.
-- **Spatial Composition**: Use Tailwind grid/flex — `grid grid-cols-12 gap-8`, `flex flex-col md:flex-row`, `-mt-8` for overlapping elements, `space-x-6` for horizontal rhythm. Asymmetry via `col-span-7` + `col-span-5` instead of even halves.
+- **Spatial Composition**: Use Tailwind grid/flex — `grid grid-cols-12 gap-8`, `flex flex-col md:flex-row gap-6`, `-mt-8` for overlapping elements. Asymmetry via `col-span-7` + `col-span-5` instead of even halves. **Always use `gap-*` for spacing between siblings — never `space-x-*`, `space-y-*`, or margin-based spacing.**
 - **Backgrounds & Visual Details**: Tailwind gradient utilities (`bg-gradient-to-br from-teal-50 to-white`), `shadow-2xl`, `ring-1 ring-gray-200`, `backdrop-blur-md bg-white/75` for glass effects, `border-l-4 border-orange-500` for accent strips. Use `bg-[url('/noise.svg')]` sparingly for texture.
 
 **NEVER** use:
@@ -139,9 +139,32 @@ Focus on:
 - Generic fonts (Arial, Inter, Roboto, system fonts) — always `font-sans` (DM Sans) and `font-serif` (DM Serif Display)
 - Purple gradients or overused AI color schemes
 - Raw CSS properties, inline `style=""`, or `px`/`rem` values outside Tailwind
+- **Margin-based element spacing** — no `mt-*`, `mb-*`, `ml-*`, `mr-*`, `my-*`, `mx-*`, `space-x-*`, `space-y-*` for spacing elements apart. Use `flex`/`grid` with `gap-*` instead.
 - Predictable layouts and component patterns that lack context-specific character
 - Cookie-cutter design — every interface should feel intentionally crafted
 
 Interpret creatively and make unexpected choices that feel genuinely designed for the context. No design should be the same. Vary between light and dark themes, different aesthetics — but always respect the project tokens above.
 
 **IMPORTANT**: Match implementation complexity to the aesthetic vision. Maximalist designs need elaborate Tailwind markup with gradients, shadows, and transforms. Minimalist or refined designs need restraint — generous spacing (`p-12`, `gap-8`), precise typography (`text-lg leading-relaxed`), and subtle borders (`border border-gray-100`).
+
+## Common Rationalizations
+
+These thoughts mean STOP — you're about to break the rules:
+
+| Thought | Reality |
+|---------|---------|
+| "This is just a quick prototype" | Prototypes become production. Design it right from the start. |
+| "It's just one `mb-4`, it's fine" | Use `gap-*`. There are no exceptions. |
+| "I need `space-y-*` for a vertical list" | Use `flex flex-col gap-*`. `space-*` is margin-based spacing. |
+| "Inline style is faster for this one-off" | Tailwind arbitrary values exist for a reason: `w-[237px]`, `bg-[#1a2b3c]`. |
+| "Inter/Arial is basically the same as DM Sans" | It isn't. Use `font-sans`. |
+| "A little purple/blue won't hurt" | Teal + orange + neutrals. No exceptions unless explicitly requested. |
+| "px values are more precise" | The Tailwind scale is intentional. Use it. Rethink the design if it doesn't fit. |
+| "I can't do this with Tailwind" | Yes you can. Read the docs. Use arbitrary values, `@utility`, or `@theme` as a last resort. |
+| "The user won't notice the font choice" | They will. Generic fonts scream AI-generated. |
+| "I'll clean up the styles later" | You won't. Write it clean the first time. |
+| "This component is too simple to look distinctive" | Simple things still need intentional design. A boring button is worse than a bold one. |
+| "`text-xs` is fine for this small label" | No `text-xs`. Minimum `text-sm` for readable content. |
+| "I need a `<style>` block for this animation" | Use Tailwind arbitrary animations: `animate-[fadeIn_0.3s_ease-out]` or define via `@utility`. |
+| "The design looks fine as-is" | Fine isn't memorable. Every interface should feel intentionally crafted. |
+| "I'm not sure Tailwind supports this" | Don't guess — ask me or try it. Never fall back to raw CSS because you assume Tailwind can't do it. |

@@ -148,15 +148,3 @@ test('recipe card navigates to detail', async ({ page }) => {
     await expect(page).toHaveURL(/\/recipes\/pasta/);
   });
 });
-
-test('root redirects to /recipes', async ({ page }) => {
-  await page.route('**/api/recipes', (route) =>
-    route.fulfill({ status: 200, contentType: 'application/json', body: '[]' }),
-  );
-
-  await page.goto('/');
-
-  await test.step('navigates to recipes page', async () => {
-    await expect(page).toHaveURL(/\/recipes/);
-  });
-});

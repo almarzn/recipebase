@@ -4,7 +4,7 @@ import {ZardInputDirective} from '@/shared/components/input';
 import {ZardInputGroupComponent} from '@/shared/components/input-group';
 
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideArrowUp, lucideCheck, lucideInfo, lucidePlus, lucideSearch } from '@ng-icons/lucide';
+import { lucideSearch } from '@ng-icons/lucide';
 
 @Component({
   selector: 'app-navbar',
@@ -16,9 +16,9 @@ import { lucideArrowUp, lucideCheck, lucideInfo, lucidePlus, lucideSearch } from
     NgIcon
   ],
   template: `
-    <nav class="flex items-baseline gap-16 px-12 py-8">
+    <nav class="flex items-baseline gap-4 px-4 py-4 md:gap-16 md:px-12 md:py-8">
       <h1 class="font-sans tracking-tight text-lg font-bold text-teal-700">recipebase</h1>
-      <div class="flex items-baseline gap-6">
+      <div class="hidden items-baseline gap-6 md:flex">
         <a [routerLink]="['/']"
            class="relative text-gray-500 font-semibold pb-1 transition-colors
                   after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full
@@ -50,10 +50,11 @@ import { lucideArrowUp, lucideCheck, lucideInfo, lucidePlus, lucideSearch } from
 
       <ng-template #search><ng-icon name="lucideSearch" /></ng-template>
 
-      <z-input-group [zAddonBefore]="search" class="w-78 bg-taupe-100">
-        <input z-input placeholder="Search..." />
-      </z-input-group>
-
+      <div class="hidden md:flex">
+        <z-input-group [zAddonBefore]="search" class="w-78 bg-taupe-100">
+          <input z-input placeholder="Search..." />
+        </z-input-group>
+      </div>
     </nav>
   `,
   viewProviders: [
