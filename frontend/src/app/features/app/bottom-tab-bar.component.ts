@@ -27,29 +27,43 @@ import { ZardInputGroupComponent } from '@/shared/components/input-group';
       </div>
     }
 
-    <nav class="fixed bottom-0 inset-x-0 z-40 border-t border-gray-200 bg-white md:hidden">
+    <nav class="fixed bottom-0 inset-x-0 z-40 border-t border-gray-200 bg-white md:hidden safe-bottom">
       <div class="flex items-center justify-around py-2">
         <a [routerLink]="['/']"
-           class="flex flex-col items-center gap-0.5 px-3 py-1 text-gray-500 transition-colors"
-           routerLinkActive="!text-teal-600"
+           class="relative flex flex-col items-center gap-0.5 px-4 py-2 text-gray-500 transition-colors
+                  hover:bg-teal-50 hover:text-teal-700 rounded-lg"
+           routerLinkActive="!text-teal-600 !bg-teal-50"
            [routerLinkActiveOptions]="{exact: true}">
+          <span class="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-6 rounded-full bg-teal-600
+                       transition-transform duration-300 scale-x-0"
+                routerLinkActive="!scale-x-100"
+                [routerLinkActiveOptions]="{exact: true}"></span>
           <ng-icon name="lucideHome" class="text-xl" />
           <span class="text-xs font-medium">Home</span>
         </a>
         <a [routerLink]="['/recipes']"
-           class="flex flex-col items-center gap-0.5 px-3 py-1 text-gray-500 transition-colors"
-           routerLinkActive="!text-teal-600">
+           class="relative flex flex-col items-center gap-0.5 px-4 py-2 text-gray-500 transition-colors
+                  hover:bg-teal-50 hover:text-teal-700 rounded-lg"
+           routerLinkActive="!text-teal-600 !bg-teal-50">
+          <span class="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-6 rounded-full bg-teal-600
+                       transition-transform duration-300 scale-x-0"
+                routerLinkActive="!scale-x-100"></span>
           <ng-icon name="lucideBookOpen" class="text-xl" />
           <span class="text-xs font-medium">Recipes</span>
         </a>
         <a [routerLink]="['/import']"
-           class="flex flex-col items-center gap-0.5 px-3 py-1 text-gray-500 transition-colors"
-           routerLinkActive="!text-teal-600">
+           class="relative flex flex-col items-center gap-0.5 px-4 py-2 text-gray-500 transition-colors
+                  hover:bg-teal-50 hover:text-teal-700 rounded-lg"
+           routerLinkActive="!text-teal-600 !bg-teal-50">
+          <span class="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-6 rounded-full bg-teal-600
+                       transition-transform duration-300 scale-x-0"
+                routerLinkActive="!scale-x-100"></span>
           <ng-icon name="lucideFileUp" class="text-xl" />
           <span class="text-xs font-medium">Import</span>
         </a>
         <button (click)="searchOpen.set(true)"
-                class="flex flex-col items-center gap-0.5 px-3 py-1 text-gray-500 transition-colors hover:text-teal-600">
+                class="flex flex-col items-center gap-0.5 px-4 py-2 text-gray-500 transition-colors
+                       hover:bg-teal-50 hover:text-teal-700 rounded-lg">
           <ng-icon name="lucideSearch" class="text-xl" />
           <span class="text-xs font-medium">Search</span>
         </button>
