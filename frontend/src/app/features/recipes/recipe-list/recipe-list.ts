@@ -7,13 +7,13 @@ import { RecipeListViewModel } from './recipe-list.vm';
   providers: [RecipeListViewModel],
   template: `
     @if (vm.loading()) {
-      <p>Loading recipes...</p>
+      <p data-testid="recipe-list-loading">Loading recipes...</p>
     } @else if (vm.error()) {
-      <p class="text-red-500">{{ vm.error() }}</p>
+      <p data-testid="recipe-list-error" class="text-red-500">{{ vm.error() }}</p>
     } @else if (!vm.hasRecipes()) {
-      <p>No recipes found.</p>
+      <p data-testid="recipe-list-empty">No recipes found.</p>
     } @else {
-      <p>{{ vm.recipeCount() }} recipe(s)</p>
+      <p data-testid="recipe-list-count">{{ vm.recipeCount() }} recipe(s)</p>
     }
   `,
 })
