@@ -4,16 +4,34 @@ export class RecipeListPage {
   readonly loading: Locator;
   readonly error: Locator;
   readonly empty: Locator;
-  readonly count: Locator;
+  readonly grid: Locator;
+  readonly recipeCards: Locator;
 
   constructor(private readonly page: Page) {
     this.loading = page.getByTestId('recipe-list-loading');
     this.error = page.getByTestId('recipe-list-error');
     this.empty = page.getByTestId('recipe-list-empty');
-    this.count = page.getByTestId('recipe-list-count');
+    this.grid = page.getByTestId('recipe-list-grid');
+    this.recipeCards = page.getByTestId('recipe-card');
   }
 
   async goto() {
     await this.page.goto('/recipes');
+  }
+
+  recipeTitle(index: number): Locator {
+    return this.recipeCards.nth(index).locator('[data-slot="card-title"]');
+  }
+
+  recipeDescription(index: number): Locator {
+    return this.recipeCards.nth(index).locator('[data-slot="card-description"]');
+  }
+
+  recipeDate(index: number): Locator {
+    return this.recipeCards.nth(index).getByTestId('recipe-date');
+  }
+
+  recipeVariantBadges(index: number): Locator {
+    return this.recipeCards.nth(index).getByTestId('recipe-variant-badge');
   }
 }
