@@ -9,7 +9,7 @@ import { RecipeCardComponent } from './recipe-card';
   imports: [RecipeCardComponent],
   template: `
     <div class="px-24 py-12">
-      <h1 class="text-4xl font-serif">Recipes</h1>
+      <h1 class="text-4xl font-serif">My recipes</h1>
     </div>
     <div class="px-24 py-12">
       @if (vm.loading()) {

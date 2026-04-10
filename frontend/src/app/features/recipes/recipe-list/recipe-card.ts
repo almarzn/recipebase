@@ -14,7 +14,7 @@ import { ZardBadgeComponent } from '@/shared/components/badge/badge.component';
         [zTitle]="recipe().title"
         [zDescription]="recipe().description ?? ''"
         class="transition-all duration-200 hover:shadow-lg hover:bg-gray-50"
-        headerClass="font-serif"
+        titleClass="font-serif text-lg"
       >
         @if (recipe().variants.length > 0) {
           <div class="mt-2 flex flex-wrap gap-2" data-testid="recipe-variants">
