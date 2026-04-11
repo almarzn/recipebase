@@ -2,13 +2,15 @@
   "name": "frontend",
   "version": "0.0.0",
   "scripts": {
+    "biome": "biome",
+    "build": "ng build",
+    "e2e": "npx playwright test",
+    "e2e:podman": "podman run --rm --network host -v \"$(pwd)\":/app -w /app mcr.microsoft.com/playwright:v1.59.1-noble npx playwright test",
+    "format": "biome format --write",
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "e2e": "npx playwright test",
-    "e2e:podman": "podman run --rm --network host -v \"$(pwd)\":/app -w /app mcr.microsoft.com/playwright:v1.59.1-noble npx playwright test"
+    "watch": "ng build --watch --configuration development"
   },
   "private": true,
   "packageManager": "npm@10.9.7",
@@ -33,6 +35,7 @@
     "@angular/build": "^21.2.6",
     "@angular/cli": "^21.2.6",
     "@angular/compiler-cli": "^21.2.0",
+    "@biomejs/biome": "^2.4.11",
     "@js-temporal/polyfill": "^0.5.1",
     "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4.1.12",

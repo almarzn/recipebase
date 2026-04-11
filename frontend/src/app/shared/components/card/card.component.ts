@@ -5,20 +5,20 @@ import {
   input,
   output,
   type TemplateRef,
-  viewChild,
   ViewEncapsulation,
-} from '@angular/core';
+  viewChild,
+} from "@angular/core";
 
-import type {ClassValue} from 'clsx';
+import type { ClassValue } from "clsx";
 
-import {ZardButtonComponent} from '@/shared/components/button/button.component';
-import {ZardIdDirective, ZardStringTemplateOutletDirective} from '@/shared/core';
-import {mergeClasses} from '@/shared/utils/merge-classes';
+import { ZardButtonComponent } from "@/shared/components/button/button.component";
+import { ZardIdDirective, ZardStringTemplateOutletDirective } from "@/shared/core";
+import { mergeClasses } from "@/shared/utils/merge-classes";
 
-import {cardBodyVariants, cardFooterVariants, cardHeaderVariants, cardVariants} from './card.variants';
+import { cardBodyVariants, cardFooterVariants, cardHeaderVariants, cardVariants } from "./card.variants";
 
 @Component({
-  selector: 'z-card',
+  selector: "z-card",
   imports: [ZardStringTemplateOutletDirective, ZardButtonComponent, ZardIdDirective],
   template: `
     <ng-container zardId="card" #z="zardId">
@@ -69,24 +69,24 @@ import {cardBodyVariants, cardFooterVariants, cardHeaderVariants, cardVariants} 
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
-    'data-slot': 'card',
-    '[class]': 'classes()',
-    '[attr.aria-labelledby]': 'titleId()',
-    '[attr.aria-describedby]': 'descriptionId()',
+    "data-slot": "card",
+    "[class]": "classes()",
+    "[attr.aria-labelledby]": "titleId()",
+    "[attr.aria-describedby]": "descriptionId()",
   },
-  exportAs: 'zCard',
+  exportAs: "zCard",
 })
 export class ZardCardComponent {
-  private readonly generatedId = viewChild<ZardIdDirective>('z');
+  private readonly generatedId = viewChild<ZardIdDirective>("z");
 
-  readonly class = input<ClassValue>('');
+  readonly class = input<ClassValue>("");
   readonly zFooterBorder = input(false);
   readonly zHeaderBorder = input(false);
-  readonly zAction = input('');
+  readonly zAction = input("");
   readonly zDescription = input<string | TemplateRef<void>>();
   readonly zTitle = input<string | TemplateRef<void>>();
-  readonly headerClass = input<ClassValue>('');
-  readonly titleClass = input<ClassValue>('');
+  readonly headerClass = input<ClassValue>("");
+  readonly titleClass = input<ClassValue>("");
 
   readonly zActionClick = output<void>();
 
@@ -103,12 +103,12 @@ export class ZardCardComponent {
   protected readonly classes = computed(() => mergeClasses(cardVariants(), this.class()));
   protected readonly bodyClasses = computed(() => mergeClasses(cardBodyVariants()));
   protected readonly footerClasses = computed(() =>
-    mergeClasses(cardFooterVariants(), this.zFooterBorder() ? 'border-t' : ''),
+    mergeClasses(cardFooterVariants(), this.zFooterBorder() ? "border-t" : ""),
   );
-  protected readonly titleClasses = computed(() => mergeClasses('leading-none', this.titleClass()));
+  protected readonly titleClasses = computed(() => mergeClasses("leading-none", this.titleClass()));
 
   protected readonly headerClasses = computed(() =>
-    mergeClasses(cardHeaderVariants(), this.headerClass(), this.zHeaderBorder() ? 'border-b' : ''),
+    mergeClasses(cardHeaderVariants(), this.headerClass(), this.zHeaderBorder() ? "border-b" : ""),
   );
 
   protected onClick(): void {

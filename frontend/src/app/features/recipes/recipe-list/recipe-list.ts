@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { RecipeListViewModel } from './recipe-list.vm';
-import { RecipeCardComponent } from './recipe-card';
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { RecipeCardComponent } from "./recipe-card";
+import { RecipeListViewModel } from "./recipe-list.vm";
 
 @Component({
-  selector: 'app-recipe-list',
+  selector: "app-recipe-list",
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RecipeListViewModel],
   imports: [RecipeCardComponent],
@@ -51,7 +51,7 @@ import { RecipeCardComponent } from './recipe-card';
         </div>
       }
     </div>
-  `
+  `,
 })
 export class RecipeListPage {
   protected readonly vm = inject(RecipeListViewModel);

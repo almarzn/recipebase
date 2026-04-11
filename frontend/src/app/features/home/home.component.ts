@@ -1,7 +1,7 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 @Component({
-  selector: 'app-home',
+  selector: "app-home",
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="px-24 py-12">

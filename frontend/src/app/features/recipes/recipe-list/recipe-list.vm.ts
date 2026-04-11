@@ -1,10 +1,10 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
-import { httpResource } from '@angular/common/http';
-import { RecipeSummary } from '@/shared/models';
+import { httpResource } from "@angular/common/http";
+import { computed, Injectable } from "@angular/core";
+import type { RecipeSummary } from "@/shared/models";
 
 @Injectable()
 export class RecipeListViewModel {
-  private readonly recipesResource = httpResource<RecipeSummary[]>(() => '/api/recipes');
+  private readonly recipesResource = httpResource<RecipeSummary[]>(() => "/api/recipes");
 
   readonly recipes = computed(() => this.recipesResource.value() ?? []);
   readonly loading = this.recipesResource.isLoading;

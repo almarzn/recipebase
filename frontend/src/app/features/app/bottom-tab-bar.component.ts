@@ -1,12 +1,12 @@
-import { Component, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideHome, lucideBookOpen, lucideFileUp, lucideSearch, lucideX } from '@ng-icons/lucide';
-import { ZardInputDirective } from '@/shared/components/input';
-import { ZardInputGroupComponent } from '@/shared/components/input-group';
+import { Component, signal } from "@angular/core";
+import { RouterLink, RouterLinkActive } from "@angular/router";
+import { NgIcon, provideIcons } from "@ng-icons/core";
+import { lucideBookOpen, lucideFileUp, lucideHome, lucideSearch, lucideX } from "@ng-icons/lucide";
+import { ZardInputDirective } from "@/shared/components/input";
+import { ZardInputGroupComponent } from "@/shared/components/input-group";
 
 @Component({
-  selector: 'app-bottom-tab-bar',
+  selector: "app-bottom-tab-bar",
   imports: [RouterLink, RouterLinkActive, NgIcon, ZardInputDirective, ZardInputGroupComponent],
   template: `
     @if (searchOpen()) {
@@ -71,8 +71,14 @@ import { ZardInputGroupComponent } from '@/shared/components/input-group';
     </nav>
   `,
   viewProviders: [
-    provideIcons({ lucideHome, lucideBookOpen, lucideFileUp, lucideSearch, lucideX })
-  ]
+    provideIcons({
+      lucideHome,
+      lucideBookOpen,
+      lucideFileUp,
+      lucideSearch,
+      lucideX,
+    }),
+  ],
 })
 export class BottomTabBarComponent {
   searchOpen = signal(false);

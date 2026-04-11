@@ -1,20 +1,13 @@
-import {Component} from '@angular/core';
-import {RouterLink, RouterLinkActive} from '@angular/router';
-import {ZardInputDirective} from '@/shared/components/input';
-import {ZardInputGroupComponent} from '@/shared/components/input-group';
-
-import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideSearch } from '@ng-icons/lucide';
+import { Component } from "@angular/core";
+import { RouterLink, RouterLinkActive } from "@angular/router";
+import { NgIcon, provideIcons } from "@ng-icons/core";
+import { lucideSearch } from "@ng-icons/lucide";
+import { ZardInputDirective } from "@/shared/components/input";
+import { ZardInputGroupComponent } from "@/shared/components/input-group";
 
 @Component({
-  selector: 'app-navbar',
-  imports: [
-    RouterLink,
-    RouterLinkActive,
-    ZardInputDirective,
-    ZardInputGroupComponent,
-    NgIcon
-  ],
+  selector: "app-navbar",
+  imports: [RouterLink, RouterLinkActive, ZardInputDirective, ZardInputGroupComponent, NgIcon],
   template: `
     <nav class="flex items-baseline gap-4 px-4 py-4 md:gap-16 md:px-12 md:py-8">
       <h1 class="font-sans tracking-tight text-lg font-bold text-teal-700">recipebase</h1>
@@ -57,10 +50,6 @@ import { lucideSearch } from '@ng-icons/lucide';
       </div>
     </nav>
   `,
-  viewProviders: [
-    provideIcons({ lucideSearch })
-  ]
+  viewProviders: [provideIcons({ lucideSearch })],
 })
-export class NavbarComponent {
-}
-
+export class NavbarComponent {}
