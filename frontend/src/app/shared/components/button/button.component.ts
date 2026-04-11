@@ -10,23 +10,23 @@ import {
   signal,
   ViewEncapsulation,
   booleanAttribute,
-} from '@angular/core';
+} from "@angular/core";
 
-import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideLoaderCircle } from '@ng-icons/lucide';
-import type { ClassValue } from 'clsx';
+import { NgIcon, provideIcons } from "@ng-icons/core";
+import { lucideLoaderCircle } from "@ng-icons/lucide";
+import type { ClassValue } from "clsx";
 
-import { mergeClasses } from '@/shared/utils/merge-classes';
+import { mergeClasses } from "@/shared/utils/merge-classes";
 
 import {
   buttonVariants,
   type ZardButtonShapeVariants,
   type ZardButtonSizeVariants,
   type ZardButtonTypeVariants,
-} from './button.variants';
+} from "./button.variants";
 
 @Component({
-  selector: 'z-button, button[z-button], a[z-button]',
+  selector: "z-button, button[z-button], a[z-button]",
   imports: [NgIcon],
   template: `
     @if (zLoading()) {
@@ -38,23 +38,23 @@ import {
   encapsulation: ViewEncapsulation.None,
   viewProviders: [provideIcons({ lucideLoaderCircle })],
   host: {
-    '[class]': 'classes()',
-    '[attr.data-icon-only]': 'iconOnly() || null',
-    '[attr.data-disabled]': 'isNotInsideOfButtonOrLink() && zDisabled() || null',
-    '[attr.aria-disabled]': 'isNotInsideOfButtonOrLink() && zDisabled() || null',
-    '[attr.disabled]': 'isNotInsideOfButtonOrLink() && zDisabled() ? "" : null',
-    '[attr.role]': 'isNotInsideOfButtonOrLink() ? "button" : null',
-    '[attr.tabindex]': 'isNotInsideOfButtonOrLink() ? "0" : null',
+    "[class]": "classes()",
+    "[attr.data-icon-only]": "iconOnly() || null",
+    "[attr.data-disabled]": "isNotInsideOfButtonOrLink() && zDisabled() || null",
+    "[attr.aria-disabled]": "isNotInsideOfButtonOrLink() && zDisabled() || null",
+    "[attr.disabled]": 'isNotInsideOfButtonOrLink() && zDisabled() ? "" : null',
+    "[attr.role]": 'isNotInsideOfButtonOrLink() ? "button" : null',
+    "[attr.tabindex]": 'isNotInsideOfButtonOrLink() ? "0" : null',
   },
-  exportAs: 'zButton',
+  exportAs: "zButton",
 })
 export class ZardButtonComponent implements OnDestroy {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
 
-  readonly zType = input<ZardButtonTypeVariants>('default');
-  readonly zSize = input<ZardButtonSizeVariants>('default');
-  readonly zShape = input<ZardButtonShapeVariants>('default');
-  readonly class = input<ClassValue>('');
+  readonly zType = input<ZardButtonTypeVariants>("default");
+  readonly zSize = input<ZardButtonSizeVariants>("default");
+  readonly zShape = input<ZardButtonShapeVariants>("default");
+  readonly class = input<ClassValue>("");
   readonly zFull = input(false, { transform: booleanAttribute });
   readonly zLoading = input(false, { transform: booleanAttribute });
   readonly zDisabled = input(false, { transform: booleanAttribute });
@@ -66,24 +66,24 @@ export class ZardButtonComponent implements OnDestroy {
 
   constructor() {
     afterNextRender(() => {
-      if (typeof window === 'undefined' || typeof MutationObserver === 'undefined') {
+      if (typeof window === "undefined" || typeof MutationObserver === "undefined") {
         return;
       }
 
       const check = () => {
         const el = this.elementRef.nativeElement;
-        const hasIcon = el.querySelector('ng-icon') !== null;
+        const hasIcon = el.querySelector("ng-icon") !== null;
         const children = Array.from<Node>(el.childNodes);
-        const hasText = children.some(node => {
+        const hasText = children.some((node) => {
           if (node.nodeType === 3) {
-            return node.textContent?.trim() !== '';
+            return node.textContent?.trim() !== "";
           }
           if (node.nodeType === 1) {
             const element = node as HTMLElement;
-            if (element.matches('ng-icon')) {
+            if (element.matches("ng-icon")) {
               return false;
             }
-            return element.textContent?.trim() !== '';
+            return element.textContent?.trim() !== "";
           }
           return false;
         });
@@ -127,7 +127,7 @@ export class ZardButtonComponent implements OnDestroy {
     const zardButtonElement = this.elementRef.nativeElement;
     if (zardButtonElement.parentElement) {
       const { tagName } = zardButtonElement.parentElement;
-      return tagName !== 'BUTTON' && tagName !== 'A';
+      return tagName !== "BUTTON" && tagName !== "A";
     }
     return true;
   });

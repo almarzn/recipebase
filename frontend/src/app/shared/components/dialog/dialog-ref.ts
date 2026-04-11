@@ -1,14 +1,14 @@
-import type { OverlayRef } from '@angular/cdk/overlay';
-import { isPlatformBrowser } from '@angular/common';
-import { EventEmitter, Inject, PLATFORM_ID } from '@angular/core';
+import type { OverlayRef } from "@angular/cdk/overlay";
+import { isPlatformBrowser } from "@angular/common";
+import { EventEmitter, Inject, PLATFORM_ID } from "@angular/core";
 
-import { filter, fromEvent, Subject, takeUntil } from 'rxjs';
+import { filter, fromEvent, Subject, takeUntil } from "rxjs";
 
-import type { ZardDialogComponent, ZardDialogOptions } from './dialog.component';
+import type { ZardDialogComponent, ZardDialogOptions } from "./dialog.component";
 
-const enum eTriggerAction {
-  CANCEL = 'cancel',
-  OK = 'ok',
+enum eTriggerAction {
+  CANCEL = "cancel",
+  OK = "ok",
 }
 
 export class ZardDialogRef<T = any, R = any, U = any> {
@@ -21,7 +21,7 @@ export class ZardDialogRef<T = any, R = any, U = any> {
     private overlayRef: OverlayRef,
     private config: ZardDialogOptions<T, U>,
     private containerInstance: ZardDialogComponent<T, U>,
-    @Inject(PLATFORM_ID) private platformId: object,
+    private platformId: object,
   ) {
     this.containerInstance.cancelTriggered.subscribe(() => this.trigger(eTriggerAction.CANCEL));
     this.containerInstance.okTriggered.subscribe(() => this.trigger(eTriggerAction.OK));
@@ -34,9 +34,9 @@ export class ZardDialogRef<T = any, R = any, U = any> {
     }
 
     if (isPlatformBrowser(this.platformId)) {
-      fromEvent<KeyboardEvent>(document, 'keydown')
+      fromEvent<KeyboardEvent>(document, "keydown")
         .pipe(
-          filter(event => event.key === 'Escape'),
+          filter((event) => event.key === "Escape"),
           takeUntil(this.destroy$),
         )
         .subscribe(() => this.close());
@@ -53,7 +53,7 @@ export class ZardDialogRef<T = any, R = any, U = any> {
 
     if (isPlatformBrowser(this.platformId)) {
       const hostElement = this.containerInstance.getNativeElement();
-      hostElement.classList.add('dialog-leave');
+      hostElement.classList.add("dialog-leave");
     }
 
     setTimeout(() => {
@@ -76,7 +76,7 @@ export class ZardDialogRef<T = any, R = any, U = any> {
 
     if (trigger instanceof EventEmitter) {
       trigger.emit(this.getContentComponent());
-    } else if (typeof trigger === 'function') {
+    } else if (typeof trigger === "function") {
       const result = trigger(this.getContentComponent()) as R;
       this.closeWithResult(result);
     } else {

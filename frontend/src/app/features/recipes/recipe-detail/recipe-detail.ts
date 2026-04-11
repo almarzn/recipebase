@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { RecipeDetailViewModel } from './recipe-detail.vm';
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { RecipeDetailViewModel } from "./recipe-detail.vm";
 
 @Component({
-  selector: 'app-recipe-detail',
+  selector: "app-recipe-detail",
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RecipeDetailViewModel],
   template: `

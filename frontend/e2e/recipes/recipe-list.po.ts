@@ -1,4 +1,4 @@
-import { type Page, type Locator } from '@playwright/test';
+import type { Page, Locator } from "@playwright/test";
 
 export class RecipeListPage {
   readonly loading: Locator;
@@ -8,15 +8,15 @@ export class RecipeListPage {
   readonly recipeCards: Locator;
 
   constructor(private readonly page: Page) {
-    this.loading = page.getByTestId('recipe-list-loading');
-    this.error = page.getByTestId('recipe-list-error');
-    this.empty = page.getByTestId('recipe-list-empty');
-    this.grid = page.getByTestId('recipe-list-grid');
-    this.recipeCards = page.getByTestId('recipe-card');
+    this.loading = page.getByTestId("recipe-list-loading");
+    this.error = page.getByTestId("recipe-list-error");
+    this.empty = page.getByTestId("recipe-list-empty");
+    this.grid = page.getByTestId("recipe-list-grid");
+    this.recipeCards = page.getByTestId("recipe-card");
   }
 
   async goto() {
-    await this.page.goto('/recipes');
+    await this.page.goto("/recipes");
   }
 
   recipeTitle(index: number): Locator {
@@ -28,10 +28,10 @@ export class RecipeListPage {
   }
 
   recipeDate(index: number): Locator {
-    return this.recipeCards.nth(index).getByTestId('recipe-date');
+    return this.recipeCards.nth(index).getByTestId("recipe-date");
   }
 
   recipeVariantBadges(index: number): Locator {
-    return this.recipeCards.nth(index).getByTestId('recipe-variant-badge');
+    return this.recipeCards.nth(index).getByTestId("recipe-variant-badge");
   }
 }

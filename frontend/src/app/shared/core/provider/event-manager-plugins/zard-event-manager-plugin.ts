@@ -1,5 +1,5 @@
-import type { ListenerOptions } from '@angular/core';
-import { EventManagerPlugin } from '@angular/platform-browser';
+import type { ListenerOptions } from "@angular/core";
+import { EventManagerPlugin } from "@angular/platform-browser";
 
 /**
  * Angular EventManagerPlugin that provides event modifier syntax for templates.
@@ -24,10 +24,10 @@ import { EventManagerPlugin } from '@angular/platform-browser';
  * (click.stop)="handler()"
  */
 export class ZardEventManagerPlugin extends EventManagerPlugin {
-  #keywords = ['prevent', 'stop', 'stop-immediate', 'prevent-with-stop'];
+  #keywords = ["prevent", "stop", "stop-immediate", "prevent-with-stop"];
 
   override supports(eventName: string): boolean {
-    return this.#keywords.some(keyword => eventName.endsWith(`.${keyword}`));
+    return this.#keywords.some((keyword) => eventName.endsWith(`.${keyword}`));
   }
 
   override addEventListener(
@@ -43,19 +43,19 @@ export class ZardEventManagerPlugin extends EventManagerPlugin {
       event,
       (event: Event) => {
         const isKeyboardEvent = event instanceof KeyboardEvent;
-        const isElementDisabled = element.getAttribute('aria-disabled') === 'true';
+        const isElementDisabled = element.getAttribute("aria-disabled") === "true";
         const shouldApplyModifier =
           (!keys.length || (isKeyboardEvent && keys.includes(event.key.toLowerCase()))) && !isElementDisabled;
 
         if (shouldApplyModifier) {
           switch (keyword) {
-            case 'stop':
+            case "stop":
               event.stopPropagation();
               break;
-            case 'stop-immediate':
+            case "stop-immediate":
               event.stopImmediatePropagation();
               break;
-            case 'prevent-with-stop':
+            case "prevent-with-stop":
               event.preventDefault();
               event.stopPropagation();
               break;
@@ -71,15 +71,14 @@ export class ZardEventManagerPlugin extends EventManagerPlugin {
   }
 
   #provideEventFrom(eventName: string, keywords: string[]): { event: string; keyword: string; keys: string[] } {
-    const eventNameSubstrings = eventName.split('.');
-    let event = '';
+    const eventNameSubstrings = eventName.split(".");
+    let event = "";
     let keys: string[] = [];
-    let keyword = '';
+    let keyword = "";
 
     for (const substring of eventNameSubstrings) {
-      if (substring.startsWith('{')) {
+      if (substring.startsWith("{")) {
         keys = this.#extractKeys(substring);
-        continue;
       } else if (keywords.includes(substring)) {
         keyword = substring;
         break;
@@ -96,10 +95,10 @@ export class ZardEventManagerPlugin extends EventManagerPlugin {
   #extractKeys(substring: string): string[] {
     const stringList = substring.substring(1, substring.length - 1);
     return stringList
-      .split(',')
-      .map(raw => {
+      .split(",")
+      .map((raw) => {
         const s = raw.toLowerCase().trim();
-        return s === 'space' ? ' ' : s;
+        return s === "space" ? " " : s;
       })
       .filter(Boolean);
   }

@@ -8,7 +8,7 @@ import {
   ViewContainerRef,
   effect,
   type EffectRef,
-} from '@angular/core';
+} from "@angular/core";
 
 export function isTemplateRef<C = unknown>(value: unknown): value is TemplateRef<C> {
   return value instanceof TemplateRef;
@@ -20,8 +20,8 @@ export interface ZardStringTemplateOutletContext {
 }
 
 @Directive({
-  selector: '[zStringTemplateOutlet]',
-  exportAs: 'zStringTemplateOutlet',
+  selector: "[zStringTemplateOutlet]",
+  exportAs: "zStringTemplateOutlet",
 })
 export class ZardStringTemplateOutletDirective<T = unknown> implements OnDestroy {
   private readonly viewContainer = inject(ViewContainerRef);
@@ -98,7 +98,7 @@ export class ZardStringTemplateOutletDirective<T = unknown> implements OnDestroy
     }
 
     if (!isTemplateRef(stringTemplateOutlet)) {
-      this.context['$implicit'] = stringTemplateOutlet as T;
+      this.context["$implicit"] = stringTemplateOutlet as T;
     }
 
     const recreateView = this.#shouldViewBeRecreated(stringTemplateOutlet, stringTemplateOutletContext);
@@ -132,7 +132,7 @@ export class ZardStringTemplateOutletDirective<T = unknown> implements OnDestroy
 
     if (!oldCtx) {
       oldCtx = newCtx;
-    } else if (newCtx && typeof newCtx === 'object') {
+    } else if (newCtx && typeof newCtx === "object") {
       for (const propName of Object.keys(newCtx)) {
         oldCtx[propName] = newCtx[propName];
       }

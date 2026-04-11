@@ -44,14 +44,14 @@ export interface Component {
 export type ComponentLink = ComponentLinkSelf | ComponentLinkExternal;
 
 export interface ComponentLinkSelf {
-  quality: 'self';
+  quality: "self";
 }
 
 export interface ComponentLinkExternal {
-  quality: 'external';
+  quality: "external";
   slug: string;
   title: string;
-  link: 'snapshot' | 'linked';
+  link: "snapshot" | "linked";
 }
 
 export interface Ingredient {
@@ -62,11 +62,11 @@ export interface Ingredient {
 }
 
 export type Quantity =
-  | { unit: 'gram'; amount: number }
-  | { unit: 'kilogram'; amount: number }
-  | { unit: 'liter'; amount: number }
-  | { unit: 'milliliter'; amount: number }
-  | { unit: 'unspecified'; notes: string };
+  | { unit: "gram"; amount: number }
+  | { unit: "kilogram"; amount: number }
+  | { unit: "liter"; amount: number }
+  | { unit: "milliliter"; amount: number }
+  | { unit: "unspecified"; notes: string };
 
 export interface Step {
   id: string;
