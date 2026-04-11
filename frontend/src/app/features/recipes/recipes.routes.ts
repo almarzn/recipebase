@@ -7,6 +7,10 @@ export const ROUTES: Routes = [
   },
   {
     path: ":slug",
-    loadComponent: () => import("./recipe-detail/recipe-detail").then((m) => m.RecipeDetailPage),
+    loadComponent: () => import("./recipe-detail/recipe-detail.component").then((m) => m.RecipeDetailPage),
+  },
+  {
+    path: ":slug/:variantSlug",
+    loadComponent: () => import("./recipe-detail/recipe-detail.component").then((m) => m.RecipeDetailPage),
   },
 ];
