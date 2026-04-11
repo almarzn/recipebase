@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { ErrorStateComponent } from "@/shared/components/error-state";
 import { RecipeCardComponent } from "./recipe-card";
 import { RecipeListViewModel } from "./recipe-list.vm";
 
@@ -6,7 +7,7 @@ import { RecipeListViewModel } from "./recipe-list.vm";
   selector: "app-recipe-list",
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RecipeListViewModel],
-  imports: [RecipeCardComponent],
+  imports: [ErrorStateComponent, RecipeCardComponent],
   template: `
     <div class="px-6 py-8 md:px-24 md:py-12">
       <h1 class="text-4xl font-serif">My recipes</h1>
@@ -28,20 +29,12 @@ import { RecipeListViewModel } from "./recipe-list.vm";
           }
         </div>
       } @else if (vm.error()) {
-        <div
-          data-testid="recipe-list-error"
-          class="rounded-xl border border-red-200 p-6 text-red-600"
-        >
-          <p class="font-medium">Failed to load recipes</p>
-          <p class="mt-1 text-sm text-red-500">{{ vm.error() }}</p>
+        <div data-testid="recipe-list-error">
+          <app-error-state message="Failed to load recipes" [detail]="vm.error()" />
         </div>
       } @else if (!vm.hasRecipes()) {
-        <div
-          data-testid="recipe-list-empty"
-          class="rounded-xl border border-gray-200 bg-gray-50 p-12 text-center"
-        >
-          <p class="font-serif text-2xl text-gray-400">No recipes yet</p>
-          <p class="mt-2 text-sm text-gray-400">Start by importing your first recipe.</p>
+        <div data-testid="recipe-list-empty">
+          <app-error-state message="No recipes yet" detail="Start by importing your first recipe." />
         </div>
       } @else {
         <div data-testid="recipe-list-grid" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, input, output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { ZardBadgeComponent } from "@/shared/components/badge/badge.component";
 import { ZardCardComponent } from "@/shared/components/card/card.component";
 import type { RecipeSummary } from "@/shared/models";
+import { formatDate } from "@/shared/utils";
 
 @Component({
   selector: "app-recipe-card",
@@ -39,11 +40,5 @@ import type { RecipeSummary } from "@/shared/models";
 })
 export class RecipeCardComponent {
   readonly recipe = input.required<RecipeSummary>();
-  readonly selected = output<string>();
-
-  protected formatDate(iso: string): string {
-    const pdt = Temporal.PlainDateTime.from(iso.endsWith("Z") ? iso.slice(0, -1) : iso);
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    return `${monthNames[pdt.month - 1]} ${pdt.day}, ${pdt.year}`;
-  }
+  protected readonly formatDate = formatDate;
 }
