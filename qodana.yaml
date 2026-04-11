@@ -9,4 +9,3 @@ profile:
 include:
   - name: CheckDependencyLicenses
 projectJDK: "25"
-bootstrap: ./gradlew jooqCodegen
