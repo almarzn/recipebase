@@ -18,20 +18,18 @@ import {
   output,
   type TemplateRef,
   type Type,
-  viewChild,
   type ViewContainerRef,
+  viewChild,
 } from "@angular/core";
 
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideX } from "@ng-icons/lucide";
-
-import { mergeClasses, noopFn } from "@/shared/utils/merge-classes";
-
-import type { ZardDialogRef } from "./dialog-ref";
-import { dialogVariants } from "./dialog.variants";
 import { ZardButtonComponent } from "@/shared/components/button/button.component";
+import { mergeClasses, noopFn } from "@/shared/utils/merge-classes";
+import { dialogVariants } from "./dialog.variants";
+import type { ZardDialogRef } from "./dialog-ref";
 
-export type OnClickCallback<T> = (instance: T) => false | void | object;
+export type OnClickCallback<T> = (instance: T) => false | undefined | object;
 export class ZardDialogOptions<T, U> {
   zCancelIcon?: string;
   zCancelText?: string | null;
@@ -169,10 +167,6 @@ export class ZardDialogComponent<T, U> extends BasePortalOutlet {
 
   okTriggered = output<void>();
   cancelTriggered = output<void>();
-
-  constructor() {
-    super();
-  }
 
   getNativeElement(): HTMLElement {
     return this.host.nativeElement;

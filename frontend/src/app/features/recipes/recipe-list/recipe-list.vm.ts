@@ -1,5 +1,5 @@
-import { computed, inject, Injectable, signal } from "@angular/core";
 import { httpResource } from "@angular/common/http";
+import { computed, Injectable } from "@angular/core";
 import type { RecipeSummary } from "@/shared/models";
 
 @Injectable()

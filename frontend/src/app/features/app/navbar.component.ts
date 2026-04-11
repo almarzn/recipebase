@@ -1,10 +1,9 @@
 import { Component } from "@angular/core";
 import { RouterLink, RouterLinkActive } from "@angular/router";
-import { ZardInputDirective } from "@/shared/components/input";
-import { ZardInputGroupComponent } from "@/shared/components/input-group";
-
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucideSearch } from "@ng-icons/lucide";
+import { ZardInputDirective } from "@/shared/components/input";
+import { ZardInputGroupComponent } from "@/shared/components/input-group";
 
 @Component({
   selector: "app-navbar",

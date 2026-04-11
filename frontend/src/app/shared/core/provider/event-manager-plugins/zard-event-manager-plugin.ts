@@ -36,9 +36,9 @@ export class ZardEventManagerPlugin extends EventManagerPlugin {
     handler: (event: Event) => void,
     options?: ListenerOptions,
     // eslint-disable-next-line
-  ): Function {
+  ): () => void {
     const { event, keyword, keys } = this.#provideEventFrom(eventName, this.#keywords);
-    return this.manager.addEventListener(
+    const unsubscribe = this.manager.addEventListener(
       element,
       event,
       (event: Event) => {
@@ -68,6 +68,7 @@ export class ZardEventManagerPlugin extends EventManagerPlugin {
       },
       options,
     );
+    return () => unsubscribe();
   }
 
   #provideEventFrom(eventName: string, keywords: string[]): { event: string; keyword: string; keys: string[] } {

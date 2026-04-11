@@ -1,7 +1,7 @@
 import { Component, signal } from "@angular/core";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { NgIcon, provideIcons } from "@ng-icons/core";
-import { lucideHome, lucideBookOpen, lucideFileUp, lucideSearch, lucideX } from "@ng-icons/lucide";
+import { lucideBookOpen, lucideFileUp, lucideHome, lucideSearch, lucideX } from "@ng-icons/lucide";
 import { ZardInputDirective } from "@/shared/components/input";
 import { ZardInputGroupComponent } from "@/shared/components/input-group";
 

@@ -1,6 +1,6 @@
 import type { OverlayRef } from "@angular/cdk/overlay";
 import { isPlatformBrowser } from "@angular/common";
-import { EventEmitter, Inject, PLATFORM_ID } from "@angular/core";
+import { EventEmitter } from "@angular/core";
 
 import { filter, fromEvent, Subject, takeUntil } from "rxjs";
 
@@ -11,7 +11,7 @@ enum eTriggerAction {
   OK = "ok",
 }
 
-export class ZardDialogRef<T = any, R = any, U = any> {
+export class ZardDialogRef<T = unknown, R = unknown, U = unknown> {
   private destroy$ = new Subject<void>();
   private isClosing = false;
   protected result?: R;

@@ -1,13 +1,13 @@
 import {
   Directive,
+  type EffectRef,
   type EmbeddedViewRef,
+  effect,
   inject,
   input,
   type OnDestroy,
   TemplateRef,
   ViewContainerRef,
-  effect,
-  type EffectRef,
 } from "@angular/core";
 
 export function isTemplateRef<C = unknown>(value: unknown): value is TemplateRef<C> {
@@ -98,7 +98,7 @@ export class ZardStringTemplateOutletDirective<T = unknown> implements OnDestroy
     }
 
     if (!isTemplateRef(stringTemplateOutlet)) {
-      this.context["$implicit"] = stringTemplateOutlet as T;
+      this.context.$implicit = stringTemplateOutlet as T;
     }
 
     const recreateView = this.#shouldViewBeRecreated(stringTemplateOutlet, stringTemplateOutletContext);

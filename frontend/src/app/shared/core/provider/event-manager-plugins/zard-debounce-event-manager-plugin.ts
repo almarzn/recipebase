@@ -12,11 +12,11 @@ export class ZardDebounceEventManagerPlugin extends EventManagerPlugin {
     handler: (event: Event) => void,
     options?: ListenerOptions,
     // eslint-disable-next-line
-  ): Function {
+  ): () => void {
     // Expected format: "event.debounce.delay" (e.g., "input.debounce.150")
     // If delay is omitted or invalid, defaults to 300ms
     const [event, , delay] = eventName.split(".");
-    const parsedDelay = Number.parseInt(delay);
+    const parsedDelay = Number.parseInt(delay, 10);
     const resolvedDelay = Number.isNaN(parsedDelay) ? 300 : parsedDelay;
 
     let timeoutId!: ReturnType<typeof setTimeout>;

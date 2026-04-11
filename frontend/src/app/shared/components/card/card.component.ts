@@ -5,8 +5,8 @@ import {
   input,
   output,
   type TemplateRef,
-  viewChild,
   ViewEncapsulation,
+  viewChild,
 } from "@angular/core";
 
 import type { ClassValue } from "clsx";

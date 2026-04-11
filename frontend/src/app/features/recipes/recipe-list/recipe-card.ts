@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, input, output } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import type { RecipeSummary } from "@/shared/models";
-import { ZardCardComponent } from "@/shared/components/card/card.component";
 import { ZardBadgeComponent } from "@/shared/components/badge/badge.component";
+import { ZardCardComponent } from "@/shared/components/card/card.component";
+import type { RecipeSummary } from "@/shared/models";
 
 @Component({
   selector: "app-recipe-card",

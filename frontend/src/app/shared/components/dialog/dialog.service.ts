@@ -2,21 +2,20 @@ import { type ComponentType, Overlay, OverlayConfig, OverlayRef } from "@angular
 import { ComponentPortal, TemplatePortal } from "@angular/cdk/portal";
 import { isPlatformBrowser } from "@angular/common";
 import {
-  inject,
   Injectable,
   InjectionToken,
   Injector,
+  inject,
   PLATFORM_ID,
   TemplateRef,
   type ViewContainerRef,
 } from "@angular/core";
-
-import { ZardDialogRef } from "./dialog-ref";
 import { ZardDialogComponent, ZardDialogOptions } from "./dialog.component";
+import { ZardDialogRef } from "./dialog-ref";
 
 type ContentType<T> = ComponentType<T> | TemplateRef<T> | string;
 
-export const Z_MODAL_DATA = new InjectionToken<any>("Z_MODAL_DATA");
+export const Z_MODAL_DATA = new InjectionToken<unknown>("Z_MODAL_DATA");
 
 @Injectable({
   providedIn: "root",

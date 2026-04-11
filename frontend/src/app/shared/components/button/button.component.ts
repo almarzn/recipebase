@@ -1,15 +1,15 @@
 import {
   afterNextRender,
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   computed,
-  type OnDestroy,
   ElementRef,
   inject,
   input,
+  type OnDestroy,
   signal,
   ViewEncapsulation,
-  booleanAttribute,
 } from "@angular/core";
 
 import { NgIcon, provideIcons } from "@ng-icons/core";

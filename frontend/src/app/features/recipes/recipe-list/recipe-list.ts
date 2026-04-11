@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { RecipeListViewModel } from "./recipe-list.vm";
 import { RecipeCardComponent } from "./recipe-card";
+import { RecipeListViewModel } from "./recipe-list.vm";
 
 @Component({
   selector: "app-recipe-list",

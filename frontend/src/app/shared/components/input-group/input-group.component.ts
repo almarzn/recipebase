@@ -7,19 +7,19 @@ import {
   effect,
   input,
   type TemplateRef,
-  viewChild,
   ViewEncapsulation,
+  viewChild,
 } from "@angular/core";
-
 import type { ClassValue } from "clsx";
-
+import { ZardInputDirective } from "@/shared/components/input/input.directive";
+import type { ZardInputSizeVariants } from "@/shared/components/input/input.variants";
+import { ZardLoaderComponent } from "@/shared/components/loader/loader.component";
 import { ZardIdDirective } from "@/shared/core";
 import {
   isTemplateRef,
   ZardStringTemplateOutletDirective,
 } from "@/shared/core/directives/string-template-outlet/string-template-outlet.directive";
 import { mergeClasses } from "@/shared/utils/merge-classes";
-
 import {
   inputGroupAddonVariants,
   inputGroupInputVariants,
@@ -27,11 +27,6 @@ import {
   type ZardInputGroupAddonAlignVariants,
   type ZardInputGroupAddonPositionVariants,
 } from "./input-group.variants";
-import { ZardInputDirective } from "@/shared/components/input/input.directive";
-import type { ZardInputSizeVariants } from "@/shared/components/input/input.variants";
-import { ZardLoaderComponent } from "@/shared/components/loader/loader.component";
-import { provideIcons } from "@ng-icons/core";
-import { lucideSearch } from "@ng-icons/lucide";
 
 @Component({
   selector: "z-input-group",
