@@ -7,22 +7,27 @@ import {
   type OnDestroy,
   signal,
 } from "@angular/core";
+import { Temporal } from "@js-temporal/polyfill";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucidePause, lucidePlay, lucideRotateCcw } from "@ng-icons/lucide";
 import { ZardButtonComponent } from "@/shared/components/button/button.component";
 
 type TimerState = "idle" | "running" | "paused" | "done";
 
-function parseDurationMs(iso: string): number {
-  const d = Temporal.Duration.from(iso);
-  return (d.hours ?? 0) * 3600_000 + (d.minutes ?? 0) * 60_000 + (d.seconds ?? 0) * 1000;
-}
+const timerFormat = new Intl.DurationFormat(undefined, { style: "digital" });
 
-function formatMs(ms: number): string {
-  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+function formatDuration(duration: Temporal.Duration): string {
+  const parts = timerFormat.formatToParts(duration.round({ smallestUnit: "seconds", largestUnit: "hours" }));
+
+  const minuteIndex = parts.findIndex((part) => part.unit === "minute");
+  const firstNonZeroPart = parts.findIndex((part) => part.type !== "literal" && Number(part.value) > 0);
+
+  const startIndex = Math.min(minuteIndex, Math.max(minuteIndex + 1, firstNonZeroPart));
+
+  return parts
+    .slice(startIndex)
+    .map((it) => it.value)
+    .join("");
 }
 
 @Component({
@@ -39,17 +44,19 @@ function formatMs(ms: number): string {
         zSize="sm"
         (click)="toggle()"
         zShape="circle"
-        class="flex items-center gap-2 bg-orange-50 border-orange-200 text-orange-700 hover:bg-orange-100"
+        class="flex items-center gap-2 bg-orange-50 border-orange-200 text-orange-700"
         [class.animate-pulse]="state() === 'done'"
         [class.bg-orange-100]="state() === 'running'"
         [class.border-orange-400]="state() === 'running'"
-        [class.bg-red-50]="state() === 'done'"
-        [class.border-red-300]="state() === 'done'"
+        [class.bg-red-500]="state() === 'done'"
+        [class.border-red-500]="state() === 'done'"
+        [class.text-white]="state() === 'done'"
+        [class.hover:bg-orange-200]="state() !== 'done'"
       >
         @if (state() === 'running') {
-          <ng-icon name="lucidePause" />
+          <ng-icon name="lucidePause"/>
         } @else {
-          <ng-icon name="lucidePlay" />
+          <ng-icon name="lucidePlay"/>
         }
         <span class="font-sans text-sm font-medium">{{ displayTime() }}</span>
       </button>
@@ -61,7 +68,7 @@ function formatMs(ms: number): string {
           zSize="icon-sm"
           (click)="reset()"
         >
-          <ng-icon name="lucideRotateCcw" />
+          <ng-icon name="lucideRotateCcw"/>
         </button>
       }
     </div>
@@ -71,17 +78,12 @@ export class RecipeTimerComponent implements OnDestroy {
   readonly duration = input.required<string>();
 
   protected readonly state = signal<TimerState>("idle");
-  private readonly totalMs = computed(() => parseDurationMs(this.duration()));
-  protected readonly remainingMs = linkedSignal(() => this.totalMs());
 
   private intervalId: ReturnType<typeof setInterval> | null = null;
+  private deadline: Temporal.Instant | null = null;
 
-  protected readonly displayTime = computed(() => {
-    if (this.state() === "idle") {
-      return formatMs(this.totalMs());
-    }
-    return formatMs(this.remainingMs());
-  });
+  protected readonly remainingTime = linkedSignal(() => Temporal.Duration.from(this.duration()));
+  protected readonly displayTime = computed(() => formatDuration(this.remainingTime()));
 
   ngOnDestroy(): void {
     this.clearInterval();
@@ -97,27 +99,36 @@ export class RecipeTimerComponent implements OnDestroy {
 
   private start(): void {
     this.state.set("running");
+    this.deadline = Temporal.Now.instant().add(this.remainingTime());
     this.intervalId = setInterval(() => {
-      const remaining = this.remainingMs() - 1000;
-      if (remaining <= 0) {
-        this.remainingMs.set(0);
-        this.clearInterval();
-        this.state.set("done");
-        this.playCompletionSound();
-      } else {
-        this.remainingMs.set(remaining);
-      }
-    }, 1000);
+      if (!this.deadline) return;
+      this.updateCountdown();
+    }, 500);
   }
 
   private pause(): void {
+    this.updateCountdown();
     this.clearInterval();
     this.state.set("paused");
   }
 
+  private updateCountdown() {
+    this.remainingTime.update((it) => this.deadline?.since(Temporal.Now.instant()) ?? it);
+
+    if (!this.deadline) return;
+
+    const remaining = this.deadline.since(Temporal.Now.instant());
+
+    if (remaining.sign <= 0) {
+      this.clearInterval();
+      this.state.set("done");
+      this.playCompletionSound();
+    }
+  }
+
   reset(): void {
     this.clearInterval();
-    this.remainingMs.set(this.totalMs());
+    this.remainingTime.set(Temporal.Duration.from(this.duration()));
     this.state.set("idle");
   }
 
@@ -126,6 +137,7 @@ export class RecipeTimerComponent implements OnDestroy {
       clearInterval(this.intervalId);
       this.intervalId = null;
     }
+    this.deadline = null;
   }
 
   private playCompletionSound(): void {
