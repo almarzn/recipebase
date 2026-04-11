@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from "@angular/core";
 import type { Step } from "@/shared/models";
-import { formatDuration } from "@/shared/utils";
+import { RecipeTimerComponent } from "./recipe-timer.component";
 
 const stepNumberFormat = new Intl.NumberFormat("en-US", {
   minimumIntegerDigits: 2,
@@ -10,6 +10,7 @@ const stepNumberFormat = new Intl.NumberFormat("en-US", {
 @Component({
   selector: "app-recipe-step-item",
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RecipeTimerComponent],
   template: `
     <li data-testid="step-item" class="flex gap-4 items-start">
       <div class="flex-shrink-0">
@@ -33,14 +34,7 @@ const stepNumberFormat = new Intl.NumberFormat("en-US", {
         }
 
         @if (step().attachment) {
-          <div
-            data-testid="step-timer"
-            class="flex items-center gap-2 py-2 px-3 bg-orange-50 rounded-lg border border-orange-200"
-          >
-            <span class="font-sans text-sm font-medium text-orange-700">
-              Timer: {{ formatDuration(step().attachment!.duration) }}
-            </span>
-          </div>
+          <app-recipe-timer [duration]="step().attachment!.duration" />
         }
       </div>
     </li>
@@ -51,5 +45,4 @@ export class RecipeStepItemComponent {
   readonly stepIndex = input.required<number>();
 
   protected readonly formattedNumber = computed(() => stepNumberFormat.format(this.stepIndex() + 1));
-  protected readonly formatDuration = formatDuration;
 }
