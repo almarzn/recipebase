@@ -14,16 +14,23 @@ import { provideRecipeVariantViewModel, RecipeVariantViewModel } from "./recipe-
   template: `
     @if (vm.loading()) {
       <div data-testid="recipe-detail-loading" class="flex items-center justify-center py-24">
-        <app-error-state message="Loading recipe..." />
+        <app-error-state message="Loading recipe..." subtext="Please wait while we fetch the recipe details." />
       </div>
     } @else if (vm.errorState(); as state) {
       @if (state.kind === "error") {
         <div data-testid="recipe-detail-error" class="flex items-center justify-center py-24">
-          <app-error-state message="{{ state.message }}" />
+          <app-error-state 
+            message="Something went wrong" 
+            subtext="We couldn't load this recipe. Please try again later."
+            [detail]="state.message"
+            icon="network" />
         </div>
       } @else {
         <div data-testid="recipe-detail-not-found" class="flex items-center justify-center py-24">
-          <app-error-state message="Recipe not found." />
+          <app-error-state 
+            message="Recipe not found" 
+            subtext="The recipe you're looking for doesn't exist or may have been removed."
+            icon="not-found" />
         </div>
       }
     } @else if (vm.recipe(); as recipe) {
@@ -39,7 +46,10 @@ import { provideRecipeVariantViewModel, RecipeVariantViewModel } from "./recipe-
       </div>
     } @else {
       <div data-testid="recipe-detail-not-found" class="flex items-center justify-center py-24">
-        <app-error-state message="Recipe not found." />
+        <app-error-state 
+          message="Recipe not found" 
+          subtext="The recipe you're looking for doesn't exist or may have been removed."
+          icon="not-found" />
       </div>
     }
   `,
