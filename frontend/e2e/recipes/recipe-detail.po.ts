@@ -94,4 +94,16 @@ export class RecipeDetailPage {
   stepsComponentTitle(index: number): Locator {
     return this.stepGroups.nth(index).getByTestId("steps-component-title");
   }
+
+  timerToggle(index: number): Locator {
+    return this.stepTimer(index).getByTestId("timer-toggle");
+  }
+
+  timerReset(index: number): Locator {
+    return this.stepTimer(index).getByTestId("timer-reset");
+  }
+
+  timerDisplay(index: number): Locator {
+    return this.timerToggle(index).locator("span");
+  }
 }

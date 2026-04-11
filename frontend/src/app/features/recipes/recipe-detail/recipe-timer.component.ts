@@ -1,4 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, input, type OnDestroy, signal } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  linkedSignal,
+  type OnDestroy,
+  signal,
+} from "@angular/core";
+import { NgIcon, provideIcons } from "@ng-icons/core";
+import { lucidePause, lucidePlay, lucideRotateCcw } from "@ng-icons/lucide";
+import { ZardButtonComponent } from "@/shared/components/button/button.component";
 
 type TimerState = "idle" | "running" | "paused" | "done";
 
@@ -17,34 +28,40 @@ function formatMs(ms: number): string {
 @Component({
   selector: "app-recipe-timer",
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgIcon, ZardButtonComponent],
+  viewProviders: [provideIcons({ lucidePlay, lucidePause, lucideRotateCcw })],
   template: `
     <div data-testid="step-timer" class="flex items-center gap-2">
       <button
         data-testid="timer-toggle"
+        z-button
+        zType="outline"
+        zSize="sm"
         (click)="toggle()"
-        class="flex items-center gap-2 py-2 px-3 bg-orange-50 rounded-lg border border-orange-200 cursor-pointer transition-colors hover:bg-orange-100"
+        zShape="circle"
+        class="flex items-center gap-2 bg-orange-50 border-orange-200 text-orange-700 hover:bg-orange-100"
         [class.animate-pulse]="state() === 'done'"
         [class.bg-orange-100]="state() === 'running'"
         [class.border-orange-400]="state() === 'running'"
         [class.bg-red-50]="state() === 'done'"
         [class.border-red-300]="state() === 'done'"
       >
-        <span class="font-sans text-sm font-medium text-orange-700">
-          @if (state() === 'running') {
-            ⏱
-          } @else {
-            ▶
-          }
-          {{ displayTime() }}
-        </span>
+        @if (state() === 'running') {
+          <ng-icon name="lucidePause" />
+        } @else {
+          <ng-icon name="lucidePlay" />
+        }
+        <span class="font-sans text-sm font-medium">{{ displayTime() }}</span>
       </button>
       @if (state() === 'paused' || state() === 'done') {
         <button
           data-testid="timer-reset"
+          z-button
+          zType="ghost"
+          zSize="icon-sm"
           (click)="reset()"
-          class="py-2 px-2 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer transition-colors hover:bg-gray-100 font-sans text-sm text-gray-500"
         >
-          ↺
+          <ng-icon name="lucideRotateCcw" />
         </button>
       }
     </div>
@@ -54,24 +71,17 @@ export class RecipeTimerComponent implements OnDestroy {
   readonly duration = input.required<string>();
 
   protected readonly state = signal<TimerState>("idle");
-  protected readonly remainingMs = signal(0);
+  private readonly totalMs = computed(() => parseDurationMs(this.duration()));
+  protected readonly remainingMs = linkedSignal(() => this.totalMs());
 
   private intervalId: ReturnType<typeof setInterval> | null = null;
-  private totalMs = 0;
 
   protected readonly displayTime = computed(() => {
     if (this.state() === "idle") {
-      return formatMs(this.totalMs);
+      return formatMs(this.totalMs());
     }
     return formatMs(this.remainingMs());
   });
-
-  constructor() {
-    queueMicrotask(() => {
-      this.totalMs = parseDurationMs(this.duration());
-      this.remainingMs.set(this.totalMs);
-    });
-  }
 
   ngOnDestroy(): void {
     this.clearInterval();
@@ -107,7 +117,7 @@ export class RecipeTimerComponent implements OnDestroy {
 
   reset(): void {
     this.clearInterval();
-    this.remainingMs.set(this.totalMs);
+    this.remainingMs.set(this.totalMs());
     this.state.set("idle");
   }
 

@@ -322,7 +322,7 @@ test("recipe detail — displays full recipe with all data", async ({ page }) =>
 
   await test.step("displays timer attachments", async () => {
     await expect(detail.stepTimer(1)).toBeVisible();
-    await expect(detail.stepTimer(1)).toContainText("Timer:");
+    await expect(detail.timerDisplay(1)).toHaveText("10:00");
   });
 });
 
