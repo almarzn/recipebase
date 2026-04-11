@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from "@angular/core";
 
+import { ZardCardComponent } from "@/shared/components/card";
 import { ErrorStateComponent } from "@/shared/components/error-state";
+import { ZardSkeletonComponent } from "@/shared/components/skeleton";
 import { provideRecipeDetailViewModel, RecipeDetailViewModel } from "./recipe-detail.vm";
 import { RecipeHeaderComponent } from "./recipe-header.component";
 import { RecipeIngredientListComponent } from "./recipe-ingredient-list.component";
@@ -10,11 +12,65 @@ import { provideRecipeVariantViewModel, RecipeVariantViewModel } from "./recipe-
 @Component({
   selector: "app-recipe-detail",
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ErrorStateComponent, RecipeHeaderComponent, RecipeIngredientListComponent, RecipeStepsComponent],
+  imports: [
+    ErrorStateComponent,
+    RecipeHeaderComponent,
+    RecipeIngredientListComponent,
+    RecipeStepsComponent,
+    ZardCardComponent,
+    ZardSkeletonComponent,
+  ],
   template: `
     @if (vm.loading()) {
-      <div data-testid="recipe-detail-loading" class="flex items-center justify-center py-24">
-        <app-error-state message="Loading recipe..." subtext="Please wait while we fetch the recipe details." />
+      <div data-testid="recipe-detail-loading" class="flex flex-col gap-8 max-w-6xl mx-auto py-8 px-4">
+        <!-- Header skeleton -->
+        <div class="flex">
+          <div class="flex flex-col gap-6 grow">
+            <div class="flex flex-col gap-2">
+              <z-skeleton class="h-10 w-3/4" />
+              <z-skeleton class="h-6 w-1/2" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Content skeleton -->
+        <div class="flex gap-8">
+          <!-- Ingredients skeleton -->
+          <div class="basis-1/3">
+            <z-card class="bg-white border border-gray-200">
+              <div class="flex flex-col gap-6 p-2">
+                <z-skeleton class="h-6 w-24" />
+                <div class="flex flex-col gap-3">
+                  <z-skeleton class="h-4 w-20" />
+                  @for (i of [1, 2, 3, 4, 5]; track i) {
+                    <div class="flex items-baseline justify-between py-2 border-b border-gray-100">
+                      <z-skeleton class="h-4 w-2/3" />
+                      <z-skeleton class="h-4 w-16" />
+                    </div>
+                  }
+                </div>
+              </div>
+            </z-card>
+          </div>
+
+          <!-- Steps skeleton -->
+          <div class="grow flex flex-col gap-6">
+            <z-skeleton class="h-6 w-28" />
+            <div class="flex flex-col gap-4">
+              @for (i of [1, 2, 3, 4]; track i) {
+                <div class="flex gap-4 items-start">
+                  <z-skeleton class="w-10 h-10 shrink-0" />
+                  <div class="flex flex-col gap-2 flex-1 pt-2">
+                    <z-skeleton [class]="'h-4 ' + (i % 2 === 0 ? 'w-full' : 'w-5/6')" />
+                    @if (i === 1) {
+                      <z-skeleton class="h-3 w-1/3" />
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
       </div>
     } @else if (vm.errorState(); as state) {
       @if (state.kind === "error") {
