@@ -16,7 +16,7 @@ export class RecipeVariantViewModel {
     (value) => {
       const recipeSlug = this.parentVm.slug();
       if (recipeSlug && value) {
-        void this.router.navigate(["/recipes", recipeSlug, value]);
+        void this.router.navigate(["/recipes", recipeSlug, "variants", value]);
       }
     },
     this.route.paramMap.pipe(
