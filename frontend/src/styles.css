@@ -6,8 +6,8 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.982 0.0041 91.45);
-  --foreground: oklch(0.145 0 0);
+  --background: var(--color-desert-storm-50);
+  --foreground: var(--color-desert-storm-950);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -74,6 +74,18 @@
 }
 
 @theme inline {
+  --color-desert-storm-50: #faf9f6;
+  --color-desert-storm-100: #f0ede4;
+  --color-desert-storm-200: #e0dac8;
+  --color-desert-storm-300: #ccc1a5;
+  --color-desert-storm-400: #b7a380;
+  --color-desert-storm-500: #a88e67;
+  --color-desert-storm-600: #9b7d5b;
+  --color-desert-storm-700: #81664d;
+  --color-desert-storm-800: #695443;
+  --color-desert-storm-900: #564538;
+  --color-desert-storm-950: #2e231c;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

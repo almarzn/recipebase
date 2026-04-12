@@ -1,9 +1,0 @@
-{
-  "lsp": {
-    "biome": {
-      "settings": {
-        "config_path": "frontend/biome.json"
-      }
-    }
-  }
-}
