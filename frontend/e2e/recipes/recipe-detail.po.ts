@@ -50,7 +50,7 @@ export class RecipeDetailPage {
   }
 
   async goto(slug: string, variantSlug?: string) {
-    const url = variantSlug ? `/recipes/${slug}/${variantSlug}` : `/recipes/${slug}`;
+    const url = variantSlug ? `/recipes/${slug}/variants/${variantSlug}` : `/recipes/${slug}`;
     await this.page.goto(url);
   }
 
