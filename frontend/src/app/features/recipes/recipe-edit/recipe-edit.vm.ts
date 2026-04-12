@@ -1,4 +1,4 @@
-import { Injectable, inject } from "@angular/core";
+import { computed, Injectable, inject } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { NavigationEnd, Router } from "@angular/router";
 import { filter, map, startWith } from "rxjs/operators";
@@ -11,6 +11,7 @@ export class RecipeEditViewModel {
   readonly variants;
   readonly slug;
   readonly variantSlug;
+  readonly activeVariant;
   private router;
 
   constructor() {
@@ -32,6 +33,12 @@ export class RecipeEditViewModel {
         }),
       ),
     );
+
+    this.activeVariant = computed(() => {
+      const variants = this.variants();
+      const slug = this.variantSlug();
+      return variants?.find((v) => v.slug === slug);
+    });
   }
 
   setActiveVariant(slug: string) {

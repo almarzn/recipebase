@@ -1,15 +1,23 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { NgIcon, provideIcons } from "@ng-icons/core";
-import { lucideInfo, lucidePencil } from "@ng-icons/lucide";
-import { ZardSelectComponent } from "@/shared/components/select/select.component";
-import { ZardSelectItemComponent } from "@/shared/components/select/select-item.component";
+import { lucideChevronsUpDown, lucidePencil } from "@ng-icons/lucide";
+import { ZardDropdownMenuItemComponent } from "@/shared/components/dropdown/dropdown-item.component";
+import { ZardDropdownMenuContentComponent } from "@/shared/components/dropdown/dropdown-menu-content.component";
+import { ZardDropdownDirective } from "@/shared/components/dropdown/dropdown-trigger.directive";
 import { RecipeEditViewModel } from "./recipe-edit.vm";
 
 @Component({
   selector: "app-recipe-edit-nav",
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, NgIcon, RouterLinkActive, ZardSelectComponent, ZardSelectItemComponent],
+  imports: [
+    RouterLink,
+    NgIcon,
+    RouterLinkActive,
+    ZardDropdownDirective,
+    ZardDropdownMenuContentComponent,
+    ZardDropdownMenuItemComponent,
+  ],
   template: `
     <nav class="flex flex-col gap-4 text-sm" data-testid="recipe-edit-nav">
       <a
@@ -28,31 +36,36 @@ import { RecipeEditViewModel } from "./recipe-edit.vm";
           Basic informations
         </div>
       </a>
+
       <div class="h-px bg-stone-200 mx-5"></div>
-      <h3 class="uppercase text-xs tracking-wide text-stone-500">Variants</h3>
-      <z-select
-        zIcon="expand"
-        zPlaceholder="Select a variant..."
-        [value]="vm.variantSlug()"
-        (valueChange)="setActiveVariant($event)"
-        data-testid="recipe-edit-variant-select"
-      >
-        @for (variant of vm.variants(); track variant.slug) {
-          <z-select-item [zValue]="variant.slug" [attr.data-testid]="'variant-option-' + variant.slug">{{ variant.name }}</z-select-item>
-        }
-      </z-select>
+
+      <div class="flex flex-col gap-2 px-5">
+          <h3 class="uppercase text-xs tracking-wide text-stone-500">Variants</h3>
+          <button
+            type="button"
+            z-dropdown
+            [zDropdownMenu]="variantMenu"
+            class="flex w-full items-center justify-between rounded-md border border-stone-300 bg-white px-3 py-2 text-sm text-stone-700 shadow-sm hover:bg-stone-50"
+            data-testid="recipe-edit-variant-select"
+          >
+            <span>{{ vm.activeVariant()?.name ?? 'Select a variant...' }}</span>
+            <ng-icon name="lucideChevronsUpDown" class="size-4 opacity-50" />
+          </button>
+          <z-dropdown-menu-content #variantMenu="zDropdownMenuContent" class="w-full">
+            @for (variant of vm.variants(); track variant.slug) {
+              <z-dropdown-menu-item
+                (click)="vm.setActiveVariant(variant.slug)"
+                [attr.data-testid]="'variant-option-' + variant.slug"
+              >
+                {{ variant.name }}
+              </z-dropdown-menu-item>
+            }
+          </z-dropdown-menu-content>
+      </div>
     </nav>
   `,
-  viewProviders: [provideIcons({ lucidePencil, lucideInfo })],
+  viewProviders: [provideIcons({ lucidePencil, lucideChevronsUpDown })],
 })
 export class RecipeEditNavComponent {
   protected readonly vm = inject(RecipeEditViewModel);
-
-  setActiveVariant(slug: string | string[]) {
-    if (Array.isArray(slug)) {
-      this.setActiveVariant(slug[0]);
-      return;
-    }
-    this.vm.setActiveVariant(slug);
-  }
 }
