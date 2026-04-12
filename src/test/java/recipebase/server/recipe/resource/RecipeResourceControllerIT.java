@@ -13,7 +13,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -61,11 +65,6 @@ class RecipeResourceControllerIT {
 			c.execute(
 				"INSERT INTO recipe_variant (id, recipe_id, slug, name, description) VALUES (?, ?, ?, ?, ?)",
 				variant2Id, recipeId, "molten", "Molten Center", "Gooey molten center"
-			);
-
-			c.execute(
-				"UPDATE recipe SET current_variant_id = ? WHERE id = ?",
-				variant1Id, recipeId
 			);
 
 			var comp1Id = UUID.randomUUID();
@@ -172,6 +171,159 @@ class RecipeResourceControllerIT {
 	@Test
 	void findBySlug_returnsNotFoundForUnknownSlug() throws Exception {
 		mockMvc.perform(get("/api/recipes/nonexistent").accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isNotFound());
+	}
+
+	// ============================================================
+	// PATCH /api/recipes/{slug}
+	// ============================================================
+
+	@Test
+	void patchRecipe_updatesTitleAndDescription() throws Exception {
+		mockMvc.perform(patch("/api/recipes/chocolate-cake")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content("""
+				{ "title": "Dark Chocolate Cake", "description": "Extra dark" }
+				"""))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.title").value("Dark Chocolate Cake"))
+			.andExpect(jsonPath("$.description").value("Extra dark"))
+			.andExpect(jsonPath("$.slug").value("chocolate-cake"));
+	}
+
+	@Test
+	void patchRecipe_returnsNotFoundForUnknownSlug() throws Exception {
+		mockMvc.perform(patch("/api/recipes/nonexistent")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content("""
+				{ "title": "Whatever", "description": null }
+				"""))
+			.andExpect(status().isNotFound());
+	}
+
+	// ============================================================
+	// DELETE /api/recipes/{slug}/variants/{variantSlug}
+	// ============================================================
+
+	@Test
+	void deleteVariant_removesVariantAndReturns204() throws Exception {
+		mockMvc.perform(delete("/api/recipes/chocolate-cake/variants/classic"))
+			.andExpect(status().isNoContent());
+
+		// verify it's gone
+		mockMvc.perform(get("/api/recipes/chocolate-cake"))
+			.andExpect(jsonPath("$.variants.length()").value(1))
+			.andExpect(jsonPath("$.variants[0].slug").value("molten"));
+	}
+
+	@Test
+	void deleteVariant_returnsNotFoundForUnknownVariant() throws Exception {
+		mockMvc.perform(delete("/api/recipes/chocolate-cake/variants/nonexistent"))
+			.andExpect(status().isNotFound());
+	}
+
+	// ============================================================
+	// POST /api/recipes/{slug}/variants
+	// ============================================================
+
+	@Test
+	void addVariant_createsVariantAndReturnsIdAndSlug() throws Exception {
+		mockMvc.perform(post("/api/recipes/chocolate-cake/variants")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content("""
+				{
+				  "slug": "gluten-free",
+				  "name": "Gluten Free",
+				  "description": "No gluten",
+				  "components": [
+				    {
+				      "title": "GF Batter",
+				      "description": null,
+				      "ingredients": [
+				        {
+				          "slug": "rice-flour",
+				          "name": "Rice flour",
+				          "notes": null,
+				          "quantity": { "unit": "gram", "amount": 200 }
+				        }
+				      ],
+				      "steps": [
+				        { "text": "Mix well.", "notes": null, "attachment": null }
+				      ]
+				    }
+				  ]
+				}
+				"""))
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.id").isNotEmpty())
+			.andExpect(jsonPath("$.slug").value("gluten-free"));
+	}
+
+	@Test
+	void addVariant_returnsConflictForDuplicateSlug() throws Exception {
+		mockMvc.perform(post("/api/recipes/chocolate-cake/variants")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content("""
+				{ "slug": "classic", "name": "Classic Copy",
+				  "description": null, "components": [] }
+				"""))
+			.andExpect(status().isConflict());
+	}
+
+	@Test
+	void addVariant_returnsNotFoundForUnknownRecipe() throws Exception {
+		mockMvc.perform(post("/api/recipes/nonexistent/variants")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content("""
+				{ "slug": "v1", "name": "V1", "description": null, "components": [] }
+				"""))
+			.andExpect(status().isNotFound());
+	}
+
+	// ============================================================
+	// PUT /api/recipes/{slug}/variants/{variantSlug}
+	// ============================================================
+
+	@Test
+	void updateVariant_replacesVariantCompletely() throws Exception {
+		mockMvc.perform(put("/api/recipes/chocolate-cake/variants/classic")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content("""
+				{
+				  "name": "Classic Revised",
+				  "description": "Lighter version",
+				  "components": [
+				    {
+				      "title": "Light Batter",
+				      "description": null,
+				      "ingredients": [
+				        {
+				          "slug": "cake-flour",
+				          "name": "Cake flour",
+				          "notes": null,
+				          "quantity": { "unit": "gram", "amount": 220 }
+				        }
+				      ],
+				      "steps": [
+				        { "text": "Sift flour.", "notes": null, "attachment": null }
+				      ]
+				    }
+				  ]
+				}
+				"""))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.variants[?(@.slug=='classic')].name").value("Classic Revised"))
+			.andExpect(jsonPath("$.variants[?(@.slug=='classic')].components[0].title").value("Light Batter"))
+			.andExpect(jsonPath("$.variants[?(@.slug=='classic')].components[0].ingredients[0].slug").value("cake-flour"));
+	}
+
+	@Test
+	void updateVariant_returnsNotFoundForUnknownVariant() throws Exception {
+		mockMvc.perform(put("/api/recipes/chocolate-cake/variants/nonexistent")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content("""
+				{ "name": "X", "description": null, "components": [] }
+				"""))
 			.andExpect(status().isNotFound());
 	}
 }

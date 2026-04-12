@@ -3,9 +3,7 @@
 -- ============================================================
 -- 001 — recipe
 -- ============================================================
--- Core recipe entity. current_variant_id is nullable to break
--- the circular dependency at insert time; the FK is added as
--- a separate deferrable constraint in changeset 003.
+-- Core recipe entity.
 -- ============================================================
 --changeset recipebase:001-recipe
 CREATE TABLE recipe (
@@ -13,7 +11,6 @@ CREATE TABLE recipe (
     slug               TEXT        NOT NULL UNIQUE,
     title              TEXT        NOT NULL,
     description        TEXT,
-    current_variant_id UUID,
     created_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at         TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -41,22 +38,7 @@ CREATE INDEX idx_recipe_variant_recipe_id ON recipe_variant (recipe_id);
 --rollback DROP TABLE recipe_variant;
 
 -- ============================================================
--- 003 — recipe.current_variant_id FK (deferrable)
--- ============================================================
--- Must be deferrable so that a recipe and its first variant
--- can be inserted in the same transaction without ordering
--- constraints.
--- ============================================================
---changeset recipebase:003-recipe-current-variant-fk
-ALTER TABLE recipe
-    ADD CONSTRAINT fk_recipe_current_variant
-    FOREIGN KEY (current_variant_id)
-    REFERENCES recipe_variant (id)
-    DEFERRABLE INITIALLY DEFERRED;
---rollback ALTER TABLE recipe DROP CONSTRAINT fk_recipe_current_variant;
-
--- ============================================================
--- 004 — recipe_component
+-- 003 — recipe_component
 -- ============================================================
 -- A component belongs to a variant and is ordered by position.
 --
@@ -76,7 +58,7 @@ ALTER TABLE recipe
 -- contain the point-in-time copy of the referenced recipe.
 -- Version-history support for snapshots is deferred.
 -- ============================================================
---changeset recipebase:004-recipe-component
+--changeset recipebase:003-recipe-component
 CREATE TABLE recipe_component (
     id          UUID    PRIMARY KEY DEFAULT gen_random_uuid(),
     variant_id  UUID    NOT NULL REFERENCES recipe_variant (id) ON DELETE CASCADE,
@@ -91,7 +73,7 @@ CREATE INDEX idx_recipe_component_variant_id ON recipe_component (variant_id);
 --rollback DROP TABLE recipe_component;
 
 -- ============================================================
--- 005 — recipe_ingredient
+-- 004 — recipe_ingredient
 -- ============================================================
 -- Ingredients belong to a component and are ordered by
 -- position. Both self and snapshot components store their
@@ -111,7 +93,7 @@ CREATE INDEX idx_recipe_component_variant_id ON recipe_component (variant_id);
 -- `slug` identifies the logical ingredient (e.g. "bread-flour")
 -- and anticipates a future ingredient catalogue table.
 -- ============================================================
---changeset recipebase:005-recipe-ingredient
+--changeset recipebase:004-recipe-ingredient
 CREATE TABLE recipe_ingredient (
     id           UUID  PRIMARY KEY DEFAULT gen_random_uuid(),
     component_id UUID  NOT NULL REFERENCES recipe_component (id) ON DELETE CASCADE,
@@ -128,7 +110,7 @@ CREATE INDEX idx_recipe_ingredient_component_id ON recipe_ingredient (component_
 --rollback DROP TABLE recipe_ingredient;
 
 -- ============================================================
--- 006 — recipe_step
+-- 005 — recipe_step
 -- ============================================================
 -- Steps belong to a component and are ordered by position.
 --
@@ -138,7 +120,7 @@ CREATE INDEX idx_recipe_ingredient_component_id ON recipe_ingredient (component_
 --
 --   {"duration": "PT1M30S"}
 -- ============================================================
---changeset recipebase:006-recipe-step
+--changeset recipebase:005-recipe-step
 CREATE TABLE recipe_step (
     id           UUID  PRIMARY KEY DEFAULT gen_random_uuid(),
     component_id UUID  NOT NULL REFERENCES recipe_component (id) ON DELETE CASCADE,
