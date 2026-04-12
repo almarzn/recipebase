@@ -10,7 +10,11 @@ export const ROUTES: Routes = [
     loadComponent: () => import("./recipe-detail/recipe-detail.component").then((m) => m.RecipeDetailPage),
   },
   {
-    path: ":slug/:variantSlug",
+    path: ":slug/variants/:variantSlug",
     loadComponent: () => import("./recipe-detail/recipe-detail.component").then((m) => m.RecipeDetailPage),
+  },
+  {
+    path: ":slug/edit",
+    loadChildren: () => import("./recipe-edit/recipe-edit.routes").then((m) => m.ROUTES),
   },
 ];
