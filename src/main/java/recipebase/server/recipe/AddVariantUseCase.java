@@ -31,7 +31,7 @@ public class AddVariantUseCase {
 
 	/**
 	 * Returns empty if the recipe is not found.
-	 * Throws DuplicateKeyException (unchecked) if the variant slug already exists —
+	 * Throws DuplicateKeyException (unchecked) if the auto-generated slug collides —
 	 * the controller maps this to 409.
 	 */
 	public java.util.Optional<AddVariantResponse> execute(String recipeSlug, AddVariantRequest request) {
@@ -48,10 +48,12 @@ public class AddVariantUseCase {
 			var variantId = UUID.randomUUID();
 			var now = OffsetDateTime.now();
 
+			var slug = SlugUtil.slugify(request.name());
+
 			c.insertInto(RECIPE_VARIANT)
 				.set(RECIPE_VARIANT.ID, variantId)
 				.set(RECIPE_VARIANT.RECIPE_ID, recipeId.get())
-				.set(RECIPE_VARIANT.SLUG, request.slug())
+				.set(RECIPE_VARIANT.SLUG, slug)
 				.set(RECIPE_VARIANT.NAME, request.name())
 				.set(RECIPE_VARIANT.DESCRIPTION, request.description())
 				.set(RECIPE_VARIANT.CREATED_AT, now)
@@ -60,7 +62,7 @@ public class AddVariantUseCase {
 
 			insertComponents(c, variantId, request.components());
 
-			return java.util.Optional.of(new AddVariantResponse(variantId, request.slug()));
+			return java.util.Optional.of(new AddVariantResponse(variantId, slug));
 		});
 	}
 

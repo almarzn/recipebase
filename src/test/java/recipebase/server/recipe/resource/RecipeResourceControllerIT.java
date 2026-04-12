@@ -13,6 +13,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
+import static org.hamcrest.Matchers.startsWith;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -232,7 +234,6 @@ class RecipeResourceControllerIT {
 			.contentType(MediaType.APPLICATION_JSON)
 			.content("""
 				{
-				  "slug": "gluten-free",
 				  "name": "Gluten Free",
 				  "description": "No gluten",
 				  "components": [
@@ -256,18 +257,7 @@ class RecipeResourceControllerIT {
 				"""))
 			.andExpect(status().isCreated())
 			.andExpect(jsonPath("$.id").isNotEmpty())
-			.andExpect(jsonPath("$.slug").value("gluten-free"));
-	}
-
-	@Test
-	void addVariant_returnsConflictForDuplicateSlug() throws Exception {
-		mockMvc.perform(post("/api/recipes/chocolate-cake/variants")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content("""
-				{ "slug": "classic", "name": "Classic Copy",
-				  "description": null, "components": [] }
-				"""))
-			.andExpect(status().isConflict());
+			.andExpect(jsonPath("$.slug").value(startsWith("gluten-free-")));
 	}
 
 	@Test
@@ -275,7 +265,7 @@ class RecipeResourceControllerIT {
 		mockMvc.perform(post("/api/recipes/nonexistent/variants")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content("""
-				{ "slug": "v1", "name": "V1", "description": null, "components": [] }
+				{ "name": "V1", "description": null, "components": [] }
 				"""))
 			.andExpect(status().isNotFound());
 	}

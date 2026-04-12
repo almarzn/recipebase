@@ -4,7 +4,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public record AddVariantRequest(
-        String slug,
         String name,
         @Nullable String description,
         List<ComponentRequest> components
