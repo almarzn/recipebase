@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { NgIcon, provideIcons } from "@ng-icons/core";
-import {lucideChevronsUpDown, lucideInfo, lucidePencil, lucideNotebookText } from "@ng-icons/lucide";
+import { lucideChevronsUpDown, lucideInfo, lucideNotebookText, lucidePencil } from "@ng-icons/lucide";
 import { ZardDropdownMenuItemComponent } from "@/shared/components/dropdown/dropdown-item.component";
 import { ZardDropdownMenuContentComponent } from "@/shared/components/dropdown/dropdown-menu-content.component";
 import { ZardDropdownDirective } from "@/shared/components/dropdown/dropdown-trigger.directive";
