@@ -12,7 +12,9 @@ import { RecipeEditInfoViewModel } from "./recipe-edit-info.vm";
   providers: [RecipeEditInfoViewModel],
   imports: [FormField, ZardInputDirective, ZardButtonComponent, ZardAlertComponent, FormRoot],
   template: `
-    <form class="flex flex-col gap-4" [formRoot]="vm.form">
+    <form class="flex flex-col gap-6" [formRoot]="vm.form">
+      <h1 class="font-serif text-4xl">Recipe informations</h1>
+      <p class="text-sm text-stone-500">General informations about the recipe.</p>
       <div class="flex flex-col gap-1">
         <label class="text-sm font-medium uppercase text-stone-500 tracking-wide" for="recipe-title">Title</label>
         <input

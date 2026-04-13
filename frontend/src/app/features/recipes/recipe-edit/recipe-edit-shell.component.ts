@@ -10,7 +10,7 @@ import { RecipeEditNavComponent } from "./recipe-edit-nav.component";
   imports: [RouterOutlet, RecipeEditNavComponent],
   providers: [provideRecipeDetailViewModel(), provideRecipeEditViewModel()],
   template: `
-    <div class="flex gap-8 max-w-6xl mx-auto py-8 px-4" data-testid="recipe-edit-shell">
+    <div class="flex gap-12 max-w-6xl mx-auto py-8 px-4" data-testid="recipe-edit-shell">
       <app-recipe-edit-nav class="basis-2/9" />
       <div class="flex-1" data-testid="recipe-edit-shell-content">
         <router-outlet />
