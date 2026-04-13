@@ -84,7 +84,7 @@ public class AddVariantUseCase {
 		}
 	}
 
-	private static void insertIngredients(DSLContext c, UUID compId, List<IngredientRequest> ingredients) {
+	static void insertIngredients(DSLContext c, UUID compId, List<IngredientRequest> ingredients) {
 		var pos = new AtomicInteger(1);
 		for (var ing : ingredients) {
 			c.insertInto(RECIPE_INGREDIENT)
@@ -99,7 +99,7 @@ public class AddVariantUseCase {
 		}
 	}
 
-	private static void insertSteps(DSLContext c, UUID compId, List<StepRequest> steps) {
+	static void insertSteps(DSLContext c, UUID compId, List<StepRequest> steps) {
 		var pos = new AtomicInteger(1);
 		for (var step : steps) {
 			c.insertInto(RECIPE_STEP)
