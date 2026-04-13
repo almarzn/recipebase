@@ -40,6 +40,10 @@ export class RecipeDetailViewModel {
 
   readonly title = computed(() => this.recipe()?.title ?? "");
   readonly variants = computed(() => this.recipe()?.variants ?? []);
+
+  reload(): void {
+    this.recipeResource.reload();
+  }
 }
 
 export const provideRecipeDetailViewModel = () => ({

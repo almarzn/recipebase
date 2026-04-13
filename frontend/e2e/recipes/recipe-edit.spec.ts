@@ -241,3 +241,155 @@ test("recipe edit nav — navigating between variants updates url", async ({ pag
     await expect(page).toHaveURL(/\/recipes\/pasta\/edit\/variants\/classic/);
   });
 });
+
+test("recipe edit info — saves recipe info successfully", async ({ page }) => {
+  let patchRequestData: unknown = null;
+
+  await page.route("**/api/recipes/pasta", async (route) => {
+    if (route.request().method() === "PATCH") {
+      patchRequestData = route.request().postDataJSON();
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          ...mockRecipeWithVariants,
+          title: "Updated Pasta Title",
+          description: "Updated description",
+        }),
+      });
+    } else {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(mockRecipeWithVariants),
+      });
+    }
+  });
+
+  const editPage = new RecipeEditPage(page);
+  await editPage.goto("pasta", "info");
+
+  await test.step("updates title and description", async () => {
+    const titleInput = page.getByLabel("Title");
+    const descriptionInput = page.getByLabel("Description");
+
+    await titleInput.fill("Updated Pasta Title");
+    await descriptionInput.fill("Updated description");
+  });
+
+  await test.step("clicks save button and PATCH request is made", async () => {
+    const savePromise = page.waitForRequest(
+      (req) => req.method() === "PATCH" && req.url().includes("/api/recipes/pasta"),
+    );
+    await page.getByRole("button", { name: "Save" }).click();
+    await savePromise;
+
+    expect(patchRequestData).toEqual({
+      title: "Updated Pasta Title",
+      description: "Updated description",
+    });
+  });
+});
+
+test("recipe edit info — shows loading state while saving", async ({ page }) => {
+  let resolvePatch: (value: unknown) => void;
+  const patchPromise = new Promise((resolve) => {
+    resolvePatch = resolve;
+  });
+
+  await page.route("**/api/recipes/pasta", async (route) => {
+    if (route.request().method() === "PATCH") {
+      await patchPromise;
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(mockRecipeWithVariants),
+      });
+    } else {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(mockRecipeWithVariants),
+      });
+    }
+  });
+
+  const editPage = new RecipeEditPage(page);
+  await editPage.goto("pasta", "info");
+
+  const titleInput = page.getByLabel("Title");
+  await titleInput.fill("Updated Title");
+
+  const saveButton = page.getByRole("button", { name: "Save" });
+
+  await test.step("save button shows loading state when clicked", async () => {
+    const clickPromise = saveButton.click();
+    // Wait a bit for the loading state to be applied
+    await page.waitForTimeout(50);
+    // The button should be disabled during submission
+    await expect(saveButton).toBeDisabled();
+    // Resolve the patch request to complete the test
+    resolvePatch!(undefined);
+    await clickPromise;
+  });
+});
+
+test("recipe edit info — shows error on save failure", async ({ page }) => {
+  await page.route("**/api/recipes/pasta", async (route) => {
+    if (route.request().method() === "PATCH") {
+      await route.fulfill({
+        status: 500,
+        contentType: "application/json",
+        body: JSON.stringify({ message: "Server error occurred" }),
+      });
+    } else {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(mockRecipeWithVariants),
+      });
+    }
+  });
+
+  const editPage = new RecipeEditPage(page);
+  await editPage.goto("pasta", "info");
+
+  const titleInput = page.getByLabel("Title");
+  await titleInput.fill("Updated Title");
+
+  const saveButton = page.getByRole("button", { name: "Save" });
+  await saveButton.click();
+
+  await test.step("shows error message", async () => {
+    // Error should be displayed in an alert - check for z-alert element
+    await expect(page.locator("z-alert")).toBeVisible();
+  });
+});
+
+test("recipe edit info — save button enables after changes", async ({ page }) => {
+  await page.route("**/api/recipes/pasta", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(mockRecipeWithVariants),
+    });
+  });
+
+  const editPage = new RecipeEditPage(page);
+  await editPage.goto("pasta", "info");
+
+  // Wait for the recipe to load and form to initialize
+  await page.waitForSelector("input#recipe-title");
+
+  await test.step("save button is enabled after making changes", async () => {
+    const saveButton = page.getByRole("button", { name: "Save" });
+    const titleInput = page.getByLabel("Title");
+
+    // Initially the button may or may not be disabled depending on form state
+    // Make a change
+    await titleInput.fill("Updated Title");
+
+    // Now the button should definitely be enabled
+    await expect(saveButton).toBeEnabled();
+  });
+});

@@ -6,7 +6,7 @@ import { RecipeDetailViewModel } from "../recipe-detail/recipe-detail.vm";
 
 @Injectable()
 export class RecipeEditViewModel {
-  private readonly detailVm: RecipeDetailViewModel;
+  readonly detailVm: RecipeDetailViewModel;
   readonly recipe;
   readonly variants;
   readonly slug;
