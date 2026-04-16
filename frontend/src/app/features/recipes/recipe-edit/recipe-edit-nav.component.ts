@@ -19,10 +19,10 @@ import { RecipeEditViewModel } from "./recipe-edit.vm";
     ZardDropdownMenuItemComponent,
   ],
   template: `
-    <nav class="flex flex-col gap-6 text-sm" data-testid="recipe-edit-nav">
+    <nav class="flex flex-row md:flex-col gap-4 md:gap-6 overflow-x-auto md:overflow-visible text-sm pb-2 md:pb-0" data-testid="recipe-edit-nav">
       <a
         routerLink="info"
-        class="p-3 -mx-3 flex gap-3 items-center rounded-md transition-colors"
+        class="p-3 flex gap-3 items-center rounded-md transition-colors flex-shrink-0"
         routerLinkActive="bg-stone-200/50 text-teal-900"
         data-testid="recipe-edit-info-link"
       >
@@ -42,9 +42,9 @@ import { RecipeEditViewModel } from "./recipe-edit.vm";
         </span>
       </a>
 
-      <div class="h-px bg-stone-200 mx-4"></div>
+      <div class="hidden md:block h-px bg-stone-200 mx-4"></div>
 
-      <div class="flex flex-col gap-2" >
+      <div class="hidden md:flex flex-col gap-2" >
         <h3 class="uppercase text-xs tracking-wide text-stone-500">Variants</h3>
         <button
           type="button"
@@ -68,12 +68,36 @@ import { RecipeEditViewModel } from "./recipe-edit.vm";
         </z-dropdown-menu-content>
       </div>
 
+      <!-- Mobile: Inline variant selector -->
+      <div class="md:hidden flex items-center gap-2 flex-shrink-0">
+        <button
+          type="button"
+          z-dropdown
+          [zDropdownMenu]="variantMenuMobile"
+          class="flex items-center justify-between rounded-md border border-stone-300 bg-white px-3 py-2 text-sm text-stone-700 shadow-sm hover:bg-stone-50 whitespace-nowrap"
+          data-testid="recipe-edit-variant-select-mobile"
+        >
+          <span>{{ vm.activeVariant()?.name ?? 'Select variant...' }}</span>
+          <ng-icon name="lucideChevronsUpDown" class="size-4 opacity-50"/>
+        </button>
+        <z-dropdown-menu-content #variantMenuMobile="zDropdownMenuContent">
+          @for (variant of vm.variants(); track variant.slug) {
+            <z-dropdown-menu-item
+              (click)="vm.setActiveVariant(variant.slug)"
+              [attr.data-testid]="'variant-option-mobile-' + variant.slug"
+            >
+              {{ variant.name }}
+            </z-dropdown-menu-item>
+          }
+        </z-dropdown-menu-content>
+      </div>
+
       @if (vm.activeVariant(); as variant) {
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-row md:flex-col gap-2 flex-shrink-0">
 
           <a
             [routerLink]="['variants', variant.slug]"
-            class="px-4 py-3 flex gap-2 items-center rounded-md transition-colors"
+            class="px-4 py-3 flex gap-2 items-center rounded-md transition-colors whitespace-nowrap"
             routerLinkActive="bg-stone-200/50 text-teal-800"
             data-testid="variant-edit-info-link"
           >
