@@ -1,7 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { NgIcon, provideIcons } from "@ng-icons/core";
-import { lucideChevronsUpDown, lucideInfo, lucideNotebookText, lucidePencil } from "@ng-icons/lucide";
+import {
+  lucideChevronsUpDown,
+  lucideComponent,
+  lucideInfo,
+  lucideLayers,
+  lucideNotebookText,
+  lucidePencil,
+} from "@ng-icons/lucide";
 import { ZardDropdownMenuItemComponent } from "@/shared/components/dropdown/dropdown-item.component";
 import { ZardDropdownMenuContentComponent } from "@/shared/components/dropdown/dropdown-menu-content.component";
 import { ZardDropdownDirective } from "@/shared/components/dropdown/dropdown-trigger.directive";
@@ -44,7 +51,7 @@ import { RecipeEditViewModel } from "./recipe-edit.vm";
 
       <div class="hidden md:block h-px bg-stone-200 mx-4"></div>
 
-      <div class="hidden md:flex flex-col gap-2" >
+      <div class="flex flex-col gap-2" >
         <h3 class="uppercase text-xs tracking-wide text-stone-500">Variants</h3>
         <button
           type="button"
@@ -68,49 +75,48 @@ import { RecipeEditViewModel } from "./recipe-edit.vm";
         </z-dropdown-menu-content>
       </div>
 
-      <!-- Mobile: Inline variant selector -->
-      <div class="md:hidden flex items-center gap-2 flex-shrink-0">
-        <button
-          type="button"
-          z-dropdown
-          [zDropdownMenu]="variantMenuMobile"
-          class="flex items-center justify-between rounded-md border border-stone-300 bg-white px-3 py-2 text-sm text-stone-700 shadow-sm hover:bg-stone-50 whitespace-nowrap"
-          data-testid="recipe-edit-variant-select-mobile"
-        >
-          <span>{{ vm.activeVariant()?.name ?? 'Select variant...' }}</span>
-          <ng-icon name="lucideChevronsUpDown" class="size-4 opacity-50"/>
-        </button>
-        <z-dropdown-menu-content #variantMenuMobile="zDropdownMenuContent">
-          @for (variant of vm.variants(); track variant.slug) {
-            <z-dropdown-menu-item
-              (click)="vm.setActiveVariant(variant.slug)"
-              [attr.data-testid]="'variant-option-mobile-' + variant.slug"
-            >
-              {{ variant.name }}
-            </z-dropdown-menu-item>
-          }
-        </z-dropdown-menu-content>
-      </div>
-
       @if (vm.activeVariant(); as variant) {
-        <div class="flex flex-row md:flex-col gap-2 flex-shrink-0">
+        <div class="flex flex-row md:flex-col gap-2 shrink-0  text-stone-900/50">
 
           <a
             [routerLink]="['variants', variant.slug]"
             class="px-4 py-3 flex gap-2 items-center rounded-md transition-colors whitespace-nowrap"
             routerLinkActive="bg-stone-200/50 text-teal-800"
+            [routerLinkActiveOptions]="{ exact: true }"
             data-testid="variant-edit-info-link"
           >
             <ng-icon name="lucideInfo" class="size-40 text-teal-800"/>
             <span class="text-sm uppercase font-semibold tracking-wider" data-testid="variant-edit-info">
-          Basic informations
-        </span>
+                Basic informations
+            </span>
+          </a>
+
+          <a
+            [routerLink]="['variants', variant.slug, 'components']"
+            class="px-4 py-3 flex gap-2 items-center rounded-md transition-colors whitespace-nowrap"
+            routerLinkActive="bg-stone-200/50 text-teal-800"
+            data-testid="variant-components-link"
+          >
+            <ng-icon name="lucideLayers" class="size-40 text-teal-800"/>
+            <span class="text-sm uppercase font-semibold tracking-wider" data-testid="variant-components-text">
+                Components
+            </span>
           </a>
         </div>
+
       }
     </nav>
   `,
-  viewProviders: [provideIcons({ lucidePencil, lucideChevronsUpDown, lucideInfo, lucideNotebookText })],
+  viewProviders: [
+    provideIcons({
+      lucidePencil,
+      lucideChevronsUpDown,
+      lucideInfo,
+      lucideLayers,
+      lucideNotebookText,
+      lucideComponent,
+    }),
+  ],
 })
 export class RecipeEditNavComponent {
   protected readonly vm = inject(RecipeEditViewModel);

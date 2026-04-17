@@ -18,6 +18,20 @@ export const ROUTES: Routes = [
         path: "variants/:variantSlug",
         loadComponent: () => import("./recipe-edit-variant.component").then((m) => m.RecipeEditVariantComponent),
       },
+      {
+        path: "variants/:variantSlug/components",
+        loadComponent: () =>
+          import("./variant-components/recipe-variant-components.component").then(
+            (m) => m.RecipeVariantComponentsComponent,
+          ),
+      },
+      {
+        path: "components/:componentId",
+        loadComponent: () =>
+          import("./variant-components/recipe-component-detail.component").then(
+            (m) => m.RecipeComponentDetailComponent,
+          ),
+      },
     ],
   },
 ];

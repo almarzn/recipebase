@@ -3,8 +3,8 @@ name: writing-playwright
 description: Use when writing or modifying Playwright E2E tests, page object models, or test helpers in the frontend/e2e/ directory
 license: MIT
 metadata:
-  language: typescript
-  framework: playwright
+    language: typescript
+    framework: playwright
 ---
 
 ## Core principles
@@ -28,45 +28,45 @@ metadata:
 Every page under test gets a PO class. The PO owns all locators and interactions — tests call PO methods only:
 
 ```typescript
-import { type Page, type Locator } from '@playwright/test';
+import { type Page, type Locator } from "@playwright/test";
 
 export class RecipeListPage {
-  readonly heading: Locator;
-  readonly recipeRows: Locator;
-  readonly addButton: Locator;
+    readonly heading: Locator;
+    readonly recipeRows: Locator;
+    readonly addButton: Locator;
 
-  constructor(private readonly page: Page) {
-    this.heading = page.getByTestId('recipe-list-heading');
-    this.recipeRows = page.getByTestId('recipe-row');
-    this.addButton = page.getByTestId('add-recipe-btn');
-  }
+    constructor(private readonly page: Page) {
+        this.heading = page.getByTestId("recipe-list-heading");
+        this.recipeRows = page.getByTestId("recipe-row");
+        this.addButton = page.getByTestId("add-recipe-btn");
+    }
 
-  async goto() {
-    await this.page.goto('/recipes');
-  }
+    async goto() {
+        await this.page.goto("/recipes");
+    }
 
-  async getRecipeNames(): Promise<string[]> {
-    return this.recipeRows.allTextContents();
-  }
+    async getRecipeNames(): Promise<string[]> {
+        return this.recipeRows.allTextContents();
+    }
 
-  async clickAdd() {
-    await this.addButton.click();
-  }
+    async clickAdd() {
+        await this.addButton.click();
+    }
 }
 ```
 
 Tests instantiate the PO and interact through it:
 
 ```typescript
-test('shows recipes', async ({ page }) => {
-  const recipeList = new RecipeListPage(page);
+test("shows recipes", async ({ page }) => {
+    const recipeList = new RecipeListPage(page);
 
-  await recipeList.goto();
+    await recipeList.goto();
 
-  await test.step('verify recipe list is rendered', async () => {
-    await expect(recipeList.heading).toBeVisible();
-    await expect(recipeList.recipeRows).toHaveCount(2);
-  });
+    await test.step("verify recipe list is rendered", async () => {
+        await expect(recipeList.heading).toBeVisible();
+        await expect(recipeList.recipeRows).toHaveCount(2);
+    });
 });
 ```
 
@@ -87,29 +87,29 @@ In page objects, always use `page.getByTestId('...')`. Never use `getByRole`, `g
 Use `page.route` to intercept and mock API responses. Set up routes before navigating. Always call the route handler's `fulfill` with explicit status and JSON body:
 
 ```typescript
-import { test, expect } from '@playwright/test';
-import { RecipeListPage } from './recipe-list.po';
+import { test, expect } from "@playwright/test";
+import { RecipeListPage } from "./recipe-list.po";
 
-test('displays recipes from API', async ({ page }) => {
-  await page.route('**/api/recipes', (route) =>
-    route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify([
-        { id: 1, name: 'Pasta' },
-        { id: 2, name: 'Salad' },
-      ]),
-    })
-  );
+test("displays recipes from API", async ({ page }) => {
+    await page.route("**/api/recipes", (route) =>
+        route.fulfill({
+            status: 200,
+            contentType: "application/json",
+            body: JSON.stringify([
+                { id: 1, name: "Pasta" },
+                { id: 2, name: "Salad" },
+            ]),
+        }),
+    );
 
-  const recipeList = new RecipeListPage(page);
-  await recipeList.goto();
+    const recipeList = new RecipeListPage(page);
+    await recipeList.goto();
 
-  await test.step('verify mocked recipes are visible', async () => {
-    await expect(recipeList.recipeRows).toHaveCount(2);
-    await expect(recipeList.recipeRows.nth(0)).toHaveText('Pasta');
-    await expect(recipeList.recipeRows.nth(1)).toHaveText('Salad');
-  });
+    await test.step("verify mocked recipes are visible", async () => {
+        await expect(recipeList.recipeRows).toHaveCount(2);
+        await expect(recipeList.recipeRows.nth(0)).toHaveText("Pasta");
+        await expect(recipeList.recipeRows.nth(1)).toHaveText("Salad");
+    });
 });
 ```
 
@@ -118,43 +118,44 @@ test('displays recipes from API', async ({ page }) => {
 Use `page.waitForRequest` as an inline expression — never assign to a variable. Chain assertions directly on the resolved request:
 
 ```typescript
-test('saves recipe on form submit', async ({ page }) => {
-  const recipeForm = new RecipeFormPage(page);
-  await recipeForm.goto();
+test("saves recipe on form submit", async ({ page }) => {
+    const recipeForm = new RecipeFormPage(page);
+    await recipeForm.goto();
 
-  await recipeForm.fillName('Soup');
-  await recipeForm.clickSave();
+    await recipeForm.fillName("Soup");
+    await recipeForm.clickSave();
 
-  await expect(
-    page.waitForRequest((req) =>
-      req.url().includes('/api/recipes') && req.method() === 'POST'
-    )
-  ).resolves.toSatisfy(async (req) => {
-    const body = req.postDataJSON();
-    expect(body.name).toBe('Soup');
-    return true;
-  });
+    await expect(
+        page.waitForRequest(
+            (req) =>
+                req.url().includes("/api/recipes") && req.method() === "POST",
+        ),
+    ).resolves.toSatisfy(async (req) => {
+        const body = req.postDataJSON();
+        expect(body.name).toBe("Soup");
+        return true;
+    });
 });
 ```
 
 For simpler payload checks, use `test.step` to await and assert:
 
 ```typescript
-test('creates recipe with correct payload', async ({ page }) => {
-  const recipeForm = new RecipeFormPage(page);
-  await recipeForm.goto();
-  await recipeForm.fillName('Soup');
+test("creates recipe with correct payload", async ({ page }) => {
+    const recipeForm = new RecipeFormPage(page);
+    await recipeForm.goto();
+    await recipeForm.fillName("Soup");
 
-  const [request] = await Promise.all([
-    page.waitForRequest('**/api/recipes'),
-    recipeForm.clickSave(),
-  ]);
+    const [request] = await Promise.all([
+        page.waitForRequest("**/api/recipes"),
+        recipeForm.clickSave(),
+    ]);
 
-  await test.step('verify request payload', async () => {
-    const body = request.postDataJSON();
-    expect(body.name).toBe('Soup');
-    expect(body.variants).toHaveLength(1);
-  });
+    await test.step("verify request payload", async () => {
+        const body = request.postDataJSON();
+        expect(body.name).toBe("Soup");
+        expect(body.variants).toHaveLength(1);
+    });
 });
 ```
 
@@ -165,39 +166,39 @@ test('creates recipe with correct payload', async ({ page }) => {
 Organize every test into `test.step` blocks. No comments — steps serve as documentation:
 
 ```typescript
-test('edits existing recipe', async ({ page }) => {
-  await page.route('**/api/recipes/1', (route) =>
-    route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({ id: 1, name: 'Pasta', variants: [] }),
-    })
-  );
+test("edits existing recipe", async ({ page }) => {
+    await page.route("**/api/recipes/1", (route) =>
+        route.fulfill({
+            status: 200,
+            contentType: "application/json",
+            body: JSON.stringify({ id: 1, name: "Pasta", variants: [] }),
+        }),
+    );
 
-  await page.route('**/api/recipes/1', (route) =>
-    route.fulfill({ status: 200 })
-  );
+    await page.route("**/api/recipes/1", (route) =>
+        route.fulfill({ status: 200 }),
+    );
 
-  const detail = new RecipeDetailPage(page);
+    const detail = new RecipeDetailPage(page);
 
-  await test.step('load recipe detail page', async () => {
-    await detail.goto(1);
-    await expect(detail.recipeName).toHaveText('Pasta');
-  });
+    await test.step("load recipe detail page", async () => {
+        await detail.goto(1);
+        await expect(detail.recipeName).toHaveText("Pasta");
+    });
 
-  await test.step('update the recipe name', async () => {
-    await detail.fillName('Updated Pasta');
-  });
+    await test.step("update the recipe name", async () => {
+        await detail.fillName("Updated Pasta");
+    });
 
-  await test.step('save and verify API call', async () => {
-    const [request] = await Promise.all([
-      page.waitForRequest('**/api/recipes/1'),
-      detail.clickSave(),
-    ]);
+    await test.step("save and verify API call", async () => {
+        const [request] = await Promise.all([
+            page.waitForRequest("**/api/recipes/1"),
+            detail.clickSave(),
+        ]);
 
-    expect(request.method()).toBe('PUT');
-    expect(request.postDataJSON().name).toBe('Updated Pasta');
-  });
+        expect(request.method()).toBe("PUT");
+        expect(request.postDataJSON().name).toBe("Updated Pasta");
+    });
 });
 ```
 
@@ -215,17 +216,17 @@ Always run via `podman run` from the repository root. The image includes Playwri
 ```bash
 podman run --rm --network host \
   -v "$(pwd)":/work -w /work/frontend \
-  mcr.microsoft.com/playwright:v1.50.1-noble \
+  mcr.microsoft.com/playwright:v1.59.1-noble \
   npx playwright test
 
 podman run --rm --network host \
   -v "$(pwd)":/work -w /work/frontend \
-  mcr.microsoft.com/playwright:v1.50.1-noble \
+  mcr.microsoft.com/playwright:v1.59.1-noble \
   npx playwright test --grep "displays recipes"
 
 podman run --rm --network host \
   -v "$(pwd)":/work -w /work/frontend \
-  mcr.microsoft.com/playwright:v1.50.1-noble \
+  mcr.microsoft.com/playwright:v1.59.1-noble \
   npx playwright test --ui
 ```
 
@@ -250,10 +251,10 @@ The `--network host` flag lets Playwright reach the Angular dev server running o
 
 ## Common rationalizations
 
-| Excuse | Reality                                                           |
-|--------|-------------------------------------------------------------------|
-| "getByRole is more semantic" | `data-testid` only. Consistency over elegance.                    |
-| "A comment would clarify this step" | Use `test.step()` blocks instead. They serve as documentation.    |
+| Excuse                                | Reality                                                           |
+| ------------------------------------- | ----------------------------------------------------------------- |
+| "getByRole is more semantic"          | `data-testid` only. Consistency over elegance.                    |
+| "A comment would clarify this step"   | Use `test.step()` blocks instead. They serve as documentation.    |
 | "I'll capture the request with a let" | Use inline `waitForRequest` or `Promise.all` pattern.             |
-| "getByText is fine for this label" | `data-testid` exclusively. No exceptions.                         |
-| "I need to run Playwright directly" | Always via `npm run e2e:podman`. Never `npx playwright` directly. |
+| "getByText is fine for this label"    | `data-testid` exclusively. No exceptions.                         |
+| "I need to run Playwright directly"   | Always via `npm run e2e:podman`. Never `npx playwright` directly. |
