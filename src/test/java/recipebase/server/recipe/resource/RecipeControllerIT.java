@@ -131,4 +131,41 @@ class RecipeControllerIT {
             .andExpect(jsonPath("$.length()").value(1))
             .andExpect(jsonPath("$[0].slug").value("main"));
     }
+
+    // ============================================================
+    // PUT /recipes/:slug
+    // ============================================================
+
+    @Test
+    void update_returnsUpdatedRecipe() throws Exception {
+        mockMvc.perform(put("/recipes/chocolate-cake")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {
+                  "name": "Dark Chocolate Cake",
+                  "tags": ["dessert", "chocolate"],
+                  "source": {"type": "url", "url": "https://example.com"},
+                  "yield": {"quantity": 8, "unit": "slices", "description": null},
+                  "notes": "Extra dark"
+                }
+                """))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name").value("Dark Chocolate Cake"))
+            .andExpect(jsonPath("$.slug").value("chocolate-cake"))
+            .andExpect(jsonPath("$.tags.length()").value(2))
+            .andExpect(jsonPath("$.source.type").value("url"))
+            .andExpect(jsonPath("$.source.url").value("https://example.com"))
+            .andExpect(jsonPath("$.yield.unit").value("slices"))
+            .andExpect(jsonPath("$.notes").value("Extra dark"));
+    }
+
+    @Test
+    void update_returnsNotFoundForUnknownSlug() throws Exception {
+        mockMvc.perform(put("/recipes/nonexistent")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {"name": "X", "tags": [], "source": null, "yield": null, "notes": null}
+                """))
+            .andExpect(status().isNotFound());
+    }
 }
