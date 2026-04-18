@@ -84,8 +84,8 @@ public class RecipeController {
             @PathVariable String componentSlug,
             @RequestBody ReplaceComponentRequest request) {
         return replaceComponentUseCase.execute(slug, componentSlug, request)
-            .<ResponseEntity<Void>>map(ignored -> ResponseEntity.noContent().build())
-            .orElseGet(() -> ResponseEntity.notFound().build());
+            ? ResponseEntity.noContent().build()
+            : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("{slug}/components/{componentSlug}")

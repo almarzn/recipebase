@@ -227,4 +227,45 @@ class RecipeControllerIT {
                 """))
             .andExpect(status().isNotFound());
     }
+
+    // ============================================================
+    // PUT /recipes/:slug/components/:componentSlug
+    // ============================================================
+
+    @Test
+    void replaceComponent_replacesIngredientsAndSteps() throws Exception {
+        mockMvc.perform(put("/recipes/chocolate-cake/components/main")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {
+                  "name": "Revised Batter",
+                  "ingredients": [
+                    {"slug": "cake-flour", "name": "Cake flour",
+                     "quantity": {"unit": "gram", "amount": 220}, "notes": null}
+                  ],
+                  "steps": [
+                    {"body": "Sift flour.", "timerSeconds": 60}
+                  ]
+                }
+                """))
+            .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/recipes/chocolate-cake"))
+            .andExpect(jsonPath("$.components[0].name").value("Revised Batter"))
+            .andExpect(jsonPath("$.components[0].ingredients.length()").value(1))
+            .andExpect(jsonPath("$.components[0].ingredients[0].slug").value("cake-flour"))
+            .andExpect(jsonPath("$.components[0].steps.length()").value(1))
+            .andExpect(jsonPath("$.components[0].steps[0].body").value("Sift flour."))
+            .andExpect(jsonPath("$.components[0].steps[0].timerSeconds").value(60));
+    }
+
+    @Test
+    void replaceComponent_returnsNotFoundForUnknownComponent() throws Exception {
+        mockMvc.perform(put("/recipes/chocolate-cake/components/nonexistent")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {"name": null, "ingredients": [], "steps": []}
+                """))
+            .andExpect(status().isNotFound());
+    }
 }
