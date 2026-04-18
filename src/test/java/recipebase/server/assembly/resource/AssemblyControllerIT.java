@@ -134,4 +134,37 @@ class AssemblyControllerIT {
             .andExpect(jsonPath("$.length()").value(1))
             .andExpect(jsonPath("$[0].slug").value("main-course"));
     }
+
+    // ============================================================
+    // PUT /assemblies/:slug
+    // ============================================================
+
+    @Test
+    void update_returnsUpdatedAssembly() throws Exception {
+        mockMvc.perform(put("/assemblies/holiday-menu")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {
+                  "name": "Winter Feast",
+                  "tags": ["dinner", "holiday"],
+                  "yield": {"quantity": 8, "unit": "servings", "description": "Feeds a crowd"}
+                }
+                """))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name").value("Winter Feast"))
+            .andExpect(jsonPath("$.slug").value("holiday-menu"))
+            .andExpect(jsonPath("$.tags.length()").value(2))
+            .andExpect(jsonPath("$.yield.quantity").value(8))
+            .andExpect(jsonPath("$.yield.description").value("Feeds a crowd"));
+    }
+
+    @Test
+    void update_returnsNotFoundForUnknownSlug() throws Exception {
+        mockMvc.perform(put("/assemblies/nonexistent")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {"name": "X", "tags": [], "yield": null}
+                """))
+            .andExpect(status().isNotFound());
+    }
 }
