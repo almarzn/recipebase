@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.jooq.impl.DSL.max;
 import static recipebase.data.Tables.*;
 
 @Repository
@@ -35,11 +36,11 @@ public class AddComponentUseCase {
 
             if (recipeId.isEmpty()) return Optional.empty();
 
-            int maxPos = c.select(RECIPE_COMPONENT.POSITION.max())
+            Integer maxPos = c.select(max(RECIPE_COMPONENT.POSITION))
                 .from(RECIPE_COMPONENT)
                 .where(RECIPE_COMPONENT.RECIPE_ID.eq(recipeId.get()))
-                .fetchOne(0, int.class);
-            int position = maxPos + 1;
+                .fetchOne(0, Integer.class);
+            int position = (maxPos != null ? maxPos : 0) + 1;
 
             var compId = UUID.randomUUID();
             String compSlug = request.name() != null
