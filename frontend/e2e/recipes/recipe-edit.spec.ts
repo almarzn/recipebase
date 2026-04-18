@@ -407,8 +407,10 @@ test("recipe edit variant — displays variant name in heading", async ({ page }
   await editPage.goto("pasta", "variants/classic");
 
   await test.step("shows variant name in h1", async () => {
-    await expect(page.getByRole("heading", { name: /Classic/ })).toBeVisible();
-    await expect(page.getByRole("heading", { name: /Variant information/ })).toBeVisible();
+    await expect(editPage.variantName).toBeVisible();
+    await expect(editPage.variantName).toHaveText("Classic");
+    await expect(editPage.variantHeading).toBeVisible();
+    await expect(editPage.variantHeading).toHaveText("Basic informations");
   });
 });
 
