@@ -186,4 +186,43 @@ class AssemblyControllerIT {
         mockMvc.perform(delete("/assemblies/nonexistent"))
             .andExpect(status().isNotFound());
     }
+
+    // ============================================================
+    // POST /assemblies/:slug/components
+    // ============================================================
+
+    @Test
+    void addComponent_addsComponentAndReturnsIt() throws Exception {
+        mockMvc.perform(post("/assemblies/holiday-menu/components")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {"itemSlug": "chocolate-cake", "scaleFactor": 2.0}
+                """))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.slug").isNotEmpty())
+            .andExpect(jsonPath("$.itemSlug").value("chocolate-cake"))
+            .andExpect(jsonPath("$.scaleFactor").value(2.0))
+            .andExpect(jsonPath("$.locked").value(false))
+            .andExpect(jsonPath("$.compOrder").value(2));
+    }
+
+    @Test
+    void addComponent_returnsNotFoundForUnknownAssembly() throws Exception {
+        mockMvc.perform(post("/assemblies/nonexistent/components")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {"itemSlug": "chocolate-cake", "scaleFactor": 1.0}
+                """))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void addComponent_returnsNotFoundForUnknownItem() throws Exception {
+        mockMvc.perform(post("/assemblies/holiday-menu/components")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {"itemSlug": "nonexistent-item", "scaleFactor": 1.0}
+                """))
+            .andExpect(status().isNotFound());
+    }
 }
