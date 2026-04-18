@@ -103,6 +103,8 @@ assembly_component (
 GET /items          search + list  (q, type, tags)
 ```
 
+No detail endpoint. Response shape: `{id, slug, type, name, tags}` — enough for client to route to `/recipes/:slug` or `/assemblies/:slug`.
+
 ### Recipes
 
 ```
