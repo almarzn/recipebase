@@ -98,4 +98,40 @@ class AssemblyControllerIT {
             .andExpect(jsonPath("$.components").isArray())
             .andExpect(jsonPath("$.components.length()").value(0));
     }
+
+    // ============================================================
+    // GET /assemblies/:slug
+    // ============================================================
+
+    @Test
+    void findBySlug_returnsAssemblyWithComponents() throws Exception {
+        mockMvc.perform(get("/assemblies/holiday-menu").accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.slug").value("holiday-menu"))
+            .andExpect(jsonPath("$.name").value("Holiday Menu"))
+            .andExpect(jsonPath("$.tags[0]").value("dinner"))
+            .andExpect(jsonPath("$.yield.unit").value("servings"))
+            .andExpect(jsonPath("$.components.length()").value(1))
+            .andExpect(jsonPath("$.components[0].slug").value("main-course"))
+            .andExpect(jsonPath("$.components[0].itemSlug").value("chocolate-cake"))
+            .andExpect(jsonPath("$.components[0].itemName").value("Chocolate Cake"))
+            .andExpect(jsonPath("$.components[0].itemType").value("recipe"))
+            .andExpect(jsonPath("$.components[0].scaleFactor").value(1.0))
+            .andExpect(jsonPath("$.components[0].locked").value(false));
+    }
+
+    @Test
+    void findBySlug_returnsNotFoundForUnknownSlug() throws Exception {
+        mockMvc.perform(get("/assemblies/nonexistent").accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void findComponents_returnsFlatList() throws Exception {
+        mockMvc.perform(get("/assemblies/holiday-menu/components").accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$.length()").value(1))
+            .andExpect(jsonPath("$[0].slug").value("main-course"));
+    }
 }
