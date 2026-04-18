@@ -225,4 +225,44 @@ class AssemblyControllerIT {
                 """))
             .andExpect(status().isNotFound());
     }
+
+    // ============================================================
+    // PUT /assemblies/:slug/components/:componentSlug
+    // ============================================================
+
+    @Test
+    void updateComponent_updatesScaleFactor() throws Exception {
+        mockMvc.perform(put("/assemblies/holiday-menu/components/main-course")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {"scaleFactor": 3.0, "locked": false}
+                """))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.scaleFactor").value(3.0))
+            .andExpect(jsonPath("$.locked").value(false))
+            .andExpect(jsonPath("$.lockSnapshot").doesNotExist());
+    }
+
+    @Test
+    void updateComponent_lockCapturesSnapshot() throws Exception {
+        mockMvc.perform(put("/assemblies/holiday-menu/components/main-course")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {"scaleFactor": 1.0, "locked": true}
+                """))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.locked").value(true))
+            .andExpect(jsonPath("$.lockSnapshot").isNotEmpty())
+            .andExpect(jsonPath("$.lockSnapshot.slug").value("chocolate-cake"));
+    }
+
+    @Test
+    void updateComponent_returnsNotFoundForUnknownComponent() throws Exception {
+        mockMvc.perform(put("/assemblies/holiday-menu/components/nonexistent")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {"scaleFactor": 1.0, "locked": false}
+                """))
+            .andExpect(status().isNotFound());
+    }
 }
