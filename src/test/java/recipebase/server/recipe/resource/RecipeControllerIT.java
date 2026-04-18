@@ -268,4 +268,23 @@ class RecipeControllerIT {
                 """))
             .andExpect(status().isNotFound());
     }
+
+    // ============================================================
+    // DELETE /recipes/:slug/components/:componentSlug
+    // ============================================================
+
+    @Test
+    void deleteComponent_removesComponent() throws Exception {
+        mockMvc.perform(delete("/recipes/chocolate-cake/components/main"))
+            .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/recipes/chocolate-cake"))
+            .andExpect(jsonPath("$.components.length()").value(0));
+    }
+
+    @Test
+    void deleteComponent_returnsNotFoundForUnknownComponent() throws Exception {
+        mockMvc.perform(delete("/recipes/chocolate-cake/components/nonexistent"))
+            .andExpect(status().isNotFound());
+    }
 }
