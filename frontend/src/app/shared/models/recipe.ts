@@ -1,80 +1,63 @@
-export interface RecipeSummary {
+/** Item summary — returned by GET /items */
+export interface Item {
   id: string;
   slug: string;
-  title: string;
-  description: string | null;
-  createdAt: string;
-  updatedAt: string;
-  variants: VariantSummary[];
-}
-
-export interface VariantSummary {
-  slug: string;
+  type: string;
   name: string;
+  tags: string[];
 }
 
-export interface Recipe {
+/** Source JSONB */
+export type Source = { type: "url"; url: string } | { type: "book"; reference: string } | { type: "original" };
+
+/** Yield JSONB */
+export interface Yield {
+  quantity: number;
+  unit: string;
+  description: string | null;
+}
+
+/** Quantity JSONB — {value, unit} */
+export interface Quantity {
+  value: number;
+  unit: string;
+}
+
+export interface Ingredient {
   id: string;
   slug: string;
-  title: string;
-  description: string | null;
-  createdAt: string;
-  updatedAt: string;
-  variants: Variant[];
+  name: string;
+  quantity: Quantity;
+  notes: string | null;
+  position: number;
 }
 
-export interface Variant {
+export interface Step {
+  id: string;
   slug: string;
-  name: string;
-  description: string | null;
-  createdAt: string;
-  updatedAt: string;
-  components: Component[];
+  order: number;
+  body: string;
+  timer_seconds: number | null;
 }
 
 export interface Component {
   id: string;
-  title: string;
-  description: string | null;
-  link: ComponentLink;
+  slug: string;
+  name: string | null;
+  position: number;
   ingredients: Ingredient[];
   steps: Step[];
 }
 
-export type ComponentLink = ComponentLinkSelf | ComponentLinkExternal;
-
-export interface ComponentLinkSelf {
-  quality: "self";
-}
-
-export interface ComponentLinkExternal {
-  quality: "external";
-  slug: string;
-  title: string;
-  link: "snapshot" | "linked";
-}
-
-export interface Ingredient {
+/** Full recipe — returned by GET /recipes/:slug */
+export interface Recipe {
+  id: string;
   slug: string;
   name: string;
-  notes: string | null;
-  quantity: Quantity;
-}
-
-export type Quantity =
-  | { unit: "gram"; amount: number }
-  | { unit: "kilogram"; amount: number }
-  | { unit: "liter"; amount: number }
-  | { unit: "milliliter"; amount: number }
-  | { unit: "unspecified"; notes: string };
-
-export interface Step {
-  id: string;
-  text: string;
-  notes: string | null;
-  attachment: TimerAttachment | null;
-}
-
-export interface TimerAttachment {
-  duration: string;
+  tags: string[];
+  source: Source | null;
+  yield: Yield | null;
+  components: Component[];
+  createdAt: string;
+  updatedAt: string;
 }
