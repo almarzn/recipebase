@@ -265,4 +265,23 @@ class AssemblyControllerIT {
                 """))
             .andExpect(status().isNotFound());
     }
+
+    // ============================================================
+    // DELETE /assemblies/:slug/components/:componentSlug
+    // ============================================================
+
+    @Test
+    void deleteComponent_removesComponent() throws Exception {
+        mockMvc.perform(delete("/assemblies/holiday-menu/components/main-course"))
+            .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/assemblies/holiday-menu"))
+            .andExpect(jsonPath("$.components.length()").value(0));
+    }
+
+    @Test
+    void deleteComponent_returnsNotFoundForUnknownComponent() throws Exception {
+        mockMvc.perform(delete("/assemblies/holiday-menu/components/nonexistent"))
+            .andExpect(status().isNotFound());
+    }
 }
