@@ -93,4 +93,42 @@ class RecipeControllerIT {
             .andExpect(jsonPath("$.components").isArray())
             .andExpect(jsonPath("$.components.length()").value(0));
     }
+
+    // ============================================================
+    // GET /recipes/:slug
+    // ============================================================
+
+    @Test
+    void findBySlug_returnsRecipeWithComponents() throws Exception {
+        mockMvc.perform(get("/recipes/chocolate-cake").accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.slug").value("chocolate-cake"))
+            .andExpect(jsonPath("$.name").value("Chocolate Cake"))
+            .andExpect(jsonPath("$.tags[0]").value("dessert"))
+            .andExpect(jsonPath("$.notes").value("Very rich"))
+            .andExpect(jsonPath("$.components.length()").value(1))
+            .andExpect(jsonPath("$.components[0].slug").value("main"))
+            .andExpect(jsonPath("$.components[0].name").value("Main Batter"))
+            .andExpect(jsonPath("$.components[0].ingredients.length()").value(1))
+            .andExpect(jsonPath("$.components[0].ingredients[0].slug").value("flour"))
+            .andExpect(jsonPath("$.components[0].ingredients[0].quantity.unit").value("gram"))
+            .andExpect(jsonPath("$.components[0].ingredients[0].quantity.amount").value(250))
+            .andExpect(jsonPath("$.components[0].steps.length()").value(1))
+            .andExpect(jsonPath("$.components[0].steps[0].body").value("Mix dry ingredients."));
+    }
+
+    @Test
+    void findBySlug_returnsNotFoundForUnknownSlug() throws Exception {
+        mockMvc.perform(get("/recipes/nonexistent").accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void findComponents_returnsFlatList() throws Exception {
+        mockMvc.perform(get("/recipes/chocolate-cake/components").accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$.length()").value(1))
+            .andExpect(jsonPath("$[0].slug").value("main"));
+    }
 }
