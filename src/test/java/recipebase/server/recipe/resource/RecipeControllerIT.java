@@ -168,4 +168,23 @@ class RecipeControllerIT {
                 """))
             .andExpect(status().isNotFound());
     }
+
+    // ============================================================
+    // DELETE /recipes/:slug
+    // ============================================================
+
+    @Test
+    void delete_removes204() throws Exception {
+        mockMvc.perform(delete("/recipes/chocolate-cake"))
+            .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/recipes/chocolate-cake"))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void delete_returnsNotFoundForUnknownSlug() throws Exception {
+        mockMvc.perform(delete("/recipes/nonexistent"))
+            .andExpect(status().isNotFound());
+    }
 }
