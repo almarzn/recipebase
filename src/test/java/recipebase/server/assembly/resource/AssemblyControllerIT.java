@@ -167,4 +167,23 @@ class AssemblyControllerIT {
                 """))
             .andExpect(status().isNotFound());
     }
+
+    // ============================================================
+    // DELETE /assemblies/:slug
+    // ============================================================
+
+    @Test
+    void delete_removes204() throws Exception {
+        mockMvc.perform(delete("/assemblies/holiday-menu"))
+            .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/assemblies/holiday-menu"))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void delete_returnsNotFoundForUnknownSlug() throws Exception {
+        mockMvc.perform(delete("/assemblies/nonexistent"))
+            .andExpect(status().isNotFound());
+    }
 }
