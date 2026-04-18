@@ -15,8 +15,8 @@ import { RecipeVariantEditViewModel } from "./recipe-variant-edit.vm";
     <form class="flex flex-col gap-6" [formRoot]="vm.form">
       <div>
 
-        <h2 class="font-bold text-teal-600 flex flex-col gap-2 text-lg">{{ vm.variant()?.name }}</h2>
-        <h1 class="font-serif text-4xl">Basic informations</h1>
+        <h2 class="font-bold text-teal-600 flex flex-col gap-2 text-lg" data-testid="variant-name">{{ vm.variant()?.name }}</h2>
+        <h1 class="font-serif text-4xl" data-testid="variant-heading">Basic informations</h1>
       </div>
       <p class="text-sm text-stone-500">Edit variant general details.</p>
       <div class="flex flex-col gap-1">

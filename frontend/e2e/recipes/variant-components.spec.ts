@@ -34,7 +34,7 @@ const mockRecipeWithComponents: Recipe = {
               slug: "eggs",
               name: "Eggs",
               notes: "Room temperature",
-              quantity: { unit: "piece", amount: 3, notes: "3 large eggs" },
+              quantity: { unit: "unspecified", notes: "3 large eggs" },
             },
           ],
           steps: [

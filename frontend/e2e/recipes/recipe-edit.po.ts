@@ -6,6 +6,8 @@ export class RecipeEditPage {
   readonly recipeTitle: Locator;
   readonly variantSelect: Locator;
   readonly shellContent: Locator;
+  readonly variantName: Locator;
+  readonly variantHeading: Locator;
 
   constructor(private readonly page: Page) {
     this.nav = page.getByTestId("recipe-edit-nav");
@@ -13,6 +15,8 @@ export class RecipeEditPage {
     this.recipeTitle = page.getByTestId("recipe-edit-title");
     this.variantSelect = page.getByTestId("recipe-edit-variant-select");
     this.shellContent = page.getByTestId("recipe-edit-shell-content");
+    this.variantName = page.getByTestId("variant-name");
+    this.variantHeading = page.getByTestId("variant-heading");
   }
 
   async goto(slug: string, subRoute: string = "info") {
