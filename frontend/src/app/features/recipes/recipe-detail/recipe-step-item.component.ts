@@ -23,18 +23,12 @@ const stepNumberFormat = new Intl.NumberFormat("en-US", {
       </div>
 
       <div class="flex flex-col gap-2 flex-1 pt-2">
-        <p data-testid="step-text" class="font-sans text-base text-gray-900 leading-relaxed">
-          {{ step().text }}
+        <p data-testid="step-body" class="font-sans text-base text-gray-900 leading-relaxed">
+          {{ step().body }}
         </p>
 
-        @if (step().notes) {
-          <p data-testid="step-notes" class="font-sans text-sm text-gray-500 italic">
-            {{ step().notes }}
-          </p>
-        }
-
-        @if (step().attachment) {
-          <app-recipe-timer [duration]="step().attachment!.duration" />
+        @if (step().timer_seconds) {
+          <app-recipe-timer [timerSeconds]="step().timer_seconds!" />
         }
       </div>
     </li>

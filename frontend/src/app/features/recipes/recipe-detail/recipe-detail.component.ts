@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 
 import { ZardCardComponent } from "@/shared/components/card";
 import { ErrorStateComponent } from "@/shared/components/error-state";
@@ -7,7 +7,6 @@ import { provideRecipeDetailViewModel, RecipeDetailViewModel } from "./recipe-de
 import { RecipeHeaderComponent } from "./recipe-header.component";
 import { RecipeIngredientListComponent } from "./recipe-ingredient-list.component";
 import { RecipeStepsComponent } from "./recipe-steps.component";
-import { provideRecipeVariantViewModel, RecipeVariantViewModel } from "./recipe-variant.vm";
 
 @Component({
   selector: "app-recipe-detail",
@@ -23,7 +22,6 @@ import { provideRecipeVariantViewModel, RecipeVariantViewModel } from "./recipe-
   template: `
     @if (vm.loading()) {
       <div data-testid="recipe-detail-loading" class="flex flex-col gap-8 max-w-6xl mx-auto py-8 px-4">
-        <!-- Header skeleton -->
         <div class="flex">
           <div class="flex flex-col gap-6 grow">
             <div class="flex flex-col gap-2">
@@ -33,9 +31,7 @@ import { provideRecipeVariantViewModel, RecipeVariantViewModel } from "./recipe-
           </div>
         </div>
 
-        <!-- Content skeleton -->
         <div class="flex gap-8">
-          <!-- Ingredients skeleton -->
           <div class="basis-1/3">
             <z-card class="bg-white border border-gray-200">
               <div class="flex flex-col gap-6 p-2">
@@ -53,7 +49,6 @@ import { provideRecipeVariantViewModel, RecipeVariantViewModel } from "./recipe-
             </z-card>
           </div>
 
-          <!-- Steps skeleton -->
           <div class="grow flex flex-col gap-6">
             <z-skeleton class="h-6 w-28" />
             <div class="flex flex-col gap-4">
@@ -89,16 +84,21 @@ import { provideRecipeVariantViewModel, RecipeVariantViewModel } from "./recipe-
             icon="not-found" />
         </div>
       }
-    } @else if (vm.recipe(); as recipe) {
+    } @else if (vm.recipe.value(); as recipe) {
       <div data-testid="recipe-detail-content" class="flex flex-col gap-8 max-w-6xl mx-auto py-8 px-4">
-        <app-recipe-header />
+        <app-recipe-header [recipe]="recipe" />
 
-        <div class="flex gap-8">
-          @if (activeVariant(); as variant) {
-            <app-recipe-ingredient-list class="basis-1/3" [variant]="variant" />
-            <app-recipe-steps class="grow" [variant]="variant" />
-          }
-        </div>
+        @for (component of vm.components(); track component.id) {
+          <div class="flex flex-col gap-6">
+            @if (component.name) {
+              <h2 class="font-serif text-2xl font-semibold text-teal-800">{{ component.name }}</h2>
+            }
+            <div class="flex gap-8">
+              <app-recipe-ingredient-list class="basis-1/3" [ingredients]="component.ingredients" />
+              <app-recipe-steps class="grow" [steps]="component.steps" />
+            </div>
+          </div>
+        }
       </div>
     } @else {
       <div data-testid="recipe-detail-not-found" class="flex items-center justify-center py-24">
@@ -109,11 +109,8 @@ import { provideRecipeVariantViewModel, RecipeVariantViewModel } from "./recipe-
       </div>
     }
   `,
-  providers: [provideRecipeDetailViewModel(), provideRecipeVariantViewModel()],
+  providers: [provideRecipeDetailViewModel()],
 })
 export class RecipeDetailPage {
   protected readonly vm = inject(RecipeDetailViewModel);
-  protected readonly variantVm = inject(RecipeVariantViewModel, { optional: true });
-
-  protected readonly activeVariant = computed(() => this.variantVm?.activeVariant() ?? null);
 }
