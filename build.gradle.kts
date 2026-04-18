@@ -198,22 +198,22 @@ jooq {
 
                 forcedTypes {
                     forcedType {
-                        userType = "recipebase.server.recipe.model.Link"
-                        jsonConverter = true
-                        jsonConverterImplementation = JSONConverterImplementation.JACKSON_3
-                        includeExpression = "RECIPE_COMPONENT\\.LINK"
-                    }
-                    forcedType {
                         userType = "recipebase.server.recipe.model.Quantity"
                         jsonConverter = true
                         jsonConverterImplementation = JSONConverterImplementation.JACKSON_3
                         includeExpression = "RECIPE_INGREDIENT\\.QUANTITY"
                     }
                     forcedType {
-                        userType = "recipebase.server.recipe.model.TimerAttachment"
+                        userType = "recipebase.server.recipe.model.Source"
                         jsonConverter = true
                         jsonConverterImplementation = JSONConverterImplementation.JACKSON_3
-                        includeExpression = "RECIPE_STEP\\.ATTACHMENT"
+                        includeExpression = "RECIPE\\.SOURCE"
+                    }
+                    forcedType {
+                        userType = "recipebase.server.recipe.model.Yield"
+                        jsonConverter = true
+                        jsonConverterImplementation = JSONConverterImplementation.JACKSON_3
+                        includeExpression = "(RECIPE|ASSEMBLY)\\.YIELD"
                     }
                 }
             }
