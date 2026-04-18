@@ -187,4 +187,44 @@ class RecipeControllerIT {
         mockMvc.perform(delete("/recipes/nonexistent"))
             .andExpect(status().isNotFound());
     }
+
+    // ============================================================
+    // POST /recipes/:slug/components
+    // ============================================================
+
+    @Test
+    void addComponent_addsComponentAtEnd() throws Exception {
+        mockMvc.perform(post("/recipes/chocolate-cake/components")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {
+                  "name": "Frosting",
+                  "ingredients": [
+                    {"slug": "cocoa", "name": "Cocoa powder",
+                     "quantity": {"unit": "gram", "amount": 50}, "notes": null}
+                  ],
+                  "steps": [
+                    {"body": "Melt chocolate.", "timerSeconds": null}
+                  ]
+                }
+                """))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.slug").isNotEmpty())
+            .andExpect(jsonPath("$.name").value("Frosting"))
+            .andExpect(jsonPath("$.position").value(2))
+            .andExpect(jsonPath("$.ingredients.length()").value(1))
+            .andExpect(jsonPath("$.ingredients[0].slug").value("cocoa"))
+            .andExpect(jsonPath("$.steps.length()").value(1))
+            .andExpect(jsonPath("$.steps[0].body").value("Melt chocolate."));
+    }
+
+    @Test
+    void addComponent_returnsNotFoundForUnknownRecipe() throws Exception {
+        mockMvc.perform(post("/recipes/nonexistent/components")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {"name": null, "ingredients": [], "steps": []}
+                """))
+            .andExpect(status().isNotFound());
+    }
 }
