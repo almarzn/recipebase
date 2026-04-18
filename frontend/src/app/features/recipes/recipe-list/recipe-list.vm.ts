@@ -1,15 +1,18 @@
 import { httpResource } from "@angular/common/http";
 import { computed, Injectable } from "@angular/core";
-import type { RecipeSummary } from "@/shared/models";
+import type { Item } from "@/shared/models";
 
 @Injectable()
 export class RecipeListViewModel {
-  private readonly recipesResource = httpResource<RecipeSummary[]>(() => "/api/recipes");
+  private readonly itemsResource = httpResource<Item[]>(() => ({
+    url: "/api/items",
+    params: { type: "recipe" },
+  }));
 
-  readonly recipes = computed(() => this.recipesResource.value() ?? []);
-  readonly loading = this.recipesResource.isLoading;
-  readonly error = computed(() => this.recipesResource.error()?.message ?? null);
+  readonly items = computed(() => this.itemsResource.value() ?? []);
+  readonly loading = this.itemsResource.isLoading;
+  readonly error = computed(() => this.itemsResource.error()?.message ?? null);
 
-  readonly hasRecipes = computed(() => this.recipes().length > 0);
-  readonly recipeCount = computed(() => this.recipes().length);
+  readonly hasItems = computed(() => this.items().length > 0);
+  readonly itemCount = computed(() => this.items().length);
 }
