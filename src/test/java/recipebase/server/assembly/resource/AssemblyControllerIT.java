@@ -63,7 +63,7 @@ class AssemblyControllerIT {
             assemblyItemId
         );
         dsl.execute(
-            "INSERT INTO assembly (id, item_id, yield) VALUES (?, ?, '{\"quantity\":4,\"unit\":\"servings\",\"description\":null}'::jsonb)",
+            "INSERT INTO assembly (id, item_id, yield) VALUES (?, ?, '{\"quantity\":{\"type\":\"decimal\",\"unit\":{\"type\":\"custom\",\"name\":\"servings\"},\"amount\":4},\"description\":null}'::jsonb)",
             assemblyId, assemblyItemId
         );
 
@@ -87,14 +87,16 @@ class AssemblyControllerIT {
                 {
                   "name": "Summer BBQ",
                   "tags": ["outdoor"],
-                  "yield": {"quantity": 6, "unit": "servings", "description": null}
+                  "yield": {"quantity": {"type": "decimal", "unit": {"type": "custom", "name": "servings"}, "amount": 6}, "description": null}
                 }
                 """))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.slug").isNotEmpty())
             .andExpect(jsonPath("$.name").value("Summer BBQ"))
             .andExpect(jsonPath("$.tags[0]").value("outdoor"))
-            .andExpect(jsonPath("$.yield.unit").value("servings"))
+            .andExpect(jsonPath("$.yield.quantity.type").value("decimal"))
+            .andExpect(jsonPath("$.yield.quantity.unit.type").value("custom"))
+            .andExpect(jsonPath("$.yield.quantity.unit.name").value("servings"))
             .andExpect(jsonPath("$.components").isArray())
             .andExpect(jsonPath("$.components.length()").value(0));
     }
@@ -110,7 +112,9 @@ class AssemblyControllerIT {
             .andExpect(jsonPath("$.slug").value("holiday-menu"))
             .andExpect(jsonPath("$.name").value("Holiday Menu"))
             .andExpect(jsonPath("$.tags[0]").value("dinner"))
-            .andExpect(jsonPath("$.yield.unit").value("servings"))
+            .andExpect(jsonPath("$.yield.quantity.type").value("decimal"))
+            .andExpect(jsonPath("$.yield.quantity.unit.type").value("custom"))
+            .andExpect(jsonPath("$.yield.quantity.unit.name").value("servings"))
             .andExpect(jsonPath("$.components.length()").value(1))
             .andExpect(jsonPath("$.components[0].slug").value("main-course"))
             .andExpect(jsonPath("$.components[0].itemSlug").value("chocolate-cake"))
@@ -147,14 +151,14 @@ class AssemblyControllerIT {
                 {
                   "name": "Winter Feast",
                   "tags": ["dinner", "holiday"],
-                  "yield": {"quantity": 8, "unit": "servings", "description": "Feeds a crowd"}
+                  "yield": {"quantity": {"type": "decimal", "unit": {"type": "custom", "name": "servings"}, "amount": 8}, "description": "Feeds a crowd"}
                 }
                 """))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name").value("Winter Feast"))
             .andExpect(jsonPath("$.slug").value("holiday-menu"))
             .andExpect(jsonPath("$.tags.length()").value(2))
-            .andExpect(jsonPath("$.yield.quantity").value(8))
+            .andExpect(jsonPath("$.yield.quantity.amount").value(8))
             .andExpect(jsonPath("$.yield.description").value("Feeds a crowd"));
     }
 

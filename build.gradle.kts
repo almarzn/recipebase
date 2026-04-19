@@ -112,11 +112,13 @@ tasks.named("jooqCodegen") {
         pg.postgresDatabase.connection.use {
             val database = liquibase.database.DatabaseFactory.getInstance()
                 .findCorrectDatabaseImplementation(liquibase.database.jvm.JdbcConnection(it))
-            Liquibase(
+            val liquibase = Liquibase(
                 "db/changelog/db.changelog-master.yaml",
                 DirectoryResourceAccessor(project.projectDir.toPath().resolve("src/main/resources")),
                 database
-            ).update(Contexts(), LabelExpression())
+            )
+            liquibase.clearCheckSums()
+            liquibase.update(Contexts(), LabelExpression())
         }
 
         Runtime.getRuntime().addShutdownHook(Thread {

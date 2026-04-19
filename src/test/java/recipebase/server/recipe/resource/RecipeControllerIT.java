@@ -58,7 +58,7 @@ class RecipeControllerIT {
         );
         dsl.execute(
             "INSERT INTO recipe_ingredient (id, component_id, slug, name, quantity, position) " +
-            "VALUES (?, ?, 'flour', 'All-purpose flour', '{\"unit\":\"gram\",\"amount\":250}', 1)",
+            "VALUES (?, ?, 'flour', 'All-purpose flour', '{\"type\":\"decimal\",\"unit\":{\"type\":\"gram\"},\"amount\":250}', 1)",
             UUID.randomUUID(), compId
         );
         dsl.execute(
@@ -80,7 +80,7 @@ class RecipeControllerIT {
                   "name": "Banana Bread",
                   "tags": ["baking"],
                   "source": {"type": "original"},
-                  "yield": {"quantity": 1, "unit": "loaf", "description": null},
+                  "yield": {"quantity": {"type": "decimal", "unit": {"type": "custom", "name": "loaf"}, "amount": 1}, "description": null},
                   "notes": null
                 }
                 """))
@@ -89,7 +89,9 @@ class RecipeControllerIT {
             .andExpect(jsonPath("$.name").value("Banana Bread"))
             .andExpect(jsonPath("$.tags[0]").value("baking"))
             .andExpect(jsonPath("$.source.type").value("original"))
-            .andExpect(jsonPath("$.yield.unit").value("loaf"))
+            .andExpect(jsonPath("$.yield.quantity.type").value("decimal"))
+            .andExpect(jsonPath("$.yield.quantity.unit.type").value("custom"))
+            .andExpect(jsonPath("$.yield.quantity.unit.name").value("loaf"))
             .andExpect(jsonPath("$.components").isArray())
             .andExpect(jsonPath("$.components.length()").value(0));
     }
@@ -111,7 +113,8 @@ class RecipeControllerIT {
             .andExpect(jsonPath("$.components[0].name").value("Main Batter"))
             .andExpect(jsonPath("$.components[0].ingredients.length()").value(1))
             .andExpect(jsonPath("$.components[0].ingredients[0].slug").value("flour"))
-            .andExpect(jsonPath("$.components[0].ingredients[0].quantity.unit").value("gram"))
+            .andExpect(jsonPath("$.components[0].ingredients[0].quantity.type").value("decimal"))
+            .andExpect(jsonPath("$.components[0].ingredients[0].quantity.unit.type").value("gram"))
             .andExpect(jsonPath("$.components[0].ingredients[0].quantity.amount").value(250))
             .andExpect(jsonPath("$.components[0].steps.length()").value(1))
             .andExpect(jsonPath("$.components[0].steps[0].body").value("Mix dry ingredients."));
@@ -145,7 +148,7 @@ class RecipeControllerIT {
                   "name": "Dark Chocolate Cake",
                   "tags": ["dessert", "chocolate"],
                   "source": {"type": "url", "url": "https://example.com"},
-                  "yield": {"quantity": 8, "unit": "slices", "description": null},
+                  "yield": {"quantity": {"type": "decimal", "unit": {"type": "custom", "name": "slices"}, "amount": 8}, "description": null},
                   "notes": "Extra dark"
                 }
                 """))
@@ -155,7 +158,9 @@ class RecipeControllerIT {
             .andExpect(jsonPath("$.tags.length()").value(2))
             .andExpect(jsonPath("$.source.type").value("url"))
             .andExpect(jsonPath("$.source.url").value("https://example.com"))
-            .andExpect(jsonPath("$.yield.unit").value("slices"))
+            .andExpect(jsonPath("$.yield.quantity.type").value("decimal"))
+            .andExpect(jsonPath("$.yield.quantity.unit.type").value("custom"))
+            .andExpect(jsonPath("$.yield.quantity.unit.name").value("slices"))
             .andExpect(jsonPath("$.notes").value("Extra dark"));
     }
 
@@ -201,7 +206,7 @@ class RecipeControllerIT {
                   "name": "Frosting",
                   "ingredients": [
                     {"slug": "cocoa", "name": "Cocoa powder",
-                     "quantity": {"unit": "gram", "amount": 50}, "notes": null}
+                     "quantity": {"type": "decimal", "unit": {"type": "gram"}, "amount": 50}, "notes": null}
                   ],
                   "steps": [
                     {"body": "Melt chocolate.", "timer": null}
@@ -241,7 +246,7 @@ class RecipeControllerIT {
                   "name": "Revised Batter",
                   "ingredients": [
                     {"slug": "cake-flour", "name": "Cake flour",
-                     "quantity": {"unit": "gram", "amount": 220}, "notes": null}
+                     "quantity": {"type": "decimal", "unit": {"type": "gram"}, "amount": 220}, "notes": null}
                   ],
                   "steps": [
                     {"body": "Sift flour.", "timer": "PT1M"}

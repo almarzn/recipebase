@@ -5,6 +5,7 @@ import { lucidePen } from "@ng-icons/lucide";
 import { ZardBadgeComponent } from "@/shared/components/badge";
 import { ZardButtonComponent } from "@/shared/components/button";
 import type { Recipe } from "@/shared/models";
+import { formatQuantity } from "@/shared/utils/unit";
 
 @Component({
   selector: "app-recipe-header",
@@ -19,7 +20,7 @@ import type { Recipe } from "@/shared/models";
           </h1>
           @if (recipe().yield) {
             <p data-testid="recipe-yield" class="font-sans text-lg text-gray-600">
-              Yields: {{ recipe().yield!.quantity }} {{ recipe().yield!.unit }}
+              Yields: {{ formatYield(recipe().yield!) }}
             </p>
           }
         </div>
@@ -46,4 +47,11 @@ import type { Recipe } from "@/shared/models";
 })
 export class RecipeHeaderComponent {
   readonly recipe = input.required<Recipe>();
+
+  formatYield(y: NonNullable<Recipe["yield"]>): string {
+    if (y.quantity) {
+      return formatQuantity(y.quantity, { unitDisplay: "long" });
+    }
+    return "";
+  }
 }
