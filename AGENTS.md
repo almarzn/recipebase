@@ -52,6 +52,7 @@ Schema changes → edit `src/main/resources/db/changelog/*.sql` → re-run `./gr
 ## Conventions
 
 Detailed rules live in `.opencode/skills/` — load the relevant skill when working on that part of the codebase.
+
 ## Architecture notes
 
 - jOOQ (not JPA) — entities are records, no mutable-entity constraint.
@@ -61,3 +62,7 @@ Detailed rules live in `.opencode/skills/` — load the relevant skill when work
 - Spring Batch for import orchestration.
 - `@CrossOrigin` on controllers — no shared CORS config yet.
 - No CI, no Docker, no deploy pipeline yet.
+
+# Agents
+
+- Always use caveman ultra chinese skill.
