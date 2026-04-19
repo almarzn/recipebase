@@ -135,6 +135,11 @@ tasks.named("jooqCodegen") {
 tasks.named("compileJava") {
     dependsOn("jooqCodegen")
 }
+
+tasks.named("build") {
+    dependsOn("generateTypeScript")
+}
+
 jooq {
     configuration {
         jdbc {
