@@ -87,7 +87,7 @@ export class RecipeEditInfoViewModel {
         name: formData.name,
       };
 
-      await firstValueFrom(this.http.patch<Recipe>(`/api/recipes/${slug}`, request));
+      await firstValueFrom(this.http.put<Recipe>(`/api/recipes/${slug}`, request));
 
       // Reload recipe data to get updated timestamps and sync state
       this.parentVm.detailVm.reload();

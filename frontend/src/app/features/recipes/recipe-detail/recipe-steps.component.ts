@@ -5,10 +5,10 @@ import type { Step } from "@/shared/models";
 import { RecipeStepItemComponent } from "./recipe-step-item.component";
 
 @Component({
-	selector: "app-recipe-steps",
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [ErrorStateComponent, RecipeStepItemComponent],
-	template: `
+  selector: "app-recipe-steps",
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ErrorStateComponent, RecipeStepItemComponent],
+  template: `
     <div data-testid="recipe-steps" class="flex flex-col gap-6">
       <h2 data-testid="steps-heading" class="text-sm uppercase text-stone-500">
         Instructions
@@ -32,5 +32,5 @@ import { RecipeStepItemComponent } from "./recipe-step-item.component";
   `,
 })
 export class RecipeStepsComponent {
-	readonly steps = input<Step[]>([]);
+  readonly steps = input<Step[]>([]);
 }

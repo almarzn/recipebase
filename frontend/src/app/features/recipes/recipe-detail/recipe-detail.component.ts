@@ -3,26 +3,23 @@ import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { ZardCardComponent } from "@/shared/components/card";
 import { ErrorStateComponent } from "@/shared/components/error-state";
 import { ZardSkeletonComponent } from "@/shared/components/skeleton";
-import {
-	provideRecipeDetailViewModel,
-	RecipeDetailViewModel,
-} from "./recipe-detail.vm";
+import { provideRecipeDetailViewModel, RecipeDetailViewModel } from "./recipe-detail.vm";
 import { RecipeHeaderComponent } from "./recipe-header.component";
 import { RecipeIngredientListComponent } from "./recipe-ingredient-list.component";
 import { RecipeStepsComponent } from "./recipe-steps.component";
 
 @Component({
-	selector: "app-recipe-detail",
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [
-		ErrorStateComponent,
-		RecipeHeaderComponent,
-		RecipeIngredientListComponent,
-		RecipeStepsComponent,
-		ZardCardComponent,
-		ZardSkeletonComponent,
-	],
-	template: `
+  selector: "app-recipe-detail",
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    ErrorStateComponent,
+    RecipeHeaderComponent,
+    RecipeIngredientListComponent,
+    RecipeStepsComponent,
+    ZardCardComponent,
+    ZardSkeletonComponent,
+  ],
+  template: `
         @if (vm.loading()) {
         <div data-testid="recipe-detail-loading" class="flex flex-col gap-8 max-w-6xl mx-auto py-8 px-4">
             <div class="flex">
@@ -112,8 +109,8 @@ import { RecipeStepsComponent } from "./recipe-steps.component";
       </div>
     }
   `,
-	providers: [provideRecipeDetailViewModel()],
+  providers: [provideRecipeDetailViewModel()],
 })
 export class RecipeDetailPage {
-	protected readonly vm = inject(RecipeDetailViewModel);
+  protected readonly vm = inject(RecipeDetailViewModel);
 }

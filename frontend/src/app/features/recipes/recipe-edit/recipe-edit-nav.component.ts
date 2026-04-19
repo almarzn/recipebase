@@ -28,7 +28,7 @@ import { RecipeEditViewModel } from "./recipe-edit.vm";
       <div class="flex flex-row md:flex-col gap-0.5 shrink-0 text-stone-900/50">
         <a
           routerLink="info"
-          class="px-4 py-3 flex gap-2 items-center rounded-md transition-colors whitespace-nowrap"
+          class="px-4 py-3 flex gap-3 items-center rounded-md transition-colors whitespace-nowrap"
           routerLinkActive="bg-stone-200/50 text-teal-800"
           data-testid="recipe-edit-info-link"
         >
@@ -40,7 +40,7 @@ import { RecipeEditViewModel } from "./recipe-edit.vm";
 
         <a
           routerLink="components"
-          class="px-4 py-3 flex gap-2 items-center rounded-md transition-colors whitespace-nowrap"
+          class="px-4 py-3 flex gap-3 items-center rounded-md transition-colors whitespace-nowrap"
           routerLinkActive="bg-stone-200/50 text-teal-800"
           data-testid="recipe-components-link"
         >

@@ -121,11 +121,11 @@ test("recipe edit nav — components link navigates to components route", async 
 });
 
 test("recipe edit info — saves recipe info successfully", async ({ page }) => {
-  let patchRequestData: unknown = null;
+  let putRequestData: unknown = null;
 
   await page.route("**/api/recipes/pasta", async (route) => {
-    if (route.request().method() === "PATCH") {
-      patchRequestData = route.request().postDataJSON();
+    if (route.request().method() === "PUT") {
+      putRequestData = route.request().postDataJSON();
       await route.fulfill({
         status: 200,
         contentType: "application/json",
@@ -151,28 +151,28 @@ test("recipe edit info — saves recipe info successfully", async ({ page }) => 
     await titleInput.fill("Updated Pasta Title");
   });
 
-  await test.step("clicks save button and PATCH request is made", async () => {
+  await test.step("clicks save button and PUT request is made", async () => {
     const savePromise = page.waitForRequest(
-      (req) => req.method() === "PATCH" && req.url().includes("/api/recipes/pasta"),
+      (req) => req.method() === "PUT" && req.url().includes("/api/recipes/pasta"),
     );
     await page.getByRole("button", { name: "Save" }).click();
     await savePromise;
 
-    expect(patchRequestData).toEqual({
+    expect(putRequestData).toEqual({
       name: "Updated Pasta Title",
     });
   });
 });
 
 test("recipe edit info — shows loading state while saving", async ({ page }) => {
-  let resolvePatch: (value: unknown) => void;
-  const patchPromise = new Promise((resolve) => {
-    resolvePatch = resolve;
+  let resolvePut: (value: unknown) => void;
+  const putPromise = new Promise((resolve) => {
+    resolvePut = resolve;
   });
 
   await page.route("**/api/recipes/pasta", async (route) => {
-    if (route.request().method() === "PATCH") {
-      await patchPromise;
+    if (route.request().method() === "PUT") {
+      await putPromise;
       await route.fulfill({
         status: 200,
         contentType: "application/json",
@@ -199,14 +199,14 @@ test("recipe edit info — shows loading state while saving", async ({ page }) =
     const clickPromise = saveButton.click();
     await page.waitForTimeout(50);
     await expect(saveButton).toBeDisabled();
-    resolvePatch?.(undefined);
+    resolvePut?.(undefined);
     await clickPromise;
   });
 });
 
 test("recipe edit info — shows error on save failure", async ({ page }) => {
   await page.route("**/api/recipes/pasta", async (route) => {
-    if (route.request().method() === "PATCH") {
+    if (route.request().method() === "PUT") {
       await route.fulfill({
         status: 500,
         contentType: "application/json",
