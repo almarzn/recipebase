@@ -20,7 +20,7 @@ import type { Recipe } from "@/shared/models";
           }
         </div>
 
-        @if (recipe().tags.length > 0) {
+        @if (recipe().tags.length) {
           <div data-testid="recipe-tags" class="flex flex-wrap gap-2">
             @for (tag of recipe().tags; track tag) {
               <z-badge zType="secondary">{{ tag }}</z-badge>

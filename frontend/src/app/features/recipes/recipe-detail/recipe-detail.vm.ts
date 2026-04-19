@@ -25,8 +25,8 @@ export class RecipeDetailViewModel {
   readonly loading = this.recipe.isLoading;
 
   readonly errorState = computed((): ErrorState | null => {
-    const err = this.recipe.error() as HttpErrorResponse | undefined;
-    if (!err) return null;
+    const err = this.recipe.error() as HttpErrorResponse | null | undefined;
+    if (err == null) return null;
 
     if (err.status === 404) {
       return { kind: "notFound" };

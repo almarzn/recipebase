@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 import type { Ingredient } from "@/shared/models";
+import { formatQuantity } from "@/shared/utils";
 
 @Component({
   selector: "app-recipe-ingredient-item",
@@ -12,7 +13,7 @@ import type { Ingredient } from "@/shared/models";
             {{ ingredient().name }}
           </span>
           <span data-testid="ingredient-quantity" class="font-sans text-teal-600 font-bold">
-            {{ ingredient().quantity.value }} {{ ingredient().quantity.unit }}
+            {{ formatQuantity(ingredient().quantity, { unitDisplay: 'short'}) }}
           </span>
         </div>
         @if (ingredient().notes) {
@@ -26,4 +27,5 @@ import type { Ingredient } from "@/shared/models";
 })
 export class RecipeIngredientItemComponent {
   readonly ingredient = input.required<Ingredient>();
+  readonly formatQuantity = formatQuantity;
 }

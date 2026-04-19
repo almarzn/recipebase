@@ -32,5 +32,5 @@ import { RecipeStepItemComponent } from "./recipe-step-item.component";
   `,
 })
 export class RecipeStepsComponent {
-  readonly steps = input.required<Step[]>();
+  readonly steps = input<Step[]>([]);
 }

@@ -35,5 +35,5 @@ import { RecipeIngredientItemComponent } from "./recipe-ingredient-item.componen
   `,
 })
 export class RecipeIngredientListComponent {
-  readonly ingredients = input.required<Ingredient[]>();
+  readonly ingredients = input<Ingredient[]>([]);
 }

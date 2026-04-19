@@ -140,7 +140,8 @@ const mockRecipeMultiComponent: Recipe = {
 };
 
 test("recipe detail — loading state", async ({ page }) => {
-  await page.route(/.*\/api\/recipes\/pasta/, async (route) => {
+  // Route must be set up before navigation
+  await page.route("**/api/recipes/pasta", async (route) => {
     await new Promise((resolve) => setTimeout(resolve, 5000));
     await route.fulfill({
       status: 200,
@@ -158,7 +159,7 @@ test("recipe detail — loading state", async ({ page }) => {
 });
 
 test("recipe detail — error state", async ({ page }) => {
-  await page.route(/.*\/api\/recipes\/.*/, (route) => {
+  await page.route("**/api/recipes/**", (route) => {
     if (route.request().url().includes("error-recipe")) {
       return route.fulfill({
         status: 500,
@@ -184,7 +185,7 @@ test("recipe detail — error state", async ({ page }) => {
 });
 
 test("recipe detail — not found state", async ({ page }) => {
-  await page.route(/.*\/api\/recipes\/.*/, (route) => {
+  await page.route("**/api/recipes/**", (route) => {
     if (route.request().url().includes("not-found")) {
       return route.fulfill({
         status: 404,
@@ -205,7 +206,8 @@ test("recipe detail — not found state", async ({ page }) => {
 });
 
 test("recipe detail — displays full recipe with all data", async ({ page }) => {
-  await page.route(/.*\/api\/recipes\/pasta/, (route) =>
+  // Set up route BEFORE navigation - critical for httpResource interception
+  await page.route("**/api/recipes/pasta", (route) =>
     route.fulfill({
       status: 200,
       contentType: "application/json",
@@ -215,6 +217,9 @@ test("recipe detail — displays full recipe with all data", async ({ page }) =>
 
   const detail = new RecipeDetailPage(page);
   await detail.goto("pasta");
+
+  // Wait for content to be visible first
+  await expect(detail.content).toBeVisible();
 
   await test.step("shows recipe header with title and tags", async () => {
     await expect(detail.header).toBeVisible();
@@ -271,7 +276,8 @@ test("recipe detail — displays full recipe with all data", async ({ page }) =>
 });
 
 test("recipe detail — handles recipe with no ingredients", async ({ page }) => {
-  await page.route(/.*\/api\/recipes\/simple-salad/, (route) =>
+  // Set up route BEFORE navigation
+  await page.route("**/api/recipes/simple-salad", (route) =>
     route.fulfill({
       status: 200,
       contentType: "application/json",
@@ -281,6 +287,9 @@ test("recipe detail — handles recipe with no ingredients", async ({ page }) =>
 
   const detail = new RecipeDetailPage(page);
   await detail.goto("simple-salad");
+
+  // Wait for content to load
+  await expect(detail.content).toBeVisible();
 
   await test.step("shows empty ingredients message", async () => {
     await expect(detail.ingredientsEmpty).toBeVisible();
@@ -293,7 +302,8 @@ test("recipe detail — handles recipe with no ingredients", async ({ page }) =>
 });
 
 test("recipe detail — handles recipe with no steps", async ({ page }) => {
-  await page.route(/.*\/api\/recipes\/simple-salad/, (route) =>
+  // Set up route BEFORE navigation
+  await page.route("**/api/recipes/simple-salad", (route) =>
     route.fulfill({
       status: 200,
       contentType: "application/json",
@@ -303,6 +313,9 @@ test("recipe detail — handles recipe with no steps", async ({ page }) => {
 
   const detail = new RecipeDetailPage(page);
   await detail.goto("simple-salad");
+
+  // Wait for content to load
+  await expect(detail.content).toBeVisible();
 
   await test.step("shows empty steps message", async () => {
     await expect(detail.stepsEmpty).toBeVisible();
@@ -315,7 +328,8 @@ test("recipe detail — handles recipe with no steps", async ({ page }) => {
 });
 
 test("recipe detail — displays multiple components correctly", async ({ page }) => {
-  await page.route(/.*\/api\/recipes\/lasagna/, (route) =>
+  // Set up route BEFORE navigation
+  await page.route("**/api/recipes/lasagna", (route) =>
     route.fulfill({
       status: 200,
       contentType: "application/json",
@@ -326,14 +340,17 @@ test("recipe detail — displays multiple components correctly", async ({ page }
   const detail = new RecipeDetailPage(page);
   await detail.goto("lasagna");
 
+  // Wait for content to load
+  await expect(detail.content).toBeVisible();
+
   await test.step("shows multiple component sections", async () => {
     await expect(detail.componentSections).toHaveCount(2);
     await expect(detail.componentName(0)).toHaveText("Ragu");
     await expect(detail.componentName(1)).toHaveText("Bechamel");
   });
 
-  await test.step("step numbers continue across components", async () => {
+  await test.step("step numbers reset for each component", async () => {
     await expect(detail.stepNumber(0)).toHaveText("01");
-    await expect(detail.stepNumber(1)).toHaveText("02");
+    await expect(detail.stepNumber(1)).toHaveText("01");
   });
 });

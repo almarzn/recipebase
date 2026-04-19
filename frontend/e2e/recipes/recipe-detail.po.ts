@@ -60,7 +60,7 @@ export class RecipeDetailPage {
   }
 
   componentName(index: number): Locator {
-    return this.componentSections.nth(index).locator("h2");
+    return this.componentSections.nth(index).getByTestId("component-name");
   }
 
   stepNumber(index: number): Locator {
