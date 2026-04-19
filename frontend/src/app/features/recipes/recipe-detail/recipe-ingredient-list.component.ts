@@ -6,13 +6,17 @@ import type { Ingredient } from "@/shared/models";
 import { RecipeIngredientItemComponent } from "./recipe-ingredient-item.component";
 
 @Component({
-  selector: "app-recipe-ingredient-list",
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ErrorStateComponent, RecipeIngredientItemComponent, ZardCardComponent],
-  template: `
+	selector: "app-recipe-ingredient-list",
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [
+		ErrorStateComponent,
+		RecipeIngredientItemComponent,
+		ZardCardComponent,
+	],
+	template: `
     <z-card data-testid="ingredient-list-card" class="bg-white border border-gray-200">
-      <div class="flex flex-col gap-6 p-2">
-        <h2 data-testid="ingredients-heading" class="text-lg font-bold text-teal-800">
+      <div class="flex flex-col gap-2 p-2">
+        <h2 data-testid="ingredients-heading" class="text-sm uppercase text-stone-500">
           Ingredients
         </h2>
 
@@ -25,7 +29,7 @@ import { RecipeIngredientItemComponent } from "./recipe-ingredient-item.componen
           <div data-testid="ingredients-content" class="flex flex-col gap-3">
             <ul class="flex flex-col gap-1">
               @for (ingredient of ingredients(); track ingredient.id) {
-                <app-recipe-ingredient-item [ingredient]="ingredient" />
+                <app-recipe-ingredient-item [ingredient]="ingredient" class=" border-b border-stone-100" />
               }
             </ul>
           </div>
@@ -35,5 +39,5 @@ import { RecipeIngredientItemComponent } from "./recipe-ingredient-item.componen
   `,
 })
 export class RecipeIngredientListComponent {
-  readonly ingredients = input<Ingredient[]>([]);
+	readonly ingredients = input<Ingredient[]>([]);
 }

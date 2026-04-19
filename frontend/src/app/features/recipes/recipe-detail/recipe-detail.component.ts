@@ -3,23 +3,26 @@ import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { ZardCardComponent } from "@/shared/components/card";
 import { ErrorStateComponent } from "@/shared/components/error-state";
 import { ZardSkeletonComponent } from "@/shared/components/skeleton";
-import { provideRecipeDetailViewModel, RecipeDetailViewModel } from "./recipe-detail.vm";
+import {
+	provideRecipeDetailViewModel,
+	RecipeDetailViewModel,
+} from "./recipe-detail.vm";
 import { RecipeHeaderComponent } from "./recipe-header.component";
 import { RecipeIngredientListComponent } from "./recipe-ingredient-list.component";
 import { RecipeStepsComponent } from "./recipe-steps.component";
 
 @Component({
-  selector: "app-recipe-detail",
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    ErrorStateComponent,
-    RecipeHeaderComponent,
-    RecipeIngredientListComponent,
-    RecipeStepsComponent,
-    ZardCardComponent,
-    ZardSkeletonComponent,
-  ],
-  template: `
+	selector: "app-recipe-detail",
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [
+		ErrorStateComponent,
+		RecipeHeaderComponent,
+		RecipeIngredientListComponent,
+		RecipeStepsComponent,
+		ZardCardComponent,
+		ZardSkeletonComponent,
+	],
+	template: `
         @if (vm.loading()) {
         <div data-testid="recipe-detail-loading" class="flex flex-col gap-8 max-w-6xl mx-auto py-8 px-4">
             <div class="flex">
@@ -91,7 +94,7 @@ import { RecipeStepsComponent } from "./recipe-steps.component";
           @for (component of vm.components(); track component.id) {
             <div data-testid="component-section" class="flex flex-col gap-6">
             @if (component.name) {
-              <h2 data-testid="component-name" class="font-serif text-2xl font-semibold text-teal-800">{{ component.name }}</h2>
+              <h2 data-testid="component-name" class="font-serif text-2xl font-semibold text-teal-800 flex gap-4">{{ component.name }} <span class="h-px self-center grow bg-stone-200"></span></h2>
             }
               <div class="flex gap-8">
                 <app-recipe-ingredient-list class="basis-1/3" [ingredients]="component.ingredients" />
@@ -109,8 +112,8 @@ import { RecipeStepsComponent } from "./recipe-steps.component";
       </div>
     }
   `,
-  providers: [provideRecipeDetailViewModel()],
+	providers: [provideRecipeDetailViewModel()],
 })
 export class RecipeDetailPage {
-  protected readonly vm = inject(RecipeDetailViewModel);
+	protected readonly vm = inject(RecipeDetailViewModel);
 }

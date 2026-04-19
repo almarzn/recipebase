@@ -1,12 +1,16 @@
 import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 import { ZardBadgeComponent } from "@/shared/components/badge";
 import type { Recipe } from "@/shared/models";
+import { ZardButtonComponent } from "@/shared/components/button";
+import { NgIcon, provideIcons } from "@ng-icons/core";
+import { lucidePen } from "@ng-icons/lucide";
+import { RouterLink } from "@angular/router";
 
 @Component({
-  selector: "app-recipe-header",
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ZardBadgeComponent],
-  template: `
+	selector: "app-recipe-header",
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [ZardBadgeComponent, ZardButtonComponent, NgIcon, RouterLink],
+	template: `
     <div data-testid="recipe-header" class="flex">
       <div class="flex flex-col gap-6 grow">
         <div class="flex flex-col gap-2">
@@ -28,9 +32,18 @@ import type { Recipe } from "@/shared/models";
           </div>
         }
       </div>
+
+      <div class="flex gap-4">
+          <a routerLink="/recipes/{{ recipe().id }}/edit" z-button zShape="circle" class="px-3" zSize="lg" zType="outline"><ng-icon name="lucidePen"></ng-icon>Edit recipe</a>
+      </div>
     </div>
   `,
+	viewProviders: [
+		provideIcons({
+			lucidePen,
+		}),
+	],
 })
 export class RecipeHeaderComponent {
-  readonly recipe = input.required<Recipe>();
+	readonly recipe = input.required<Recipe>();
 }
