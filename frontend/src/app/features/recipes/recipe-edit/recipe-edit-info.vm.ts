@@ -23,11 +23,11 @@ export class RecipeEditInfoViewModel {
 
   // linkedSignal that saves state but re-initializes when recipe changes
   readonly basicRecipeInfo = linkedSignal<RecipeInfoFormData>(() => {
-    const r = this.recipe();
+    const r = this.recipe.value();
 
     return {
-      title: r?.title ?? "",
-      description: r?.description ?? "",
+      title: r?.name ?? "",
+      description: "",
     };
   });
 
@@ -50,10 +50,10 @@ export class RecipeEditInfoViewModel {
 
   // Computed to check if form has changes from original recipe
   readonly hasChanges = computed(() => {
-    const r = this.recipe();
+    const r = this.recipe.value();
     if (!r) return false;
     const current = this.basicRecipeInfo();
-    return current.title !== r.title || current.description !== (r.description ?? "");
+    return current.title !== r.name;
   });
 
   // Expose current form data
@@ -68,10 +68,10 @@ export class RecipeEditInfoViewModel {
 
   reset(): void {
     // Reset to original recipe values
-    const r = this.recipe();
+    const r = this.recipe.value();
     this.basicRecipeInfo.set({
-      title: r?.title ?? "",
-      description: r?.description ?? "",
+      title: r?.name ?? "",
+      description: "",
     });
     this.form().reset();
   }

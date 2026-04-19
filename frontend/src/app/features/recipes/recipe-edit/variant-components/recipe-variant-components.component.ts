@@ -12,13 +12,13 @@ import { RecipeVariantComponentsViewModel } from "./recipe-variant-components.vm
   providers: [RecipeVariantComponentsViewModel],
   imports: [NgIcon, RouterLink],
   template: `
-		<div class="flex flex-col gap-6" data-testid="variant-components-page">
+		<div class="flex flex-col gap-6" data-testid="components-page">
 			<div>
-				<h2 class="font-bold text-teal-600 flex flex-col gap-2 text-lg" data-testid="variant-name">{{ vm.variant()?.name }}</h2>
+				<h2 class="font-bold text-teal-600 flex flex-col gap-2 text-lg" data-testid="recipe-name">{{ vm.recipe.value()?.name }}</h2>
 				<h1 class="font-serif text-4xl" data-testid="components-heading">Components</h1>
 			</div>
 			<p class="text-sm text-stone-500" data-testid="components-description">
-				Manage the components for this variant. Components group ingredients and steps together.
+				Manage the components for this recipe. Components group ingredients and steps together.
 			</p>
 
 			@if (vm.hasComponents()) {
@@ -29,7 +29,7 @@ import { RecipeVariantComponentsViewModel } from "./recipe-variant-components.vm
 							class="block cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-stone-200/50 group relative bg-white rounded-lg border border-stone-200 p-6 no-underline"
 							[attr.data-testid]="'component-card-' + component.id"
 						>
-							<h3 class="font-serif text-2xl text-stone-800 mb-4">{{ component.title }}</h3>
+							<h3 class="font-serif text-2xl text-stone-800 mb-4">{{ component.name }}</h3>
 							<div class="grid grid-cols-2 gap-6 pr-8">
 									<!-- Right arrow indicator - appears on hover -->
 									<div class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
@@ -43,7 +43,7 @@ import { RecipeVariantComponentsViewModel } from "./recipe-variant-components.vm
 										</div>
 										@if (component.ingredients.length > 0) {
 											<ul class="flex flex-col gap-3 text-base">
-												@for (ingredient of component.ingredients; track ingredient.slug) {
+												@for (ingredient of component.ingredients; track ingredient.id) {
 													<li class="flex items-start gap-2">
 														<span class="text-teal-600">•</span>
 														<div class="flex flex-col">
@@ -77,10 +77,7 @@ import { RecipeVariantComponentsViewModel } from "./recipe-variant-components.vm
 													<li class="flex gap-2">
 														<span class="text-teal-600 font-medium shrink-0">{{ $index + 1 }}.</span>
 														<div class="flex flex-col">
-															<span>{{ step.text }}</span>
-															@if (step.notes) {
-																<span class="text-sm text-stone-500">{{ step.notes }}</span>
-															}
+																<span>{{ step.body }}</span>
 														</div>
 													</li>
 												}

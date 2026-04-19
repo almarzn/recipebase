@@ -15,11 +15,7 @@ export const ROUTES: Routes = [
         loadComponent: () => import("./recipe-edit-info.component").then((m) => m.RecipeEditInfoComponent),
       },
       {
-        path: "variants/:variantSlug",
-        loadComponent: () => import("./recipe-edit-variant.component").then((m) => m.RecipeEditVariantComponent),
-      },
-      {
-        path: "variants/:variantSlug/components",
+        path: "components",
         loadComponent: () =>
           import("./variant-components/recipe-variant-components.component").then(
             (m) => m.RecipeVariantComponentsComponent,

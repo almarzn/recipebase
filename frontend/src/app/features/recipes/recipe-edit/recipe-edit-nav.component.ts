@@ -1,30 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { NgIcon, provideIcons } from "@ng-icons/core";
-import {
-  lucideChevronsUpDown,
-  lucideComponent,
-  lucideInfo,
-  lucideLayers,
-  lucideNotebookText,
-  lucidePencil,
-} from "@ng-icons/lucide";
-import { ZardDropdownMenuItemComponent } from "@/shared/components/dropdown/dropdown-item.component";
-import { ZardDropdownMenuContentComponent } from "@/shared/components/dropdown/dropdown-menu-content.component";
-import { ZardDropdownDirective } from "@/shared/components/dropdown/dropdown-trigger.directive";
+import { lucideLayers, lucideNotebookText } from "@ng-icons/lucide";
 import { RecipeEditViewModel } from "./recipe-edit.vm";
 
 @Component({
   selector: "app-recipe-edit-nav",
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    RouterLink,
-    NgIcon,
-    RouterLinkActive,
-    ZardDropdownDirective,
-    ZardDropdownMenuContentComponent,
-    ZardDropdownMenuItemComponent,
-  ],
+  imports: [RouterLink, NgIcon, RouterLinkActive],
   template: `
     <nav class="flex flex-row md:flex-col gap-4 md:gap-6 overflow-x-auto md:overflow-visible text-sm pb-2 md:pb-0" data-testid="recipe-edit-nav">
       <a
@@ -40,7 +23,7 @@ import { RecipeEditViewModel } from "./recipe-edit.vm";
         <span class="flex flex-col">
 
         <span class="font-serif text-base tracking-wide" data-testid="recipe-edit-title">
-          {{ vm.recipe()?.title ?? 'Recipe Title' }}
+          {{ vm.recipe.value()?.name ?? 'Recipe Title' }}
         </span>
 
         <div class="text-xs flex gap-2 items-center text-stone-500">
@@ -51,72 +34,22 @@ import { RecipeEditViewModel } from "./recipe-edit.vm";
 
       <div class="hidden md:block h-px bg-stone-200 mx-4"></div>
 
-      <div class="flex flex-col gap-2" >
-        <h3 class="uppercase text-xs tracking-wide text-stone-500">Variants</h3>
-        <button
-          type="button"
-          z-dropdown
-          [zDropdownMenu]="variantMenu"
-          class="flex w-full items-center justify-between rounded-md border border-stone-300 bg-white px-3 py-2 text-sm text-stone-700 shadow-sm hover:bg-stone-50"
-          data-testid="recipe-edit-variant-select"
+      <div class="flex flex-row md:flex-col gap-2 shrink-0 text-stone-900/50">
+        <a
+          routerLink="components"
+          class="px-4 py-3 flex gap-2 items-center rounded-md transition-colors whitespace-nowrap"
+          routerLinkActive="bg-stone-200/50 text-teal-800"
+          data-testid="recipe-components-link"
         >
-          <span>{{ vm.activeVariant()?.name ?? 'Select a variant...' }}</span>
-          <ng-icon name="lucideChevronsUpDown" class="size-4 opacity-50"/>
-        </button>
-        <z-dropdown-menu-content #variantMenu="zDropdownMenuContent" class="w-full">
-          @for (variant of vm.variants(); track variant.slug) {
-            <z-dropdown-menu-item
-              (click)="vm.setActiveVariant(variant.slug)"
-              [attr.data-testid]="'variant-option-' + variant.slug"
-            >
-              {{ variant.name }}
-            </z-dropdown-menu-item>
-          }
-        </z-dropdown-menu-content>
+          <ng-icon name="lucideLayers" class="size-40 text-teal-800"/>
+          <span class="text-sm uppercase font-semibold tracking-wider" data-testid="recipe-components-text">
+              Components
+          </span>
+        </a>
       </div>
-
-      @if (vm.activeVariant(); as variant) {
-        <div class="flex flex-row md:flex-col gap-2 shrink-0  text-stone-900/50">
-
-          <a
-            [routerLink]="['variants', variant.slug]"
-            class="px-4 py-3 flex gap-2 items-center rounded-md transition-colors whitespace-nowrap"
-            routerLinkActive="bg-stone-200/50 text-teal-800"
-            [routerLinkActiveOptions]="{ exact: true }"
-            data-testid="variant-edit-info-link"
-          >
-            <ng-icon name="lucideInfo" class="size-40 text-teal-800"/>
-            <span class="text-sm uppercase font-semibold tracking-wider" data-testid="variant-edit-info">
-                Basic informations
-            </span>
-          </a>
-
-          <a
-            [routerLink]="['variants', variant.slug, 'components']"
-            class="px-4 py-3 flex gap-2 items-center rounded-md transition-colors whitespace-nowrap"
-            routerLinkActive="bg-stone-200/50 text-teal-800"
-            data-testid="variant-components-link"
-          >
-            <ng-icon name="lucideLayers" class="size-40 text-teal-800"/>
-            <span class="text-sm uppercase font-semibold tracking-wider" data-testid="variant-components-text">
-                Components
-            </span>
-          </a>
-        </div>
-
-      }
     </nav>
   `,
-  viewProviders: [
-    provideIcons({
-      lucidePencil,
-      lucideChevronsUpDown,
-      lucideInfo,
-      lucideLayers,
-      lucideNotebookText,
-      lucideComponent,
-    }),
-  ],
+  viewProviders: [provideIcons({ lucideLayers, lucideNotebookText })],
 })
 export class RecipeEditNavComponent {
   protected readonly vm = inject(RecipeEditViewModel);

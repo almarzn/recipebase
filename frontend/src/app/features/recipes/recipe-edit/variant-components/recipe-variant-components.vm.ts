@@ -4,9 +4,9 @@ import { RecipeEditViewModel } from "../recipe-edit.vm";
 @Injectable()
 export class RecipeVariantComponentsViewModel {
   readonly parentVm = inject(RecipeEditViewModel);
-  readonly variant = this.parentVm.activeVariant;
+  readonly recipe = this.parentVm.recipe;
 
-  readonly components = computed(() => this.variant()?.components ?? []);
+  readonly components = computed(() => this.recipe.value()?.components ?? []);
   readonly hasComponents = computed(() => this.components().length > 0);
   readonly componentCount = computed(() => this.components().length);
 }
