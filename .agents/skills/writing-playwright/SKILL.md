@@ -14,7 +14,7 @@ metadata:
 - Locators use `data-testid` attributes exclusively — no `getByRole`, `getByText`, `getByLabel`.
 - Use `test.step()` blocks instead of comments to organize test logic.
 - Never use `let` to capture network requests — use inline `waitForRequest`/`waitForResponse`.
-- All Playwright commands run via `podman run` — never invoke `npx playwright` directly.
+- All Playwright commands run via `npx playwright` directly.
 
 ## File conventions
 
@@ -211,26 +211,54 @@ test("edits existing recipe", async ({ page }) => {
 
 ## Running tests
 
-Always run via `podman run` from the repository root. The image includes Playwright browsers:
+**ALWAYS START WITH `cd frontend`** — all Playwright commands must be run from the `frontend/` directory:
 
 ```bash
-podman run --rm --network host \
-  -v "$(pwd)":/work -w /work/frontend \
-  mcr.microsoft.com/playwright:v1.59.1-noble \
-  npx playwright test
-
-podman run --rm --network host \
-  -v "$(pwd)":/work -w /work/frontend \
-  mcr.microsoft.com/playwright:v1.59.1-noble \
-  npx playwright test --grep "displays recipes"
-
-podman run --rm --network host \
-  -v "$(pwd)":/work -w /work/frontend \
-  mcr.microsoft.com/playwright:v1.59.1-noble \
-  npx playwright test --ui
+cd frontend
+npx playwright test
+npx playwright test --grep "displays recipes"
+npx playwright test --ui
 ```
 
-The `--network host` flag lets Playwright reach the Angular dev server running on the host. Start `npx ng serve` separately before running tests.
+Start `npx ng serve` separately before running tests.
+
+## Recording traces
+
+Traces are enabled by default in the config (`trace: 'on-first-retry'`). To record traces on every test run:
+
+```bash
+npx playwright test --trace on
+```
+
+## Reading traces
+
+Use `playwright-trace-analyzer` from `uv` (it is a python package) to inspect trace files (found in `frontend/test-results/`):
+
+```bash
+# Get a high-level summary of the trace
+playwright-trace-analyzer summary trace.zip
+
+# View all actions executed during the test
+playwright-trace-analyzer actions trace.zip
+playwright-trace-analyzer actions trace.zip --errors-only
+
+# Extract console messages and warnings
+playwright-trace-analyzer console trace.zip
+playwright-trace-analyzer console trace.zip --level error
+
+# Check failed network requests
+playwright-trace-analyzer network trace.zip --failed-only
+
+# Extract screenshots from the trace
+playwright-trace-analyzer screenshots trace.zip -o ./screenshots
+
+# Extract screenshots with deduplication control
+playwright-trace-analyzer screenshots trace.zip --dedupe-threshold 0.01  # default: drops visually identical frames
+playwright-trace-analyzer screenshots trace.zip --dedupe-threshold 0     # disable deduplication
+
+# View trace metadata
+playwright-trace-analyzer metadata trace.zip
+```
 
 ## Config notes
 
@@ -246,15 +274,15 @@ The `--network host` flag lets Playwright reach the Angular dev server running o
 - No `getByRole`, `getByText`, `getByLabel`, or CSS selectors — `getByTestId` exclusively.
 - No calling `page.getBy*` directly in tests — always go through a Page Object.
 - No comments — `test.step` blocks replace them.
-- No running Playwright directly — always via `podman run`.
+- No running Playwright via Docker/Podman — always use `npx playwright` directly.
 - No `test.slow()` — fix the test instead.
 
 ## Common rationalizations
 
-| Excuse                                | Reality                                                           |
-| ------------------------------------- | ----------------------------------------------------------------- |
-| "getByRole is more semantic"          | `data-testid` only. Consistency over elegance.                    |
-| "A comment would clarify this step"   | Use `test.step()` blocks instead. They serve as documentation.    |
-| "I'll capture the request with a let" | Use inline `waitForRequest` or `Promise.all` pattern.             |
-| "getByText is fine for this label"    | `data-testid` exclusively. No exceptions.                         |
-| "I need to run Playwright directly"   | Always via `npm run e2e:podman`. Never `npx playwright` directly. |
+| Excuse                                | Reality                                                              |
+| ------------------------------------- | -------------------------------------------------------------------- |
+| "getByRole is more semantic"          | `data-testid` only. Consistency over elegance.                       |
+| "A comment would clarify this step"   | Use `test.step()` blocks instead. They serve as documentation.       |
+| "I'll capture the request with a let" | Use inline `waitForRequest` or `Promise.all` pattern.                |
+| "getByText is fine for this label"    | `data-testid` exclusively. No exceptions.                            |
+| "I need to run Playwright via Docker" | Always use `npx playwright` directly from the `frontend/` directory. |

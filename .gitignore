@@ -64,3 +64,5 @@ out/
 .worktrees/
 
 __pycache__/
+
+test-results
