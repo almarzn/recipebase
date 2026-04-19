@@ -18,10 +18,15 @@ export interface Yield {
 }
 
 /** Quantity JSONB — {value, unit} */
-export interface Quantity {
-  value: number;
-  unit: string;
-}
+export type Quantity =
+  | {
+      amount: number;
+      unit: "gram" | "kilogram" | "liter" | "milliliter" | "arbitrary";
+    }
+  | {
+      unit: "unspecified";
+      notes: string;
+    };
 
 export interface Ingredient {
   id: string;

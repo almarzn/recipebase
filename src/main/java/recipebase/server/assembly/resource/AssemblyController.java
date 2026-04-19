@@ -1,15 +1,14 @@
 package recipebase.server.assembly.resource;
 
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import recipebase.server.assembly.*;
 
-import java.util.List;
-
 @RestController
 @CrossOrigin
-@RequestMapping("/assemblies")
+@RequestMapping("/api/assemblies")
 public class AssemblyController {
 
     private final CreateAssemblyUseCase createAssemblyUseCase;
@@ -21,13 +20,14 @@ public class AssemblyController {
     private final DeleteAssemblyComponentUseCase deleteAssemblyComponentUseCase;
 
     public AssemblyController(
-            CreateAssemblyUseCase createAssemblyUseCase,
-            FindAssemblyBySlugUseCase findAssemblyBySlugUseCase,
-            UpdateAssemblyUseCase updateAssemblyUseCase,
-            DeleteAssemblyUseCase deleteAssemblyUseCase,
-            AddAssemblyComponentUseCase addAssemblyComponentUseCase,
-            UpdateAssemblyComponentUseCase updateAssemblyComponentUseCase,
-            DeleteAssemblyComponentUseCase deleteAssemblyComponentUseCase) {
+        CreateAssemblyUseCase createAssemblyUseCase,
+        FindAssemblyBySlugUseCase findAssemblyBySlugUseCase,
+        UpdateAssemblyUseCase updateAssemblyUseCase,
+        DeleteAssemblyUseCase deleteAssemblyUseCase,
+        AddAssemblyComponentUseCase addAssemblyComponentUseCase,
+        UpdateAssemblyComponentUseCase updateAssemblyComponentUseCase,
+        DeleteAssemblyComponentUseCase deleteAssemblyComponentUseCase
+    ) {
         this.createAssemblyUseCase = createAssemblyUseCase;
         this.findAssemblyBySlugUseCase = findAssemblyBySlugUseCase;
         this.updateAssemblyUseCase = updateAssemblyUseCase;
@@ -38,26 +38,36 @@ public class AssemblyController {
     }
 
     @PostMapping
-    public ResponseEntity<AssemblyResource> create(@RequestBody CreateAssemblyRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(createAssemblyUseCase.execute(request));
+    public ResponseEntity<AssemblyResource> create(
+        @RequestBody CreateAssemblyRequest request
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            createAssemblyUseCase.execute(request)
+        );
     }
 
     @GetMapping("{slug}")
-    public ResponseEntity<AssemblyResource> findBySlug(@PathVariable String slug) {
+    public ResponseEntity<AssemblyResource> findBySlug(
+        @PathVariable String slug
+    ) {
         return ResponseEntity.of(findAssemblyBySlugUseCase.execute(slug));
     }
 
     @GetMapping("{slug}/components")
-    public ResponseEntity<List<AssemblyComponentResource>> findComponents(@PathVariable String slug) {
-        return findAssemblyBySlugUseCase.execute(slug)
+    public ResponseEntity<List<AssemblyComponentResource>> findComponents(
+        @PathVariable String slug
+    ) {
+        return findAssemblyBySlugUseCase
+            .execute(slug)
             .map(a -> ResponseEntity.ok(a.components()))
             .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("{slug}")
     public ResponseEntity<AssemblyResource> update(
-            @PathVariable String slug,
-            @RequestBody UpdateAssemblyRequest request) {
+        @PathVariable String slug,
+        @RequestBody UpdateAssemblyRequest request
+    ) {
         return ResponseEntity.of(updateAssemblyUseCase.execute(slug, request));
     }
 
@@ -70,26 +80,35 @@ public class AssemblyController {
 
     @PostMapping("{slug}/components")
     public ResponseEntity<AssemblyComponentResource> addComponent(
-            @PathVariable String slug,
-            @RequestBody AddAssemblyComponentRequest request) {
-        return addAssemblyComponentUseCase.execute(slug, request)
-            .map(c -> ResponseEntity.status(HttpStatus.CREATED).<AssemblyComponentResource>body(c))
+        @PathVariable String slug,
+        @RequestBody AddAssemblyComponentRequest request
+    ) {
+        return addAssemblyComponentUseCase
+            .execute(slug, request)
+            .map(c ->
+                ResponseEntity.status(HttpStatus.CREATED).<
+                    AssemblyComponentResource
+                >body(c)
+            )
             .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("{slug}/components/{componentSlug}")
     public ResponseEntity<AssemblyComponentResource> updateComponent(
-            @PathVariable String slug,
-            @PathVariable String componentSlug,
-            @RequestBody UpdateAssemblyComponentRequest request) {
+        @PathVariable String slug,
+        @PathVariable String componentSlug,
+        @RequestBody UpdateAssemblyComponentRequest request
+    ) {
         return ResponseEntity.of(
-            updateAssemblyComponentUseCase.execute(slug, componentSlug, request));
+            updateAssemblyComponentUseCase.execute(slug, componentSlug, request)
+        );
     }
 
     @DeleteMapping("{slug}/components/{componentSlug}")
     public ResponseEntity<Void> deleteComponent(
-            @PathVariable String slug,
-            @PathVariable String componentSlug) {
+        @PathVariable String slug,
+        @PathVariable String componentSlug
+    ) {
         return deleteAssemblyComponentUseCase.execute(slug, componentSlug)
             ? ResponseEntity.noContent().build()
             : ResponseEntity.notFound().build();

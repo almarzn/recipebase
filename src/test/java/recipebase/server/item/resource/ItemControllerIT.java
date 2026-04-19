@@ -59,7 +59,7 @@ class ItemControllerIT {
 
     @Test
     void list_returnsAllItems() throws Exception {
-        mockMvc.perform(get("/items").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/items").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$.length()").value(2));
@@ -67,7 +67,7 @@ class ItemControllerIT {
 
     @Test
     void list_filterByType_recipe() throws Exception {
-        mockMvc.perform(get("/items?type=recipe").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/items?type=recipe").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()").value(1))
             .andExpect(jsonPath("$[0].slug").value("chocolate-cake"))
@@ -77,7 +77,7 @@ class ItemControllerIT {
 
     @Test
     void list_filterByType_assembly() throws Exception {
-        mockMvc.perform(get("/items?type=assembly").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/items?type=assembly").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()").value(1))
             .andExpect(jsonPath("$[0].slug").value("holiday-menu"))
@@ -86,7 +86,7 @@ class ItemControllerIT {
 
     @Test
     void list_filterByQ_matchesName() throws Exception {
-        mockMvc.perform(get("/items?q=chocolate").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/items?q=chocolate").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()").value(1))
             .andExpect(jsonPath("$[0].slug").value("chocolate-cake"));
@@ -94,7 +94,7 @@ class ItemControllerIT {
 
     @Test
     void list_filterByTags() throws Exception {
-        mockMvc.perform(get("/items?tags=dessert").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/items?tags=dessert").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()").value(1))
             .andExpect(jsonPath("$[0].slug").value("holiday-menu"));
@@ -102,7 +102,7 @@ class ItemControllerIT {
 
     @Test
     void list_noMatch_returnsEmpty() throws Exception {
-        mockMvc.perform(get("/items?q=nonexistent").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/items?q=nonexistent").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()").value(0));
     }

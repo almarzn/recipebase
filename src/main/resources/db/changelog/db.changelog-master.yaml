@@ -5,3 +5,5 @@ databaseChangeLog:
       file: db/changelog/002-drop-old-schema.sql
   - include:
       file: db/changelog/003-new-schema.sql
+  - include:
+      file: db/changelog/004-sample-recipes.sql

@@ -68,12 +68,12 @@ class RecipeControllerIT {
     }
 
     // ============================================================
-    // POST /recipes
+    // POST /api/recipes
     // ============================================================
 
     @Test
     void create_returnsCreatedRecipe() throws Exception {
-        mockMvc.perform(post("/recipes")
+        mockMvc.perform(post("/api/recipes")
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
                 {
@@ -95,12 +95,12 @@ class RecipeControllerIT {
     }
 
     // ============================================================
-    // GET /recipes/:slug
+    // GET /api/recipes/:slug
     // ============================================================
 
     @Test
     void findBySlug_returnsRecipeWithComponents() throws Exception {
-        mockMvc.perform(get("/recipes/chocolate-cake").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/recipes/chocolate-cake").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.slug").value("chocolate-cake"))
             .andExpect(jsonPath("$.name").value("Chocolate Cake"))
@@ -119,13 +119,13 @@ class RecipeControllerIT {
 
     @Test
     void findBySlug_returnsNotFoundForUnknownSlug() throws Exception {
-        mockMvc.perform(get("/recipes/nonexistent").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/recipes/nonexistent").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
 
     @Test
     void findComponents_returnsFlatList() throws Exception {
-        mockMvc.perform(get("/recipes/chocolate-cake/components").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/recipes/chocolate-cake/components").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$.length()").value(1))
@@ -133,12 +133,12 @@ class RecipeControllerIT {
     }
 
     // ============================================================
-    // PUT /recipes/:slug
+    // PUT /api/recipes/:slug
     // ============================================================
 
     @Test
     void update_returnsUpdatedRecipe() throws Exception {
-        mockMvc.perform(put("/recipes/chocolate-cake")
+        mockMvc.perform(put("/api/recipes/chocolate-cake")
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
                 {
@@ -161,7 +161,7 @@ class RecipeControllerIT {
 
     @Test
     void update_returnsNotFoundForUnknownSlug() throws Exception {
-        mockMvc.perform(put("/recipes/nonexistent")
+        mockMvc.perform(put("/api/recipes/nonexistent")
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
                 {"name": "X", "tags": [], "source": null, "yield": null, "notes": null}
@@ -170,31 +170,31 @@ class RecipeControllerIT {
     }
 
     // ============================================================
-    // DELETE /recipes/:slug
+    // DELETE /api/recipes/:slug
     // ============================================================
 
     @Test
     void delete_removes204() throws Exception {
-        mockMvc.perform(delete("/recipes/chocolate-cake"))
+        mockMvc.perform(delete("/api/recipes/chocolate-cake"))
             .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/recipes/chocolate-cake"))
+        mockMvc.perform(get("/api/recipes/chocolate-cake"))
             .andExpect(status().isNotFound());
     }
 
     @Test
     void delete_returnsNotFoundForUnknownSlug() throws Exception {
-        mockMvc.perform(delete("/recipes/nonexistent"))
+        mockMvc.perform(delete("/api/recipes/nonexistent"))
             .andExpect(status().isNotFound());
     }
 
     // ============================================================
-    // POST /recipes/:slug/components
+    // POST /api/recipes/:slug/components
     // ============================================================
 
     @Test
     void addComponent_addsComponentAtEnd() throws Exception {
-        mockMvc.perform(post("/recipes/chocolate-cake/components")
+        mockMvc.perform(post("/api/recipes/chocolate-cake/components")
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
                 {
@@ -220,7 +220,7 @@ class RecipeControllerIT {
 
     @Test
     void addComponent_returnsNotFoundForUnknownRecipe() throws Exception {
-        mockMvc.perform(post("/recipes/nonexistent/components")
+        mockMvc.perform(post("/api/recipes/nonexistent/components")
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
                 {"name": null, "ingredients": [], "steps": []}
@@ -229,12 +229,12 @@ class RecipeControllerIT {
     }
 
     // ============================================================
-    // PUT /recipes/:slug/components/:componentSlug
+    // PUT /api/recipes/:slug/components/:componentSlug
     // ============================================================
 
     @Test
     void replaceComponent_replacesIngredientsAndSteps() throws Exception {
-        mockMvc.perform(put("/recipes/chocolate-cake/components/main")
+        mockMvc.perform(put("/api/recipes/chocolate-cake/components/main")
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
                 {
@@ -250,7 +250,7 @@ class RecipeControllerIT {
                 """))
             .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/recipes/chocolate-cake"))
+        mockMvc.perform(get("/api/recipes/chocolate-cake"))
             .andExpect(jsonPath("$.components[0].name").value("Revised Batter"))
             .andExpect(jsonPath("$.components[0].ingredients.length()").value(1))
             .andExpect(jsonPath("$.components[0].ingredients[0].slug").value("cake-flour"))
@@ -261,7 +261,7 @@ class RecipeControllerIT {
 
     @Test
     void replaceComponent_returnsNotFoundForUnknownComponent() throws Exception {
-        mockMvc.perform(put("/recipes/chocolate-cake/components/nonexistent")
+        mockMvc.perform(put("/api/recipes/chocolate-cake/components/nonexistent")
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
                 {"name": null, "ingredients": [], "steps": []}
@@ -270,21 +270,21 @@ class RecipeControllerIT {
     }
 
     // ============================================================
-    // DELETE /recipes/:slug/components/:componentSlug
+    // DELETE /api/recipes/:slug/components/:componentSlug
     // ============================================================
 
     @Test
     void deleteComponent_removesComponent() throws Exception {
-        mockMvc.perform(delete("/recipes/chocolate-cake/components/main"))
+        mockMvc.perform(delete("/api/recipes/chocolate-cake/components/main"))
             .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/recipes/chocolate-cake"))
+        mockMvc.perform(get("/api/recipes/chocolate-cake"))
             .andExpect(jsonPath("$.components.length()").value(0));
     }
 
     @Test
     void deleteComponent_returnsNotFoundForUnknownComponent() throws Exception {
-        mockMvc.perform(delete("/recipes/chocolate-cake/components/nonexistent"))
+        mockMvc.perform(delete("/api/recipes/chocolate-cake/components/nonexistent"))
             .andExpect(status().isNotFound());
     }
 }

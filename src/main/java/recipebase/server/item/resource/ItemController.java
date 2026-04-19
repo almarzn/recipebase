@@ -1,5 +1,6 @@
 package recipebase.server.item.resource;
 
+import java.util.List;
 import org.jspecify.annotations.Nullable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,11 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import recipebase.server.item.FindItemsUseCase;
 
-import java.util.List;
-
 @RestController
 @CrossOrigin
-@RequestMapping("/items")
+@RequestMapping("/api/items")
 public class ItemController {
 
     private final FindItemsUseCase findItemsUseCase;
@@ -23,9 +22,10 @@ public class ItemController {
 
     @GetMapping
     public List<ItemSummaryResource> list(
-            @RequestParam @Nullable String q,
-            @RequestParam @Nullable String type,
-            @RequestParam(required = false) @Nullable List<String> tags) {
+        @RequestParam @Nullable String q,
+        @RequestParam @Nullable String type,
+        @RequestParam(required = false) @Nullable List<String> tags
+    ) {
         return findItemsUseCase.execute(q, type, tags);
     }
 }

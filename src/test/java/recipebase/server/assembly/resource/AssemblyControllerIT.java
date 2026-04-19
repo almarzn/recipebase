@@ -76,12 +76,12 @@ class AssemblyControllerIT {
     }
 
     // ============================================================
-    // POST /assemblies
+    // POST /api/assemblies
     // ============================================================
 
     @Test
     void create_returnsCreatedAssembly() throws Exception {
-        mockMvc.perform(post("/assemblies")
+        mockMvc.perform(post("/api/assemblies")
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
                 {
@@ -100,12 +100,12 @@ class AssemblyControllerIT {
     }
 
     // ============================================================
-    // GET /assemblies/:slug
+    // GET /api/assemblies/:slug
     // ============================================================
 
     @Test
     void findBySlug_returnsAssemblyWithComponents() throws Exception {
-        mockMvc.perform(get("/assemblies/holiday-menu").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/assemblies/holiday-menu").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.slug").value("holiday-menu"))
             .andExpect(jsonPath("$.name").value("Holiday Menu"))
@@ -122,13 +122,13 @@ class AssemblyControllerIT {
 
     @Test
     void findBySlug_returnsNotFoundForUnknownSlug() throws Exception {
-        mockMvc.perform(get("/assemblies/nonexistent").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/assemblies/nonexistent").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
 
     @Test
     void findComponents_returnsFlatList() throws Exception {
-        mockMvc.perform(get("/assemblies/holiday-menu/components").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/assemblies/holiday-menu/components").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$.length()").value(1))
@@ -136,12 +136,12 @@ class AssemblyControllerIT {
     }
 
     // ============================================================
-    // PUT /assemblies/:slug
+    // PUT /api/assemblies/:slug
     // ============================================================
 
     @Test
     void update_returnsUpdatedAssembly() throws Exception {
-        mockMvc.perform(put("/assemblies/holiday-menu")
+        mockMvc.perform(put("/api/assemblies/holiday-menu")
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
                 {
@@ -160,7 +160,7 @@ class AssemblyControllerIT {
 
     @Test
     void update_returnsNotFoundForUnknownSlug() throws Exception {
-        mockMvc.perform(put("/assemblies/nonexistent")
+        mockMvc.perform(put("/api/assemblies/nonexistent")
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
                 {"name": "X", "tags": [], "yield": null}
@@ -169,31 +169,31 @@ class AssemblyControllerIT {
     }
 
     // ============================================================
-    // DELETE /assemblies/:slug
+    // DELETE /api/assemblies/:slug
     // ============================================================
 
     @Test
     void delete_removes204() throws Exception {
-        mockMvc.perform(delete("/assemblies/holiday-menu"))
+        mockMvc.perform(delete("/api/assemblies/holiday-menu"))
             .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/assemblies/holiday-menu"))
+        mockMvc.perform(get("/api/assemblies/holiday-menu"))
             .andExpect(status().isNotFound());
     }
 
     @Test
     void delete_returnsNotFoundForUnknownSlug() throws Exception {
-        mockMvc.perform(delete("/assemblies/nonexistent"))
+        mockMvc.perform(delete("/api/assemblies/nonexistent"))
             .andExpect(status().isNotFound());
     }
 
     // ============================================================
-    // POST /assemblies/:slug/components
+    // POST /api/assemblies/:slug/components
     // ============================================================
 
     @Test
     void addComponent_addsComponentAndReturnsIt() throws Exception {
-        mockMvc.perform(post("/assemblies/holiday-menu/components")
+        mockMvc.perform(post("/api/assemblies/holiday-menu/components")
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
                 {"itemSlug": "chocolate-cake", "scaleFactor": 2.0}
@@ -208,7 +208,7 @@ class AssemblyControllerIT {
 
     @Test
     void addComponent_returnsNotFoundForUnknownAssembly() throws Exception {
-        mockMvc.perform(post("/assemblies/nonexistent/components")
+        mockMvc.perform(post("/api/assemblies/nonexistent/components")
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
                 {"itemSlug": "chocolate-cake", "scaleFactor": 1.0}
@@ -218,7 +218,7 @@ class AssemblyControllerIT {
 
     @Test
     void addComponent_returnsNotFoundForUnknownItem() throws Exception {
-        mockMvc.perform(post("/assemblies/holiday-menu/components")
+        mockMvc.perform(post("/api/assemblies/holiday-menu/components")
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
                 {"itemSlug": "nonexistent-item", "scaleFactor": 1.0}
@@ -227,12 +227,12 @@ class AssemblyControllerIT {
     }
 
     // ============================================================
-    // PUT /assemblies/:slug/components/:componentSlug
+    // PUT /api/assemblies/:slug/components/:componentSlug
     // ============================================================
 
     @Test
     void updateComponent_updatesScaleFactor() throws Exception {
-        mockMvc.perform(put("/assemblies/holiday-menu/components/main-course")
+        mockMvc.perform(put("/api/assemblies/holiday-menu/components/main-course")
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
                 {"scaleFactor": 3.0, "locked": false}
@@ -245,7 +245,7 @@ class AssemblyControllerIT {
 
     @Test
     void updateComponent_lockCapturesSnapshot() throws Exception {
-        mockMvc.perform(put("/assemblies/holiday-menu/components/main-course")
+        mockMvc.perform(put("/api/assemblies/holiday-menu/components/main-course")
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
                 {"scaleFactor": 1.0, "locked": true}
@@ -258,7 +258,7 @@ class AssemblyControllerIT {
 
     @Test
     void updateComponent_returnsNotFoundForUnknownComponent() throws Exception {
-        mockMvc.perform(put("/assemblies/holiday-menu/components/nonexistent")
+        mockMvc.perform(put("/api/assemblies/holiday-menu/components/nonexistent")
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
                 {"scaleFactor": 1.0, "locked": false}
@@ -267,21 +267,21 @@ class AssemblyControllerIT {
     }
 
     // ============================================================
-    // DELETE /assemblies/:slug/components/:componentSlug
+    // DELETE /api/assemblies/:slug/components/:componentSlug
     // ============================================================
 
     @Test
     void deleteComponent_removesComponent() throws Exception {
-        mockMvc.perform(delete("/assemblies/holiday-menu/components/main-course"))
+        mockMvc.perform(delete("/api/assemblies/holiday-menu/components/main-course"))
             .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/assemblies/holiday-menu"))
+        mockMvc.perform(get("/api/assemblies/holiday-menu"))
             .andExpect(jsonPath("$.components.length()").value(0));
     }
 
     @Test
     void deleteComponent_returnsNotFoundForUnknownComponent() throws Exception {
-        mockMvc.perform(delete("/assemblies/holiday-menu/components/nonexistent"))
+        mockMvc.perform(delete("/api/assemblies/holiday-menu/components/nonexistent"))
             .andExpect(status().isNotFound());
     }
 }

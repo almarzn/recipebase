@@ -1,15 +1,14 @@
 package recipebase.server.recipe.resource;
 
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import recipebase.server.recipe.*;
 
-import java.util.List;
-
 @RestController
 @CrossOrigin
-@RequestMapping("/recipes")
+@RequestMapping("/api/recipes")
 public class RecipeController {
 
     private final CreateRecipeUseCase createRecipeUseCase;
@@ -21,13 +20,14 @@ public class RecipeController {
     private final DeleteComponentUseCase deleteComponentUseCase;
 
     public RecipeController(
-            CreateRecipeUseCase createRecipeUseCase,
-            FindRecipeBySlugUseCase findRecipeBySlugUseCase,
-            UpdateRecipeUseCase updateRecipeUseCase,
-            DeleteRecipeUseCase deleteRecipeUseCase,
-            AddComponentUseCase addComponentUseCase,
-            ReplaceComponentUseCase replaceComponentUseCase,
-            DeleteComponentUseCase deleteComponentUseCase) {
+        CreateRecipeUseCase createRecipeUseCase,
+        FindRecipeBySlugUseCase findRecipeBySlugUseCase,
+        UpdateRecipeUseCase updateRecipeUseCase,
+        DeleteRecipeUseCase deleteRecipeUseCase,
+        AddComponentUseCase addComponentUseCase,
+        ReplaceComponentUseCase replaceComponentUseCase,
+        DeleteComponentUseCase deleteComponentUseCase
+    ) {
         this.createRecipeUseCase = createRecipeUseCase;
         this.findRecipeBySlugUseCase = findRecipeBySlugUseCase;
         this.updateRecipeUseCase = updateRecipeUseCase;
@@ -38,27 +38,35 @@ public class RecipeController {
     }
 
     @PostMapping
-    public ResponseEntity<RecipeResource> create(@RequestBody CreateRecipeRequest request) {
+    public ResponseEntity<RecipeResource> create(
+        @RequestBody CreateRecipeRequest request
+    ) {
         var recipe = createRecipeUseCase.execute(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(recipe);
     }
 
     @GetMapping("{slug}")
-    public ResponseEntity<RecipeResource> findBySlug(@PathVariable String slug) {
+    public ResponseEntity<RecipeResource> findBySlug(
+        @PathVariable String slug
+    ) {
         return ResponseEntity.of(findRecipeBySlugUseCase.execute(slug));
     }
 
     @GetMapping("{slug}/components")
-    public ResponseEntity<List<ComponentResource>> findComponents(@PathVariable String slug) {
-        return findRecipeBySlugUseCase.execute(slug)
+    public ResponseEntity<List<ComponentResource>> findComponents(
+        @PathVariable String slug
+    ) {
+        return findRecipeBySlugUseCase
+            .execute(slug)
             .map(r -> ResponseEntity.ok(r.components()))
             .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("{slug}")
     public ResponseEntity<RecipeResource> update(
-            @PathVariable String slug,
-            @RequestBody UpdateRecipeRequest request) {
+        @PathVariable String slug,
+        @RequestBody UpdateRecipeRequest request
+    ) {
         return ResponseEntity.of(updateRecipeUseCase.execute(slug, request));
     }
 
@@ -71,18 +79,25 @@ public class RecipeController {
 
     @PostMapping("{slug}/components")
     public ResponseEntity<ComponentResource> addComponent(
-            @PathVariable String slug,
-            @RequestBody AddComponentRequest request) {
-        return addComponentUseCase.execute(slug, request)
-            .map(c -> ResponseEntity.status(HttpStatus.CREATED).<ComponentResource>body(c))
+        @PathVariable String slug,
+        @RequestBody AddComponentRequest request
+    ) {
+        return addComponentUseCase
+            .execute(slug, request)
+            .map(c ->
+                ResponseEntity.status(HttpStatus.CREATED).<
+                    ComponentResource
+                >body(c)
+            )
             .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("{slug}/components/{componentSlug}")
     public ResponseEntity<Void> replaceComponent(
-            @PathVariable String slug,
-            @PathVariable String componentSlug,
-            @RequestBody ReplaceComponentRequest request) {
+        @PathVariable String slug,
+        @PathVariable String componentSlug,
+        @RequestBody ReplaceComponentRequest request
+    ) {
         return replaceComponentUseCase.execute(slug, componentSlug, request)
             ? ResponseEntity.noContent().build()
             : ResponseEntity.notFound().build();
@@ -90,8 +105,9 @@ public class RecipeController {
 
     @DeleteMapping("{slug}/components/{componentSlug}")
     public ResponseEntity<Void> deleteComponent(
-            @PathVariable String slug,
-            @PathVariable String componentSlug) {
+        @PathVariable String slug,
+        @PathVariable String componentSlug
+    ) {
         return deleteComponentUseCase.execute(slug, componentSlug)
             ? ResponseEntity.noContent().build()
             : ResponseEntity.notFound().build();
