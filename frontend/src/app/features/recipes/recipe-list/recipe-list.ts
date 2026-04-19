@@ -32,14 +32,14 @@ import { RecipeListViewModel } from "./recipe-list.vm";
         <div data-testid="recipe-list-error">
           <app-error-state message="Failed to load recipes" [detail]="vm.error()" />
         </div>
-      } @else if (!vm.hasRecipes()) {
+      } @else if (!vm.hasItems()) {
         <div data-testid="recipe-list-empty">
           <app-error-state message="No recipes yet" detail="Start by importing your first recipe." />
         </div>
       } @else {
         <div data-testid="recipe-list-grid" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          @for (recipe of vm.recipes(); track recipe.id) {
-            <app-recipe-card [recipe]="recipe" />
+          @for (item of vm.items(); track item.id) {
+            <app-recipe-card [item]="item" />
           }
         </div>
       }
