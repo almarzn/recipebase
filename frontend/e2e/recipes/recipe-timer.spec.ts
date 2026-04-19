@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import type { Recipe } from "@/shared/models";
 import { RecipeDetailPage } from "./recipe-detail.po";
 
-const mockRecipeWithTimer: Recipe = {
+const mockRecipeWithTimer = {
   id: "1",
   slug: "timer-recipe",
   name: "Timer Recipe",
@@ -11,6 +11,7 @@ const mockRecipeWithTimer: Recipe = {
   yield: null,
   createdAt: "2026-01-01T00:00:00Z",
   updatedAt: "2026-01-01T00:00:00Z",
+  notes: null,
   components: [
     {
       id: "comp-1",
@@ -22,16 +23,16 @@ const mockRecipeWithTimer: Recipe = {
         {
           id: "step-1",
           slug: "wait",
-          order: 1,
+          stepOrder: 1,
           body: "Wait patiently",
           timer: "PT10M",
         },
       ],
     },
   ],
-};
+} as Recipe;
 
-const mockRecipeShortTimer: Recipe = {
+const mockRecipeShortTimer = {
   id: "2",
   slug: "short-timer-recipe",
   name: "Short Timer",
@@ -40,6 +41,7 @@ const mockRecipeShortTimer: Recipe = {
   yield: null,
   createdAt: "2026-01-01T00:00:00Z",
   updatedAt: "2026-01-01T00:00:00Z",
+  notes: null,
   components: [
     {
       id: "comp-1",
@@ -51,14 +53,14 @@ const mockRecipeShortTimer: Recipe = {
         {
           id: "step-1",
           slug: "quick",
-          order: 1,
+          stepOrder: 1,
           body: "Quick step",
           timer: "PT5S",
         },
       ],
     },
   ],
-};
+} as Recipe;
 
 test("timer — displays initial duration", async ({ page }) => {
   await page.route("**/api/recipes/timer-recipe", (route) =>

@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import type { Recipe } from "@/shared/models";
 import { RecipeEditPage } from "./recipe-edit.po";
 
-const mockRecipe: Recipe = {
+const mockRecipe = {
   id: "1",
   slug: "pasta",
   name: "Fresh Pasta",
@@ -11,6 +11,7 @@ const mockRecipe: Recipe = {
   yield: { quantity: 4, unit: "servings", description: null },
   createdAt: "2026-01-01T00:00:00Z",
   updatedAt: "2026-01-01T00:00:00Z",
+  notes: null,
   components: [
     {
       id: "comp-1",
@@ -21,7 +22,7 @@ const mockRecipe: Recipe = {
       steps: [],
     },
   ],
-};
+} as Recipe;
 
 test("recipe edit nav — renders navigation sidebar", async ({ page }) => {
   await page.route("**/api/recipes/pasta", (route) =>

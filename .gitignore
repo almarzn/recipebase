@@ -66,3 +66,4 @@ out/
 __pycache__/
 
 test-results
+frontend/src/app/shared/server.ts

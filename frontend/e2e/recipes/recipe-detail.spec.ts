@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import type { Recipe } from "@/shared/models";
 import { RecipeDetailPage } from "./recipe-detail.po";
 
-const mockRecipeWithComponents: Recipe = {
+const mockRecipeWithComponents = {
   id: "1",
   slug: "pasta",
   name: "Fresh Pasta",
@@ -11,6 +11,7 @@ const mockRecipeWithComponents: Recipe = {
   yield: { quantity: 4, unit: "servings", description: null },
   createdAt: "2026-01-01T00:00:00Z",
   updatedAt: "2026-01-01T00:00:00Z",
+  notes: null,
   components: [
     {
       id: "comp-1",
@@ -39,23 +40,23 @@ const mockRecipeWithComponents: Recipe = {
         {
           id: "step-1",
           slug: "mix",
-          order: 1,
+          stepOrder: 1,
           body: "Mix flour and eggs in a large bowl",
           timer: null,
         },
         {
           id: "step-2",
           slug: "knead",
-          order: 2,
+          stepOrder: 2,
           body: "Knead for 10 minutes until smooth",
           timer: "PT10M",
         },
       ],
     },
   ],
-};
+} as Recipe;
 
-const mockRecipeMinimal: Recipe = {
+const mockRecipeMinimal = {
   id: "2",
   slug: "simple-salad",
   name: "Simple Salad",
@@ -64,6 +65,7 @@ const mockRecipeMinimal: Recipe = {
   yield: null,
   createdAt: "2026-01-01T00:00:00Z",
   updatedAt: "2026-01-01T00:00:00Z",
+  notes: null,
   components: [
     {
       id: "comp-3",
@@ -74,9 +76,9 @@ const mockRecipeMinimal: Recipe = {
       steps: [],
     },
   ],
-};
+} as Recipe;
 
-const mockRecipeMultiComponent: Recipe = {
+const mockRecipeMultiComponent = {
   id: "3",
   slug: "lasagna",
   name: "Lasagna",
@@ -85,6 +87,7 @@ const mockRecipeMultiComponent: Recipe = {
   yield: { quantity: 8, unit: "servings", description: null },
   createdAt: "2026-01-01T00:00:00Z",
   updatedAt: "2026-01-01T00:00:00Z",
+  notes: null,
   components: [
     {
       id: "comp-4",
@@ -105,7 +108,7 @@ const mockRecipeMultiComponent: Recipe = {
         {
           id: "step-4",
           slug: "brown",
-          order: 1,
+          stepOrder: 1,
           body: "Brown the beef",
           timer: null,
         },
@@ -130,14 +133,14 @@ const mockRecipeMultiComponent: Recipe = {
         {
           id: "step-5",
           slug: "make-sauce",
-          order: 1,
+          stepOrder: 1,
           body: "Make the bechamel",
           timer: null,
         },
       ],
     },
   ],
-};
+} as Recipe;
 
 test("recipe detail — loading state", async ({ page }) => {
   // Route must be set up before navigation

@@ -4,6 +4,10 @@ import liquibase.Contexts
 import liquibase.LabelExpression
 import liquibase.Liquibase
 import liquibase.resource.DirectoryResourceAccessor
+import cz.habarta.typescript.generator.JsonLibrary
+import cz.habarta.typescript.generator.TypeScriptFileType
+import cz.habarta.typescript.generator.TypeScriptOutputKind
+
 
 // build.gradle.kts
 buildscript {
@@ -20,6 +24,8 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
     id("org.graalvm.buildtools.native") version "0.11.5"
     id("org.jooq.jooq-codegen-gradle") version "3.21.1"
+
+    id("cz.habarta.typescript-generator") version "4.0.0"
 }
 
 group = "recipebase"
@@ -74,6 +80,25 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+tasks {
+    generateTypeScript {
+        jsonLibrary = JsonLibrary.jackson3
+        outputKind = TypeScriptOutputKind.module
+        outputFileType = TypeScriptFileType.implementationFile
+        classPatterns  = listOf("recipebase.**Resource")
+        outputFile = "./frontend/src/app/shared/server.ts"
+        customTypeMappings = listOf(
+            "java.time.Duration:string",
+            "java.time.Instant:string",
+            "java.time.ZonedDateTime:string",
+            "java.time.ZoneId:string",
+            "java.time.ZoneOffset:string",
+            "java.time.OffsetDateTime:string",
+            "java.util.UUID:string"
+        )
+        nullableAnnotations = listOf("org.jspecify.annotations.Nullable")
+    }
+}
 var embeddedPg: EmbeddedPostgres? = null  // project-level variable
 
 tasks.named("jooqCodegen") {

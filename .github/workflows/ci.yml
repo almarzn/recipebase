@@ -1,31 +1,50 @@
 name: CI
-
 on:
     push:
         branches: [main]
     pull_request:
         branches: [main]
-
 jobs:
-    backend:
-        name: Backend (Gradle)
+    backend-build:
+        name: Backend Build (Gradle)
         runs-on: ubuntu-latest
-        defaults:
-            run:
-                working-directory: .
         steps:
             - uses: actions/checkout@v4
-
             - uses: actions/setup-java@v4
               with:
                   distribution: temurin
                   java-version: "25"
-
             - uses: gradle/actions/setup-gradle@v4
+            - name: Build (no tests)
+              run: ./gradlew build -x test
+            - name: Cache backend build output
+              uses: actions/cache/save@v4
+              with:
+                  path: |
+                      build
+                      frontend/src/app/shared/server.ts
+                  key: backend-build-${{ github.sha }}
 
-            - name: Build & Test
-              run: ./gradlew build
-
+    backend-test:
+        name: Backend Test (Gradle)
+        runs-on: ubuntu-latest
+        needs: backend-build
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-java@v4
+              with:
+                  distribution: temurin
+                  java-version: "25"
+            - uses: gradle/actions/setup-gradle@v4
+            - name: Restore backend build cache
+              uses: actions/cache/restore@v4
+              with:
+                  path: |
+                      build
+                      frontend/src/app/shared/server.ts
+                  key: backend-build-${{ github.sha }}
+            - name: Test
+              run: ./gradlew test
             - name: Upload test report
               if: always()
               uses: actions/upload-artifact@v4
@@ -36,24 +55,28 @@ jobs:
     frontend:
         name: Frontend (Angular)
         runs-on: ubuntu-latest
+        needs: backend-build
         defaults:
             run:
                 working-directory: frontend
         steps:
             - uses: actions/checkout@v4
-
+            - name: Restore backend build cache
+              uses: actions/cache/restore@v4
+              with:
+                  path: |
+                      build
+                      frontend/src/app/shared/server.ts
+                  key: backend-build-${{ github.sha }}
             - uses: actions/setup-node@v4
               with:
                   node-version: "22"
                   cache: npm
                   cache-dependency-path: frontend/package-lock.json
-
             - name: Install dependencies
               run: npm ci
-
             - name: Build
               run: npx ng build
-
             # - name: Test
             #   run: npx ng test --watch=false
 
@@ -61,35 +84,40 @@ jobs:
         name: Playwright Tests
         runs-on: ubuntu-latest
         timeout-minutes: 60
+        needs: backend-build
         defaults:
             run:
                 working-directory: frontend
         steps:
             - uses: actions/checkout@v4
-
+            - name: Restore backend build cache
+              uses: actions/cache/restore@v4
+              with:
+                  path: |
+                      build
+                      frontend/src/app/shared/server.ts
+                  key: backend-build-${{ github.sha }}
             - uses: actions/setup-node@v4
               with:
                   node-version: "22"
                   cache: npm
                   cache-dependency-path: frontend/package-lock.json
-
             - name: Install dependencies
               run: npm ci
-
             - name: Install Playwright Browsers
               run: npx playwright install --with-deps
-
             - name: Run Playwright tests
               run: npx playwright test
-
             - uses: actions/upload-artifact@v4
               if: ${{ !cancelled() }}
               with:
                   name: playwright-report
                   path: frontend/playwright-report/
                   retention-days: 30
+
     quality:
         runs-on: ubuntu-latest
+        needs: backend-build
         permissions:
             contents: read
         defaults:
@@ -97,9 +125,16 @@ jobs:
                 working-directory: frontend
         steps:
             - name: Checkout
-              uses: actions/checkout@v5
+              uses: actions/checkout@v4
               with:
                   persist-credentials: false
+            - name: Restore backend build cache
+              uses: actions/cache/restore@v4
+              with:
+                  path: |
+                      build
+                      frontend/src/app/shared/server.ts
+                  key: backend-build-${{ github.sha }}
             - name: Setup Biome
               uses: biomejs/setup-biome@v2
               with:
