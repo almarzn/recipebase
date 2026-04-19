@@ -89,7 +89,7 @@ import { RecipeStepsComponent } from "./recipe-steps.component";
         <app-recipe-header [recipe]="recipe" />
 
         @for (component of vm.components(); track component.id) {
-          <div class="flex flex-col gap-6">
+          <div data-testid="component-section" class="flex flex-col gap-6">
             @if (component.name) {
               <h2 class="font-serif text-2xl font-semibold text-teal-800">{{ component.name }}</h2>
             }

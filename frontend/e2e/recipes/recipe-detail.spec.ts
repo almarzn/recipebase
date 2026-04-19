@@ -140,7 +140,7 @@ const mockRecipeMultiComponent: Recipe = {
 };
 
 test("recipe detail — loading state", async ({ page }) => {
-  await page.route("**/api/recipes/pasta", async (route) => {
+  await page.route(/.*\/api\/recipes\/pasta/, async (route) => {
     await new Promise((resolve) => setTimeout(resolve, 5000));
     await route.fulfill({
       status: 200,
@@ -158,7 +158,7 @@ test("recipe detail — loading state", async ({ page }) => {
 });
 
 test("recipe detail — error state", async ({ page }) => {
-  await page.route("**/api/recipes/**", (route) => {
+  await page.route(/.*\/api\/recipes\/.*/, (route) => {
     if (route.request().url().includes("error-recipe")) {
       return route.fulfill({
         status: 500,
@@ -184,7 +184,7 @@ test("recipe detail — error state", async ({ page }) => {
 });
 
 test("recipe detail — not found state", async ({ page }) => {
-  await page.route("**/api/recipes/**", (route) => {
+  await page.route(/.*\/api\/recipes\/.*/, (route) => {
     if (route.request().url().includes("not-found")) {
       return route.fulfill({
         status: 404,
@@ -205,7 +205,7 @@ test("recipe detail — not found state", async ({ page }) => {
 });
 
 test("recipe detail — displays full recipe with all data", async ({ page }) => {
-  await page.route("**/api/recipes/pasta", (route) =>
+  await page.route(/.*\/api\/recipes\/pasta/, (route) =>
     route.fulfill({
       status: 200,
       contentType: "application/json",
@@ -271,7 +271,7 @@ test("recipe detail — displays full recipe with all data", async ({ page }) =>
 });
 
 test("recipe detail — handles recipe with no ingredients", async ({ page }) => {
-  await page.route("**/api/recipes/simple-salad", (route) =>
+  await page.route(/.*\/api\/recipes\/simple-salad/, (route) =>
     route.fulfill({
       status: 200,
       contentType: "application/json",
@@ -293,7 +293,7 @@ test("recipe detail — handles recipe with no ingredients", async ({ page }) =>
 });
 
 test("recipe detail — handles recipe with no steps", async ({ page }) => {
-  await page.route("**/api/recipes/simple-salad", (route) =>
+  await page.route(/.*\/api\/recipes\/simple-salad/, (route) =>
     route.fulfill({
       status: 200,
       contentType: "application/json",
@@ -315,7 +315,7 @@ test("recipe detail — handles recipe with no steps", async ({ page }) => {
 });
 
 test("recipe detail — displays multiple components correctly", async ({ page }) => {
-  await page.route("**/api/recipes/lasagna", (route) =>
+  await page.route(/.*\/api\/recipes\/lasagna/, (route) =>
     route.fulfill({
       status: 200,
       contentType: "application/json",
