@@ -204,7 +204,7 @@ class RecipeControllerIT {
                      "quantity": {"unit": "gram", "amount": 50}, "notes": null}
                   ],
                   "steps": [
-                    {"body": "Melt chocolate.", "timerSeconds": null}
+                    {"body": "Melt chocolate.", "timer": null}
                   ]
                 }
                 """))
@@ -244,7 +244,7 @@ class RecipeControllerIT {
                      "quantity": {"unit": "gram", "amount": 220}, "notes": null}
                   ],
                   "steps": [
-                    {"body": "Sift flour.", "timerSeconds": 60}
+                    {"body": "Sift flour.", "timer": "PT1M"}
                   ]
                 }
                 """))
@@ -256,7 +256,7 @@ class RecipeControllerIT {
             .andExpect(jsonPath("$.components[0].ingredients[0].slug").value("cake-flour"))
             .andExpect(jsonPath("$.components[0].steps.length()").value(1))
             .andExpect(jsonPath("$.components[0].steps[0].body").value("Sift flour."))
-            .andExpect(jsonPath("$.components[0].steps[0].timerSeconds").value(60));
+            .andExpect(jsonPath("$.components[0].steps[0].timer").value("PT1M"));
     }
 
     @Test

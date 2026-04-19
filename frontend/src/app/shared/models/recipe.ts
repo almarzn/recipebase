@@ -37,7 +37,7 @@ export interface Step {
   slug: string;
   order: number;
   body: string;
-  timer_seconds: number | null;
+  timer: string | null;
 }
 
 export interface Component {

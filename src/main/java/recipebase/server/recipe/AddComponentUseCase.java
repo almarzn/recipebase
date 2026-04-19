@@ -1,12 +1,14 @@
 package recipebase.server.recipe;
 
 import org.jooq.DSLContext;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Repository;
 import recipebase.server.recipe.resource.AddComponentRequest;
 import recipebase.server.recipe.resource.ComponentResource;
 import recipebase.server.recipe.resource.IngredientResource;
 import recipebase.server.recipe.resource.StepResource;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -88,15 +90,20 @@ public class AddComponentUseCase {
             var id = UUID.randomUUID();
             int o = order.getAndIncrement();
             String slug = SlugUtil.slugify(step.body().substring(0, Math.min(step.body().length(), 40)));
+            var timerSeconds = toSeconds(step.timer());
             c.insertInto(RECIPE_STEP)
                 .set(RECIPE_STEP.ID, id)
                 .set(RECIPE_STEP.COMPONENT_ID, compId)
                 .set(RECIPE_STEP.SLUG, slug)
                 .set(RECIPE_STEP.STEP_ORDER, o)
                 .set(RECIPE_STEP.BODY, step.body())
-                .set(RECIPE_STEP.TIMER_SECONDS, step.timerSeconds())
+                .set(RECIPE_STEP.TIMER_SECONDS, timerSeconds)
                 .execute();
-            return new StepResource(id, slug, o, step.body(), step.timerSeconds());
+            return new StepResource(id, slug, o, step.body(), step.timer());
         }).toList();
+    }
+
+    private static @Nullable Integer toSeconds(@Nullable Duration duration) {
+        return duration != null ? (int) duration.getSeconds() : null;
     }
 }

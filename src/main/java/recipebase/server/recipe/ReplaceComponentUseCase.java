@@ -49,7 +49,7 @@ public class ReplaceComponentUseCase {
                 .map(i -> new AddComponentRequest.IngredientRequest(i.slug(), i.name(), i.quantity(), i.notes()))
                 .toList();
             var stepRequests = request.steps().stream()
-                .map(s -> new AddComponentRequest.StepRequest(s.body(), s.timerSeconds()))
+                .map(s -> new AddComponentRequest.StepRequest(s.body(), s.timer()))
                 .toList();
 
             AddComponentUseCase.insertIngredients(c, compId.get(), ingRequests);

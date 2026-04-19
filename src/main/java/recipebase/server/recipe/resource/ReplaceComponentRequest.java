@@ -1,6 +1,7 @@
 package recipebase.server.recipe.resource;
 
 import org.jspecify.annotations.Nullable;
+import java.time.Duration;
 import java.util.List;
 
 public record ReplaceComponentRequest(
@@ -17,6 +18,6 @@ public record ReplaceComponentRequest(
 
     public record StepRequest(
         String body,
-        @Nullable Integer timerSeconds
+        @Nullable Duration timer
     ) {}
 }

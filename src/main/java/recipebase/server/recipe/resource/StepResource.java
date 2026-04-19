@@ -1,6 +1,7 @@
 package recipebase.server.recipe.resource;
 
 import org.jspecify.annotations.Nullable;
+import java.time.Duration;
 import java.util.UUID;
 
 public record StepResource(
@@ -8,5 +9,5 @@ public record StepResource(
     String slug,
     int stepOrder,
     String body,
-    @Nullable Integer timerSeconds
+    @Nullable Duration timer
 ) {}

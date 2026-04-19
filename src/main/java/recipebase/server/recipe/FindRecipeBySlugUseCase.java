@@ -9,6 +9,7 @@ import recipebase.server.recipe.resource.IngredientResource;
 import recipebase.server.recipe.resource.RecipeResource;
 import recipebase.server.recipe.resource.StepResource;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -108,7 +109,11 @@ public class FindRecipeBySlugUseCase {
             row.get(RECIPE_STEP.SLUG),
             row.get(RECIPE_STEP.STEP_ORDER),
             row.get(RECIPE_STEP.BODY),
-            row.get(RECIPE_STEP.TIMER_SECONDS)
+            toDuration(row.get(RECIPE_STEP.TIMER_SECONDS))
         )));
+    }
+
+    private @Nullable Duration toDuration(@Nullable Integer seconds) {
+        return seconds != null ? Duration.ofSeconds(seconds) : null;
     }
 }

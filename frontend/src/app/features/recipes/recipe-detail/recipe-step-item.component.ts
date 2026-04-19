@@ -27,8 +27,8 @@ const stepNumberFormat = new Intl.NumberFormat("en-US", {
           {{ step().body }}
         </p>
 
-        @if (step().timer_seconds) {
-          <app-recipe-timer [timerSeconds]="step().timer_seconds!" />
+        @if (step().timer) {
+          <app-recipe-timer [duration]="step().timer!" />
         }
       </div>
     </li>

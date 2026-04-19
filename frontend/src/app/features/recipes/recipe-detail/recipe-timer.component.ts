@@ -7,16 +7,27 @@ import {
   type OnDestroy,
   signal,
 } from "@angular/core";
+import { Temporal } from "@js-temporal/polyfill";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { lucidePause, lucidePlay, lucideRotateCcw } from "@ng-icons/lucide";
 import { ZardButtonComponent } from "@/shared/components/button/button.component";
 
 type TimerState = "idle" | "running" | "paused" | "done";
 
-function formatSeconds(totalSeconds: number): string {
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+const timerFormat = new Intl.DurationFormat(undefined, { style: "digital" });
+
+function formatDuration(duration: Temporal.Duration): string {
+  const parts = timerFormat.formatToParts(duration.round({ smallestUnit: "seconds", largestUnit: "hours" }));
+
+  const minuteIndex = parts.findIndex((part) => part.unit === "minute");
+  const firstNonZeroPart = parts.findIndex((part) => part.type !== "literal" && Number(part.value) > 0);
+
+  const startIndex = Math.min(minuteIndex, Math.max(minuteIndex + 1, firstNonZeroPart));
+
+  return parts
+    .slice(startIndex)
+    .map((it) => it.value)
+    .join("");
 }
 
 @Component({
@@ -64,15 +75,15 @@ function formatSeconds(totalSeconds: number): string {
   `,
 })
 export class RecipeTimerComponent implements OnDestroy {
-  readonly timerSeconds = input.required<number>();
+  readonly duration = input.required<string>();
 
   protected readonly state = signal<TimerState>("idle");
 
   private intervalId: ReturnType<typeof setInterval> | null = null;
-  private endTime: number | null = null;
+  private deadline: Temporal.Instant | null = null;
 
-  protected readonly remainingSeconds = linkedSignal(() => this.timerSeconds());
-  protected readonly displayTime = computed(() => formatSeconds(this.remainingSeconds()));
+  protected readonly remainingTime = linkedSignal(() => Temporal.Duration.from(this.duration()));
+  protected readonly displayTime = computed(() => formatDuration(this.remainingTime()));
 
   ngOnDestroy(): void {
     this.clearInterval();
@@ -88,8 +99,9 @@ export class RecipeTimerComponent implements OnDestroy {
 
   private start(): void {
     this.state.set("running");
-    this.endTime = Date.now() + this.remainingSeconds() * 1000;
+    this.deadline = Temporal.Now.instant().add(this.remainingTime());
     this.intervalId = setInterval(() => {
+      if (!this.deadline) return;
       this.updateCountdown();
     }, 500);
   }
@@ -100,13 +112,14 @@ export class RecipeTimerComponent implements OnDestroy {
     this.state.set("paused");
   }
 
-  private updateCountdown(): void {
-    if (!this.endTime) return;
+  private updateCountdown() {
+    this.remainingTime.update((it) => this.deadline?.since(Temporal.Now.instant()) ?? it);
 
-    const remaining = Math.ceil((this.endTime - Date.now()) / 1000);
-    this.remainingSeconds.set(Math.max(0, remaining));
+    if (!this.deadline) return;
 
-    if (remaining <= 0) {
+    const remaining = this.deadline.since(Temporal.Now.instant());
+
+    if (remaining.sign <= 0) {
       this.clearInterval();
       this.state.set("done");
       this.playCompletionSound();
@@ -115,7 +128,7 @@ export class RecipeTimerComponent implements OnDestroy {
 
   reset(): void {
     this.clearInterval();
-    this.remainingSeconds.set(this.timerSeconds());
+    this.remainingTime.set(Temporal.Duration.from(this.duration()));
     this.state.set("idle");
   }
 
@@ -124,7 +137,7 @@ export class RecipeTimerComponent implements OnDestroy {
       clearInterval(this.intervalId);
       this.intervalId = null;
     }
-    this.endTime = null;
+    this.deadline = null;
   }
 
   private playCompletionSound(): void {
