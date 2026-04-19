@@ -1,41 +1,32 @@
 import { expect, test } from "@playwright/test";
 import { RecipeListPage } from "./recipe-list.po";
 
-const mockRecipes = [
+const mockItems = [
   {
     id: "1",
     slug: "pasta",
-    title: "Fresh Pasta",
-    description: "Handmade pasta with semolina flour and eggs",
-    createdAt: "2026-01-01T00:00:00Z",
-    updatedAt: "2026-01-01T00:00:00Z",
-    variants: [
-      { slug: "classic", name: "Classic" },
-      { slug: "spinach", name: "Spinach" },
-    ],
+    type: "recipe",
+    name: "Fresh Pasta",
+    tags: ["italian", "vegetarian"],
   },
   {
     id: "2",
     slug: "salad",
-    title: "Garden Salad",
-    description: null,
-    createdAt: "2026-03-15T00:00:00Z",
-    updatedAt: "2026-03-15T00:00:00Z",
-    variants: [{ slug: "simple", name: "Simple" }],
+    type: "recipe",
+    name: "Garden Salad",
+    tags: [],
   },
   {
     id: "3",
     slug: "chocolate-cake",
-    title: "Chocolate Cake",
-    description: "Rich dark chocolate layer cake with ganache frosting and a moist crumb",
-    createdAt: "2025-12-25T00:00:00Z",
-    updatedAt: "2025-12-25T00:00:00Z",
-    variants: [],
+    type: "recipe",
+    name: "Chocolate Cake",
+    tags: ["dessert", "chocolate", "cake"],
   },
 ];
 
 test("recipe list — loading state", async ({ page }) => {
-  await page.route("**/api/recipes", async (route) => {
+  await page.route("**/api/items*", async (route) => {
     await new Promise((resolve) => setTimeout(resolve, 5000));
     await route.fulfill({
       status: 200,
@@ -53,7 +44,7 @@ test("recipe list — loading state", async ({ page }) => {
 });
 
 test("recipe list — empty state", async ({ page }) => {
-  await page.route("**/api/recipes", (route) =>
+  await page.route("**/api/items*", (route) =>
     route.fulfill({ status: 200, contentType: "application/json", body: "[]" }),
   );
 
@@ -72,11 +63,11 @@ test("recipe list — empty state", async ({ page }) => {
 });
 
 test("recipe list — populated state", async ({ page }) => {
-  await page.route("**/api/recipes", (route) =>
+  await page.route("**/api/items*", (route) =>
     route.fulfill({
       status: 200,
       contentType: "application/json",
-      body: JSON.stringify(mockRecipes),
+      body: JSON.stringify(mockItems),
     }),
   );
 
@@ -88,32 +79,21 @@ test("recipe list — populated state", async ({ page }) => {
     await expect(recipeList.recipeCards).toHaveCount(3);
   });
 
-  await test.step("displays recipe titles", async () => {
+  await test.step("displays recipe names", async () => {
     await expect(recipeList.recipeTitle(0)).toHaveText("Fresh Pasta");
     await expect(recipeList.recipeTitle(1)).toHaveText("Garden Salad");
     await expect(recipeList.recipeTitle(2)).toHaveText("Chocolate Cake");
   });
 
-  await test.step("displays descriptions where present", async () => {
-    await expect(recipeList.recipeDescription(0)).toHaveText(/semolina/);
-    await expect(recipeList.recipeDescription(2)).toHaveText(/ganache/);
-  });
-
-  await test.step("displays variant badges", async () => {
-    await expect(recipeList.recipeVariantBadges(0)).toHaveCount(2);
-    await expect(recipeList.recipeVariantBadges(1)).toHaveCount(1);
-    await expect(recipeList.recipeVariantBadges(2)).toHaveCount(0);
-  });
-
-  await test.step("displays formatted dates", async () => {
-    await expect(recipeList.recipeDate(0)).toHaveText("Jan 1, 2026");
-    await expect(recipeList.recipeDate(1)).toHaveText("Mar 15, 2026");
-    await expect(recipeList.recipeDate(2)).toHaveText("Dec 25, 2025");
+  await test.step("displays tag badges", async () => {
+    await expect(recipeList.recipeTagBadges(0)).toHaveCount(2);
+    await expect(recipeList.recipeTagBadges(1)).toHaveCount(0);
+    await expect(recipeList.recipeTagBadges(2)).toHaveCount(3);
   });
 });
 
 test("recipe list — error state", async ({ page }) => {
-  await page.route("**/api/recipes", (route) =>
+  await page.route("**/api/items*", (route) =>
     route.fulfill({
       status: 500,
       contentType: "application/json",
@@ -136,11 +116,11 @@ test("recipe list — error state", async ({ page }) => {
 });
 
 test("recipe card navigates to detail", async ({ page }) => {
-  await page.route("**/api/recipes", (route) =>
+  await page.route("**/api/items*", (route) =>
     route.fulfill({
       status: 200,
       contentType: "application/json",
-      body: JSON.stringify(mockRecipes),
+      body: JSON.stringify(mockItems),
     }),
   );
 

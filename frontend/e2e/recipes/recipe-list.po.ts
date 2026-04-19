@@ -23,15 +23,7 @@ export class RecipeListPage {
     return this.recipeCards.nth(index).locator('[data-slot="card-title"]');
   }
 
-  recipeDescription(index: number): Locator {
-    return this.recipeCards.nth(index).locator('[data-slot="card-description"]');
-  }
-
-  recipeDate(index: number): Locator {
-    return this.recipeCards.nth(index).getByTestId("recipe-date");
-  }
-
-  recipeVariantBadges(index: number): Locator {
-    return this.recipeCards.nth(index).getByTestId("recipe-variant-badge");
+  recipeTagBadges(index: number): Locator {
+    return this.recipeCards.nth(index).getByTestId("recipe-tag-badge");
   }
 }
