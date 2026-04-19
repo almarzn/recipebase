@@ -10,6 +10,10 @@ export const formatQuantity = (
     return quantity.notes.toString();
   }
 
+  if (!("amount" in quantity) || typeof quantity.amount !== "number") {
+    throw new Error(`Unexpected quantity without amount: ${JSON.stringify(quantity)}`);
+  }
+
   if (quantity.unit === "arbitrary") {
     return new Intl.NumberFormat(undefined, {
       ...options,
