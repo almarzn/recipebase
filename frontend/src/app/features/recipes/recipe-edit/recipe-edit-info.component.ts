@@ -23,27 +23,11 @@ import { RecipeEditInfoViewModel } from "./recipe-edit-info.vm";
           zSize="lg"
           type="text"
           placeholder="Recipe title"
-          [formField]="vm.titleField"
-          [class.is-invalid]="vm.titleField().touched() && vm.titleField().invalid()"
+          [formField]="vm.nameField"
+          [class.is-invalid]="vm.nameField().touched() && vm.nameField().invalid()"
         />
-        @if (vm.titleField().touched() && vm.titleField().invalid()) {
-          <p class="text-sm text-red-500">{{ vm.titleField().errors()[0].message }}</p>
-        }
-      </div>
-
-      <div class="flex flex-col gap-1">
-        <label class="text-sm font-medium uppercase text-stone-500 tracking-wide" for="recipe-description">Description</label>
-        <textarea
-          id="recipe-description"
-          z-input
-          zSize="lg"
-          rows="4"
-          placeholder="Recipe description"
-          [formField]="vm.descriptionField"
-          [class.is-invalid]="vm.descriptionField().touched() && vm.descriptionField().invalid()"
-        ></textarea>
-        @if (vm.descriptionField().touched() && vm.descriptionField().invalid()) {
-          <p class="text-sm text-red-600">{{ vm.descriptionField().errors()[0].message }}</p>
+        @if (vm.nameField().touched() && vm.nameField().invalid()) {
+          <p class="text-sm text-red-500">{{ vm.nameField().errors()[0].message }}</p>
         }
       </div>
 

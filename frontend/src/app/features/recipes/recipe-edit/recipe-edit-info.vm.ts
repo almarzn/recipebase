@@ -6,13 +6,11 @@ import { RecipeEditViewModel } from "@/features/recipes/recipe-edit/recipe-edit.
 import type { Recipe } from "@/shared/models";
 
 export interface RecipeInfoFormData {
-  title: string;
-  description: string;
+  name: string;
 }
 
 export interface UpdateRecipeRequest {
-  title: string;
-  description: string | null;
+  name: string;
 }
 
 @Injectable()
@@ -26,8 +24,7 @@ export class RecipeEditInfoViewModel {
     const r = this.recipe.value();
 
     return {
-      title: r?.name ?? "",
-      description: "",
+      name: r?.name ?? "",
     };
   });
 
@@ -35,7 +32,7 @@ export class RecipeEditInfoViewModel {
   readonly form = form(
     this.basicRecipeInfo,
     (schemaPath) => {
-      required(schemaPath.title, { message: "Title is required" });
+      required(schemaPath.name, { message: "Title is required" });
     },
     {
       submission: {
@@ -45,15 +42,14 @@ export class RecipeEditInfoViewModel {
   );
 
   // Expose field trees for template binding
-  readonly titleField = this.form.title;
-  readonly descriptionField = this.form.description;
+  readonly nameField = this.form.name;
 
   // Computed to check if form has changes from original recipe
   readonly hasChanges = computed(() => {
     const r = this.recipe.value();
     if (!r) return false;
     const current = this.basicRecipeInfo();
-    return current.title !== r.name;
+    return current.name !== r.name;
   });
 
   // Expose current form data
@@ -70,8 +66,7 @@ export class RecipeEditInfoViewModel {
     // Reset to original recipe values
     const r = this.recipe.value();
     this.basicRecipeInfo.set({
-      title: r?.name ?? "",
-      description: "",
+      name: r?.name ?? "",
     });
     this.form().reset();
   }
@@ -89,8 +84,7 @@ export class RecipeEditInfoViewModel {
     try {
       const formData = this.basicRecipeInfo();
       const request: UpdateRecipeRequest = {
-        title: formData.title,
-        description: formData.description || null,
+        name: formData.name,
       };
 
       await firstValueFrom(this.http.patch<Recipe>(`/api/recipes/${slug}`, request));
