@@ -5,32 +5,26 @@ import { RecipeDetailPage } from "./recipe-detail.po";
 const mockRecipeWithTimer: Recipe = {
   id: "1",
   slug: "timer-recipe",
-  title: "Timer Recipe",
-  description: null,
+  name: "Timer Recipe",
+  tags: [],
+  source: null,
+  yield: null,
   createdAt: "2026-01-01T00:00:00Z",
   updatedAt: "2026-01-01T00:00:00Z",
-  variants: [
+  components: [
     {
-      slug: "default",
-      name: "Default",
-      description: null,
-      createdAt: "2026-01-01T00:00:00Z",
-      updatedAt: "2026-01-01T00:00:00Z",
-      components: [
+      id: "comp-1",
+      slug: "main",
+      name: "Main",
+      position: 1,
+      ingredients: [],
+      steps: [
         {
-          id: "comp-1",
-          title: "Main",
-          description: null,
-          link: { quality: "self" },
-          ingredients: [],
-          steps: [
-            {
-              id: "step-1",
-              text: "Wait patiently",
-              notes: null,
-              attachment: { duration: "PT10M" },
-            },
-          ],
+          id: "step-1",
+          slug: "wait",
+          order: 1,
+          body: "Wait patiently",
+          timer_seconds: 600,
         },
       ],
     },
@@ -40,32 +34,26 @@ const mockRecipeWithTimer: Recipe = {
 const mockRecipeShortTimer: Recipe = {
   id: "2",
   slug: "short-timer-recipe",
-  title: "Short Timer",
-  description: null,
+  name: "Short Timer",
+  tags: [],
+  source: null,
+  yield: null,
   createdAt: "2026-01-01T00:00:00Z",
   updatedAt: "2026-01-01T00:00:00Z",
-  variants: [
+  components: [
     {
-      slug: "default",
-      name: "Default",
-      description: null,
-      createdAt: "2026-01-01T00:00:00Z",
-      updatedAt: "2026-01-01T00:00:00Z",
-      components: [
+      id: "comp-1",
+      slug: "main",
+      name: "Main",
+      position: 1,
+      ingredients: [],
+      steps: [
         {
-          id: "comp-1",
-          title: "Main",
-          description: null,
-          link: { quality: "self" },
-          ingredients: [],
-          steps: [
-            {
-              id: "step-1",
-              text: "Quick step",
-              notes: null,
-              attachment: { duration: "PT5S" },
-            },
-          ],
+          id: "step-1",
+          slug: "quick",
+          order: 1,
+          body: "Quick step",
+          timer_seconds: 5,
         },
       ],
     },
