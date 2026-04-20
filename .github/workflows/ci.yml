@@ -77,8 +77,8 @@ jobs:
               run: npm ci
             - name: Build
               run: npx ng build
-            # - name: Test
-            #   run: npx ng test --watch=false
+            - name: Unit Test
+              run: npm test
 
     playwright:
         name: Playwright Tests
