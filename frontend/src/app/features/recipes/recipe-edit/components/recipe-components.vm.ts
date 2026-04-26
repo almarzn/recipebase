@@ -2,11 +2,12 @@ import { computed, Injectable, inject } from "@angular/core";
 import { RecipeEditViewModel } from "../recipe-edit.vm";
 
 @Injectable()
-export class RecipeVariantComponentsViewModel {
+export class RecipeComponentsViewModel {
   readonly parentVm = inject(RecipeEditViewModel);
   readonly recipe = this.parentVm.recipe;
 
   readonly components = computed(() => this.recipe.value()?.components ?? []);
-  readonly hasComponents = computed(() => this.components().length > 0);
-  readonly componentCount = computed(() => this.components().length);
+
+  /** Only the first component for now. */
+  readonly firstComponent = computed(() => this.components()[0] ?? null);
 }

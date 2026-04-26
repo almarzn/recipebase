@@ -278,4 +278,8 @@ test("recipe edit components — displays components page", async ({ page }) => 
     await expect(editPage.componentsHeading).toBeVisible();
     await expect(editPage.componentsHeading).toHaveText("Components");
   });
+
+  await test.step("shows component editor", async () => {
+    await expect(page.getByTestId("component-editor")).toBeVisible();
+  });
 });
