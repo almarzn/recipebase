@@ -1,5 +1,5 @@
 import { Injectable, linkedSignal, signal } from "@angular/core";
-import { form } from "@angular/forms/signals";
+import { applyEach, form, validate } from "@angular/forms/signals";
 import type { ComponentResource, Quantity } from "@/shared/server";
 import { formatQuantity, parseQuantity } from "@/shared/utils/unit";
 
@@ -41,9 +41,23 @@ export class RecipeComponentEditorViewModel {
     })),
   );
 
-  readonly ingredientsForm = form(this.ingredientModel);
-
-  readonly parseErrors = signal<Map<number, string>>(new Map());
+  readonly ingredientsForm = form(this.ingredientModel, (path) => {
+    applyEach(path, (item) => {
+      validate(item.quantity, ({ value }) => {
+        const text = value();
+        if (!text.trim()) return null;
+        try {
+          parseQuantity(text);
+          return null;
+        } catch (err) {
+          return {
+            kind: "quantity",
+            message: err instanceof Error ? err.message : "Invalid quantity",
+          };
+        }
+      });
+    });
+  });
 
   addIngredient(): void {
     const newItem: EditableIngredient = {
@@ -57,11 +71,6 @@ export class RecipeComponentEditorViewModel {
 
   deleteIngredient(index: number): void {
     this.ingredientModel.update((curr) => curr.filter((_, i) => i !== index));
-    this.parseErrors.update((errors) => {
-      const next = new Map(errors);
-      next.delete(index);
-      return next;
-    });
   }
 
   readonly stepModel = linkedSignal<EditableStep[]>(() =>
@@ -86,26 +95,7 @@ export class RecipeComponentEditorViewModel {
   }
 
   saveChanges(): void {
-    const errors = new Map<number, string>();
-    const parsedIngredients: ParsedIngredient[] = [];
-
-    for (let i = 0; i < this.ingredientModel().length; i++) {
-      const e = this.ingredientModel()[i];
-      try {
-        const quantity = parseQuantity(e.quantity);
-        parsedIngredients.push({
-          id: e.id,
-          name: e.name,
-          quantity,
-          notes: e.notes || null,
-        });
-      } catch (err) {
-        errors.set(i, err instanceof Error ? err.message : "Invalid quantity");
-      }
-    }
-
-    this.parseErrors.set(errors);
-    if (errors.size > 0) return;
+    if (this.ingredientsForm().invalid()) return;
 
     const parsedSteps: ParsedStep[] = this.stepModel().map((s, i) => ({
       id: s.id,
@@ -113,9 +103,8 @@ export class RecipeComponentEditorViewModel {
       stepOrder: i,
     }));
 
-    // TODO: POST /api/recipes/{slug}/components/{componentId}
     console.log("Saving component:", this.component()?.id, {
-      ingredients: parsedIngredients,
+      ingredients: this.ingredientModel(),
       steps: parsedSteps,
     });
   }

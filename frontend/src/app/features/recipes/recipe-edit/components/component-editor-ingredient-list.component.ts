@@ -23,7 +23,6 @@ import type { EditableIngredient } from "./recipe-component-editor.vm";
             <app-editor-ingredient
               [ingredientForm]="ingredientForm"
               [attr.data-testid]="'component-editor-ingredient-row-' + $index"
-              [quantityError]="parseErrors().get($index) ?? undefined"
               (delete)="deleteIngredient.emit($index)"
             />
           }
@@ -46,7 +45,6 @@ import type { EditableIngredient } from "./recipe-component-editor.vm";
 })
 export class ComponentEditorIngredientListComponent {
   readonly ingredientsForm = input.required<FieldTree<EditableIngredient[]>>();
-  readonly parseErrors = input.required<Map<number, string>>();
   readonly deleteIngredient = output<number>();
   readonly addIngredient = output();
 }

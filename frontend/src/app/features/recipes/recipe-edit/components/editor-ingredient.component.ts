@@ -26,10 +26,12 @@ import type { EditableIngredient } from "./recipe-component-editor.vm";
             [formField]="ingredientForm().quantity"
             placeholder="Quantity"
             class="w-32"
-            [class.border-destructive]="quantityError() != null"
+            [class.border-destructive]="ingredientForm().quantity().touched() && ingredientForm().quantity().invalid()"
           />
-          @if (quantityError(); as err) {
-            <span class="text-xs text-destructive">{{ err }}</span>
+          @if (ingredientForm().quantity().touched() && ingredientForm().quantity().invalid()) {
+            @for (err of ingredientForm().quantity().errors(); track err.kind) {
+              <span class="text-xs text-destructive">{{ err.message }}</span>
+            }
           }
         </div>
         <button
@@ -55,6 +57,5 @@ import type { EditableIngredient } from "./recipe-component-editor.vm";
 })
 export class EditorIngredientComponent {
   readonly ingredientForm = input.required<FieldTree<EditableIngredient>>();
-  readonly quantityError = input<string | undefined>(undefined);
   readonly delete = output();
 }
