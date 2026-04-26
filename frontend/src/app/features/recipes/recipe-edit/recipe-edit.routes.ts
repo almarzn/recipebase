@@ -17,16 +17,7 @@ export const ROUTES: Routes = [
       {
         path: "components",
         loadComponent: () =>
-          import("./variant-components/recipe-variant-components.component").then(
-            (m) => m.RecipeVariantComponentsComponent,
-          ),
-      },
-      {
-        path: "components/:componentId",
-        loadComponent: () =>
-          import("./variant-components/recipe-component-detail.component").then(
-            (m) => m.RecipeComponentDetailComponent,
-          ),
+          import("./components/recipe-components.component").then((m) => m.RecipeComponentsComponent),
       },
     ],
   },
