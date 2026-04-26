@@ -3,8 +3,8 @@ name: writing-presentation
 description: Use when creating or modifying Angular components, templates, presentational UI elements, or Zard UI integrations
 license: MIT
 metadata:
-  language: typescript
-  framework: angular
+    language: typescript
+    framework: angular
 ---
 
 ## Architecture
@@ -58,28 +58,34 @@ Thin shell that instantiates a view-model. ~3 lines of class code. All state and
 
 ```typescript
 @Component({
-  selector: 'app-recipe-list',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [RecipeListViewModel],
-  template: `
-    @if (vm.loading()) {
-      <z-skeleton class="h-8 w-full" />
-    } @else if (vm.error()) {
-      <z-alert zType="destructive">{{ vm.error() }}</z-alert>
-    } @else {
-      @for (recipe of vm.recipes(); track recipe.id) {
-        <z-card>
-          <z-card-header>
-            <z-card-title>{{ recipe.name }}</z-card-title>
-          </z-card-header>
-        </z-card>
-      }
-    }
-  `,
-  imports: [ZardCardComponent, ZardCardHeaderComponent, ZardCardTitleComponent, ZardSkeletonComponent, ZardAlertComponent],
+    selector: "app-recipe-list",
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [RecipeListViewModel],
+    template: `
+        @if (vm.loading()) {
+            <z-skeleton class="h-8 w-full" />
+        } @else if (vm.error()) {
+            <z-alert zType="destructive">{{ vm.error() }}</z-alert>
+        } @else {
+            @for (recipe of vm.recipes(); track recipe.id) {
+                <z-card>
+                    <z-card-header>
+                        <z-card-title>{{ recipe.name }}</z-card-title>
+                    </z-card-header>
+                </z-card>
+            }
+        }
+    `,
+    imports: [
+        ZardCardComponent,
+        ZardCardHeaderComponent,
+        ZardCardTitleComponent,
+        ZardSkeletonComponent,
+        ZardAlertComponent,
+    ],
 })
 export class RecipeListComponent {
-  protected readonly vm = inject(RecipeListViewModel);
+    protected readonly vm = inject(RecipeListViewModel);
 }
 ```
 
@@ -93,24 +99,29 @@ View-models are provided at the component (or route) level — never `providedIn
 
 ```typescript
 @Component({
-  selector: 'app-recipe-card',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <z-card class="cursor-pointer transition-shadow hover:shadow-lg">
-      <z-card-header>
-        <z-card-title>{{ recipe().name }}</z-card-title>
-      </z-card-header>
-      <z-card-content>
-        <p class="text-sm text-gray-500">{{ recipe().description }}</p>
-      </z-card-content>
-    </z-card>
-  `,
-  imports: [ZardCardComponent, ZardCardHeaderComponent, ZardCardTitleComponent, ZardCardContentComponent],
+    selector: "app-recipe-card",
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
+        <z-card class="cursor-pointer transition-shadow hover:shadow-lg">
+            <z-card-header>
+                <z-card-title>{{ recipe().name }}</z-card-title>
+            </z-card-header>
+            <z-card-content>
+                <p class="text-sm text-gray-500">{{ recipe().description }}</p>
+            </z-card-content>
+        </z-card>
+    `,
+    imports: [
+        ZardCardComponent,
+        ZardCardHeaderComponent,
+        ZardCardTitleComponent,
+        ZardCardContentComponent,
+    ],
 })
 export class RecipeCardComponent {
-  readonly recipe = input.required<Recipe>();
-  readonly selected = input(false);
-  readonly deleted = output<string>();
+    readonly recipe = input.required<Recipe>();
+    readonly selected = input(false);
+    readonly deleted = output<string>();
 }
 ```
 
@@ -140,9 +151,9 @@ export class RecipeCardComponent {
 
 ```typescript
 export class RecipeCardComponent {
-  readonly recipe = input.required<Recipe>();
-  readonly selected = input(false);
-  readonly deleted = output<string>();
+    readonly recipe = input.required<Recipe>();
+    readonly selected = input(false);
+    readonly deleted = output<string>();
 }
 ```
 
@@ -153,8 +164,8 @@ export class RecipeCardComponent {
 
 ```typescript
 export class MyComponent {
-  private readonly vm = inject(MyViewModel);
-  private readonly router = inject(Router);
+    private readonly vm = inject(MyViewModel);
+    private readonly router = inject(Router);
 }
 ```
 
@@ -178,8 +189,12 @@ Use [Zard UI](https://zardui.com) components. Installed locally via CLI (`npx za
 ### Import pattern
 
 ```typescript
-import { ZardButtonComponent } from '@/shared/ui/button.component';
-import { ZardCardComponent, ZardCardHeaderComponent, ZardCardTitleComponent } from '@/shared/ui/card.component';
+import { ZardButtonComponent } from "@/shared/ui/button.component";
+import {
+    ZardCardComponent,
+    ZardCardHeaderComponent,
+    ZardCardTitleComponent,
+} from "@/shared/ui/card.component";
 ```
 
 The exact import path depends on where `zard-cli` places them (typically `src/shared/ui/`). Adjust to match actual file locations.
@@ -193,17 +208,17 @@ The exact import path depends on where `zard-cli` places them (typically `src/sh
 
 ### Common components reference
 
-| Component | Selector | Common attributes |
-|-----------|----------|-------------------|
-| Button | `button[z-button]` | `zType`, `zSize`, `zDisabled`, `zLoading` |
-| Input | `input[z-input]` | `zSize`, `zError` |
-| Card | `z-card` | `class` for styling |
-| Alert | `z-alert` | `zType` |
-| Skeleton | `z-skeleton` | `class` for sizing |
-| Dialog | `z-dialog` | programmatic via service |
-| Tabs | `z-tabs` | `z-tabs-list`, `z-tab-trigger`, `z-tab-content` |
-| Select | `z-select` | `z-select-trigger`, `z-select-content`, `z-select-item` |
-| Badge | `z-badge` | `zType`, `zSize` |
+| Component | Selector           | Common attributes                                       |
+| --------- | ------------------ | ------------------------------------------------------- |
+| Button    | `button[z-button]` | `zType`, `zSize`, `zDisabled`, `zLoading`               |
+| Input     | `input[z-input]`   | `zSize`, `zError`                                       |
+| Card      | `z-card`           | `class` for styling                                     |
+| Alert     | `z-alert`          | `zType`                                                 |
+| Skeleton  | `z-skeleton`       | `class` for sizing                                      |
+| Dialog    | `z-dialog`         | programmatic via service                                |
+| Tabs      | `z-tabs`           | `z-tabs-list`, `z-tab-trigger`, `z-tab-content`         |
+| Select    | `z-select`         | `z-select-trigger`, `z-select-content`, `z-select-item` |
+| Badge     | `z-badge`          | `zType`, `zSize`                                        |
 
 When in doubt about a component's API, fetch its docs page at `https://zardui.com/docs/components/<component-name>`.
 
