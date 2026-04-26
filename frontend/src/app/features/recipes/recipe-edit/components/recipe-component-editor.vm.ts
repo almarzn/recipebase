@@ -45,7 +45,6 @@ export class RecipeComponentEditorViewModel {
     applyEach(path, (item) => {
       validate(item.quantity, ({ value }) => {
         const text = value();
-        if (!text.trim()) return null;
         try {
           parseQuantity(text);
           return null;

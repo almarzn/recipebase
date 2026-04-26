@@ -182,6 +182,7 @@ test.describe("recipe components editor", () => {
 
     await test.step("enter invalid empty quantity", async () => {
       await editor.ingredientQuantityInput(0).fill("");
+      await editor.ingredientQuantityInput(0).blur();
     });
 
     await test.step("save button shows validation error", async () => {
