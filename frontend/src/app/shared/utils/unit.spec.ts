@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Custom, DecimalAmount, Interval, Unspecified } from "@/shared/server";
-import { formatQuantity, parseQuantity } from "@/shared/utils/unit";
+import { formatQuantity, formatQuantityForEdit, parseQuantity } from "@/shared/utils/unit";
 
 function isCustomUnit(unit: { type: string }): unit is Custom {
   return unit.type === "custom";
@@ -57,8 +57,8 @@ describe("parseQuantity", () => {
       expect((result as DecimalAmount).unit.type).toBe("arbitrary");
     });
 
-    it("parses custom unit as custom", () => {
-      const result = parseQuantity("4 parts");
+    it("parses custom unit with @ prefix", () => {
+      const result = parseQuantity("4 @parts");
       expect(result.type).toBe("decimal");
       expect((result as DecimalAmount).amount).toBe(4);
       expect((result as DecimalAmount).unit.type).toBe("custom");
@@ -68,8 +68,8 @@ describe("parseQuantity", () => {
       }
     });
 
-    it("parses multi-word custom unit", () => {
-      const result = parseQuantity("2 slices of bread");
+    it("parses multi-word custom unit with @ prefix", () => {
+      const result = parseQuantity("2 @slices of bread");
       expect(result.type).toBe("decimal");
       expect((result as DecimalAmount).amount).toBe(2);
       expect((result as DecimalAmount).unit.type).toBe("custom");
@@ -129,8 +129,8 @@ describe("parseQuantity", () => {
       expect((result as Interval).unit.type).toBe("arbitrary");
     });
 
-    it("parses interval with custom unit", () => {
-      const result = parseQuantity("3-5 parts");
+    it("parses interval with custom unit (@ prefix)", () => {
+      const result = parseQuantity("3-5 @parts");
       expect(result.type).toBe("interval");
       expect((result as Interval).from).toBe(3);
       expect((result as Interval).to).toBe(5);
@@ -141,8 +141,8 @@ describe("parseQuantity", () => {
       }
     });
 
-    it("parses interval with multi-word custom unit", () => {
-      const result = parseQuantity("2-4 cloves of garlic");
+    it("parses interval with multi-word custom unit (@ prefix)", () => {
+      const result = parseQuantity("2-4 @cloves of garlic");
       expect(result.type).toBe("interval");
       expect((result as Interval).from).toBe(2);
       expect((result as Interval).to).toBe(4);
@@ -154,27 +154,27 @@ describe("parseQuantity", () => {
     });
   });
 
-  describe("unspecified quantities (free text)", () => {
-    it("parses free text without number as unspecified", () => {
-      const result = parseQuantity("a handful");
+  describe("unspecified quantities (free text with ~ prefix)", () => {
+    it("parses free text with ~ as unspecified", () => {
+      const result = parseQuantity("~a handful");
       expect(result.type).toBe("unspecified");
       expect((result as Unspecified).notes).toBe("a handful");
     });
 
-    it("parses 'to taste' as unspecified", () => {
-      const result = parseQuantity("to taste");
+    it("parses '~to taste' as unspecified", () => {
+      const result = parseQuantity("~to taste");
       expect(result.type).toBe("unspecified");
       expect((result as Unspecified).notes).toBe("to taste");
     });
 
-    it("parses 'pinch of salt' as unspecified", () => {
-      const result = parseQuantity("pinch of salt");
+    it("parses '~pinch of salt' as unspecified", () => {
+      const result = parseQuantity("~pinch of salt");
       expect(result.type).toBe("unspecified");
       expect((result as Unspecified).notes).toBe("pinch of salt");
     });
 
-    it("trims whitespace", () => {
-      const result = parseQuantity("  a handful  ");
+    it("trims whitespace and strips ~", () => {
+      const result = parseQuantity("  ~a handful  ");
       expect(result.type).toBe("unspecified");
       expect((result as Unspecified).notes).toBe("a handful");
     });
@@ -224,6 +224,18 @@ describe("parseQuantity", () => {
 
     it("throws on whitespace-only string", () => {
       expect(() => parseQuantity("   ")).toThrow("Cannot parse empty quantity text");
+    });
+
+    it("throws on unspecified without ~ prefix", () => {
+      expect(() => parseQuantity("a handful")).toThrow('must start with "~"');
+    });
+
+    it("throws on custom unit without @ prefix", () => {
+      expect(() => parseQuantity("4 parts")).toThrow('must be prefixed with "@"');
+    });
+
+    it("throws on interval custom unit without @ prefix", () => {
+      expect(() => parseQuantity("3-5 parts")).toThrow('must be prefixed with "@"');
     });
   });
 });
@@ -343,6 +355,41 @@ describe("formatQuantity", () => {
   });
 });
 
+describe("formatQuantityForEdit", () => {
+  it("formats unspecified with ~ prefix", () => {
+    const q: Unspecified = { type: "unspecified", notes: "a handful" };
+    expect(formatQuantityForEdit(q)).toBe("~a handful");
+  });
+
+  it("formats decimal custom unit with @ prefix", () => {
+    const q: DecimalAmount = {
+      type: "decimal",
+      amount: 4,
+      unit: { type: "custom", name: "parts" },
+    };
+    expect(formatQuantityForEdit(q)).toBe("4 @parts");
+  });
+
+  it("formats interval custom unit with @ prefix", () => {
+    const q: Interval = {
+      type: "interval",
+      from: 3,
+      to: 5,
+      unit: { type: "custom", name: "parts" },
+    };
+    expect(formatQuantityForEdit(q)).toBe("3 - 5 @parts");
+  });
+
+  it("formats standard unit same as display", () => {
+    const q: DecimalAmount = {
+      type: "decimal",
+      amount: 12.5,
+      unit: { type: "gram" },
+    };
+    expect(formatQuantityForEdit(q)).toBe("12.5 g");
+  });
+});
+
 describe("round-trip: parse → format", () => {
   it("round-trips decimal standard unit", () => {
     const original = "12.5 g";
@@ -351,10 +398,10 @@ describe("round-trip: parse → format", () => {
     expect(formatted).toBe(original);
   });
 
-  it("round-trips decimal custom unit", () => {
-    const original = "4 parts";
+  it("round-trips decimal custom unit with formatQuantityForEdit", () => {
+    const original = "4 @parts";
     const parsed = parseQuantity(original);
-    const formatted = formatQuantity(parsed);
+    const formatted = formatQuantityForEdit(parsed);
     expect(formatted).toBe(original);
   });
 
@@ -365,17 +412,17 @@ describe("round-trip: parse → format", () => {
     expect(formatted).toBe(original);
   });
 
-  it("round-trips interval custom unit", () => {
-    const original = "3 - 5 parts";
-    const parsed = parseQuantity("3-5 parts");
-    const formatted = formatQuantity(parsed);
+  it("round-trips interval custom unit with formatQuantityForEdit", () => {
+    const original = "3 - 5 @parts";
+    const parsed = parseQuantity("3-5 @parts");
+    const formatted = formatQuantityForEdit(parsed);
     expect(formatted).toBe(original);
   });
 
-  it("round-trips unspecified", () => {
-    const original = "a handful";
+  it("round-trips unspecified with formatQuantityForEdit", () => {
+    const original = "~a handful";
     const parsed = parseQuantity(original);
-    const formatted = formatQuantity(parsed);
+    const formatted = formatQuantityForEdit(parsed);
     expect(formatted).toBe(original);
   });
 });

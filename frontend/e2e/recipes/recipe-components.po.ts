@@ -59,7 +59,11 @@ export class RecipeComponentsPage {
   }
 
   ingredientQuantityError(index: number): Locator {
-    return this.ingredientRow(index).locator("span.text-xs.text-destructive");
+    return this.ingredientRow(index).getByTestId("ingredient-quantity-error");
+  }
+
+  get quantityErrorTooltip(): Locator {
+    return this.page.locator('z-tooltip[data-state="opened"]');
   }
 
   stepRow(index: number): Locator {
