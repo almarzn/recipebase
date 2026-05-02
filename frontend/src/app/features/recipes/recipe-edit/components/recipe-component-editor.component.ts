@@ -20,6 +20,8 @@ import { RecipeComponentEditorViewModel } from "./recipe-component-editor.vm";
         [ingredientsForm]="vm.ingredientsForm"
         (addIngredient)="vm.addIngredient()"
         (deleteIngredient)="vm.deleteIngredient($event)"
+        (moveIngredientUp)="vm.moveIngredientUp($event)"
+        (moveIngredientDown)="vm.moveIngredientDown($event)"
       />
 
       <app-component-editor-steps-list

@@ -19,11 +19,15 @@ import type { EditableIngredient } from "./recipe-component-editor.vm";
 
       @if (ingredientsForm().length > 0) {
         <div class="flex flex-col gap-3">
-          @for (ingredientForm of ingredientsForm(); track $index) {
+          @for (ingredientForm of ingredientsForm(); track $index; let first = $first, last = $last) {
             <app-editor-ingredient
               [ingredientForm]="ingredientForm"
+              [isFirst]="first"
+              [isLast]="last"
               [attr.data-testid]="'component-editor-ingredient-row-' + $index"
               (delete)="deleteIngredient.emit($index)"
+              (moveUp)="moveIngredientUp.emit($index)"
+              (moveDown)="moveIngredientDown.emit($index)"
             />
           }
         </div>
@@ -47,4 +51,6 @@ export class ComponentEditorIngredientListComponent {
   readonly ingredientsForm = input.required<FieldTree<EditableIngredient[]>>();
   readonly deleteIngredient = output<number>();
   readonly addIngredient = output();
+  readonly moveIngredientUp = output<number>();
+  readonly moveIngredientDown = output<number>();
 }
