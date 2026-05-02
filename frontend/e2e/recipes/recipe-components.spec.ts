@@ -87,11 +87,17 @@ test.describe("recipe components editor", () => {
       await expect(editor.ingredientRow(0)).toBeVisible();
       await expect(editor.ingredientNameInput(0)).toHaveValue("Flour");
       await expect(editor.ingredientQuantityInput(0)).toHaveValue("500 g");
-      await expect(editor.ingredientNotesTextarea(0)).toHaveValue("Type 00");
 
       await expect(editor.ingredientRow(1)).toBeVisible();
       await expect(editor.ingredientNameInput(1)).toHaveValue("Eggs");
       await expect(editor.ingredientQuantityInput(1)).toHaveValue("5");
+    });
+
+    await test.step("toggle notes to check pre-populated notes content", async () => {
+      await editor.ingredientToggleNotesBtn(0).click();
+      await expect(editor.ingredientNotesTextarea(0)).toHaveValue("Type 00");
+
+      await editor.ingredientToggleNotesBtn(1).click();
       await expect(editor.ingredientNotesTextarea(1)).toHaveValue("");
     });
 
@@ -195,6 +201,95 @@ test.describe("recipe components editor", () => {
       await editor.ingredientQuantityError(0).hover();
       await expect(editor.quantityErrorTooltip).toBeVisible();
       await expect(editor.quantityErrorTooltip).toContainText("Cannot parse empty quantity text");
+    });
+  });
+
+  test("ingredient toolbar buttons", async ({ page }) => {
+    await page.route("**/api/recipes/pasta", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(mockRecipe),
+      }),
+    );
+
+    const editor = new RecipeComponentsPage(page);
+    await editor.goto("pasta");
+
+    await test.step("first ingredient toolbar: move up hidden, move down visible", async () => {
+      await expect(editor.ingredientMoveUpBtn(0)).not.toBeVisible();
+      await expect(editor.ingredientMoveDownBtn(0)).toBeVisible();
+    });
+
+    await test.step("second ingredient toolbar: move up visible, move down hidden", async () => {
+      await expect(editor.ingredientMoveUpBtn(1)).toBeVisible();
+      await expect(editor.ingredientMoveDownBtn(1)).not.toBeVisible();
+    });
+
+    await test.step("toolbar has delete and notes toggle buttons", async () => {
+      await expect(editor.ingredientDeleteBtn(0)).toBeVisible();
+      await expect(editor.ingredientToggleNotesBtn(0)).toBeVisible();
+    });
+  });
+
+  test("ingredient notes toggle shows notes textarea and indicator", async ({ page }) => {
+    await page.route("**/api/recipes/pasta", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(mockRecipe),
+      }),
+    );
+
+    const editor = new RecipeComponentsPage(page);
+    await editor.goto("pasta");
+
+    await test.step("notes textarea hidden by default", async () => {
+      await expect(editor.ingredientNotesTextarea(0)).not.toBeVisible();
+    });
+
+    await test.step("click toggle shows textarea with content and indicator for ingredient with notes", async () => {
+      await editor.ingredientToggleNotesBtn(0).click();
+      await expect(editor.ingredientNotesTextarea(0)).toBeVisible();
+      await expect(editor.ingredientNotesTextarea(0)).toHaveValue("Type 00");
+      await expect(editor.ingredientNotesIndicator(0)).toBeVisible();
+    });
+
+    await test.step("ingredient with no notes has no indicator dot", async () => {
+      await editor.ingredientToggleNotesBtn(1).click();
+      await expect(editor.ingredientNotesTextarea(1)).toBeVisible();
+      await expect(editor.ingredientNotesTextarea(1)).toHaveValue("");
+      await expect(editor.ingredientNotesIndicator(1)).not.toBeVisible();
+    });
+  });
+
+  test("moving ingredients up and down", async ({ page }) => {
+    await page.route("**/api/recipes/pasta", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(mockRecipe),
+      }),
+    );
+
+    const editor = new RecipeComponentsPage(page);
+    await editor.goto("pasta");
+
+    await test.step("initial order is Flour then Eggs", async () => {
+      await expect(editor.ingredientNameInput(0)).toHaveValue("Flour");
+      await expect(editor.ingredientNameInput(1)).toHaveValue("Eggs");
+    });
+
+    await test.step("move first ingredient down swaps order", async () => {
+      await editor.ingredientMoveDownBtn(0).click();
+      await expect(editor.ingredientNameInput(0)).toHaveValue("Eggs");
+      await expect(editor.ingredientNameInput(1)).toHaveValue("Flour");
+    });
+
+    await test.step("move second ingredient up restores original order", async () => {
+      await editor.ingredientMoveUpBtn(1).click();
+      await expect(editor.ingredientNameInput(0)).toHaveValue("Flour");
+      await expect(editor.ingredientNameInput(1)).toHaveValue("Eggs");
     });
   });
 
