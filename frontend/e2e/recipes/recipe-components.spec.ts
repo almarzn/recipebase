@@ -93,12 +93,11 @@ test.describe("recipe components editor", () => {
       await expect(editor.ingredientQuantityInput(1)).toHaveValue("5");
     });
 
-    await test.step("toggle notes to check pre-populated notes content", async () => {
-      await editor.ingredientToggleNotesBtn(0).click();
+    await test.step("notes textarea visible for ingredient with notes, hidden for empty notes", async () => {
+      await expect(editor.ingredientNotesTextarea(0)).toBeVisible();
       await expect(editor.ingredientNotesTextarea(0)).toHaveValue("Type 00");
 
-      await editor.ingredientToggleNotesBtn(1).click();
-      await expect(editor.ingredientNotesTextarea(1)).toHaveValue("");
+      await expect(editor.ingredientNotesTextarea(1)).not.toBeVisible();
     });
 
     await test.step("pre-populates steps from API", async () => {
@@ -232,7 +231,7 @@ test.describe("recipe components editor", () => {
     });
   });
 
-  test("ingredient notes toggle shows notes textarea and indicator", async ({ page }) => {
+  test("ingredient notes toggle shows and hides textarea", async ({ page }) => {
     await page.route("**/api/recipes/pasta", (route) =>
       route.fulfill({
         status: 200,
@@ -244,17 +243,21 @@ test.describe("recipe components editor", () => {
     const editor = new RecipeComponentsPage(page);
     await editor.goto("pasta");
 
-    await test.step("notes textarea hidden by default", async () => {
-      await expect(editor.ingredientNotesTextarea(0)).not.toBeVisible();
-    });
-
-    await test.step("click toggle shows textarea with content for ingredient with notes", async () => {
-      await editor.ingredientToggleNotesBtn(0).click();
+    await test.step("notes textarea visible by default for ingredient with notes", async () => {
       await expect(editor.ingredientNotesTextarea(0)).toBeVisible();
       await expect(editor.ingredientNotesTextarea(0)).toHaveValue("Type 00");
     });
 
-    await test.step("ingredient with no notes still toggles but has empty textarea", async () => {
+    await test.step("click toggle hides textarea for ingredient with notes", async () => {
+      await editor.ingredientToggleNotesBtn(0).click();
+      await expect(editor.ingredientNotesTextarea(0)).not.toBeVisible();
+    });
+
+    await test.step("notes textarea hidden by default for ingredient with empty notes", async () => {
+      await expect(editor.ingredientNotesTextarea(1)).not.toBeVisible();
+    });
+
+    await test.step("click toggle shows empty textarea for ingredient without notes", async () => {
       await editor.ingredientToggleNotesBtn(1).click();
       await expect(editor.ingredientNotesTextarea(1)).toBeVisible();
       await expect(editor.ingredientNotesTextarea(1)).toHaveValue("");

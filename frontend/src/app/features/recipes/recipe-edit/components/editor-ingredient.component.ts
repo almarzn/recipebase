@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, signal } from "@angular/core";
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, input, output, signal } from "@angular/core";
 import type { FieldTree } from "@angular/forms/signals";
 import { FormField } from "@angular/forms/signals";
 import { NgIcon, provideIcons } from "@ng-icons/core";
@@ -135,6 +135,15 @@ export class EditorIngredientComponent {
     const errors = q.errors();
     return errors?.map((e) => e.message).join(". ") ?? "";
   });
+
+  constructor() {
+    afterNextRender(() => {
+      const notes = this.ingredientForm().notes().value();
+      if (notes.trim() !== "") {
+        this.showNotes.set(true);
+      }
+    });
+  }
 
   protected toggleNotes(): void {
     this.showNotes.update((v) => !v);
