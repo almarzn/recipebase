@@ -63,20 +63,25 @@ function createUnit(type: string, customName?: string): Unit {
 /**
  * Parse human-written quantity text into a Quantity object.
  *
+ * Prefix rules:
+ * - Unspecified MUST start with "~" or it fails (catches typos)
+ * - Custom unit text MUST start with "@" or it fails (catches typos)
+ *
  * Type resolution:
  * - arbitrary: number only (e.g., "5", "1.5", "10-20")
- * - custom: number + text (e.g., "4 parts", "2 slices of bread")
- * - unspecified: no number (e.g., "a handful", "to taste")
+ * - custom: number + "@text" (e.g., "4 @parts", "2 @slices of bread")
+ * - unspecified: "~text" (e.g., "~a handful", "~to taste")
+ * - standard: number + known unit (e.g., "12.5 g", "250 ml")
  *
  * Examples:
  * ```ts
- * parseQuantity("12.5 g")        // { type: "decimal", amount: 12.5, unit: { type: "gram" } }
- * parseQuantity("14 ml")           // { type: "decimal", amount: 14, unit: { type: "milliliter" } }
- * parseQuantity("4 parts")         // { type: "decimal", amount: 4, unit: { type: "custom", name: "parts" } }
+ * parseQuantity("12.5 g")          // { type: "decimal", amount: 12.5, unit: { type: "gram" } }
+ * parseQuantity("14ml")            // { type: "decimal", amount: 14, unit: { type: "milliliter" } }
+ * parseQuantity("4 @parts")        // { type: "decimal", amount: 4, unit: { type: "custom", name: "parts" } }
  * parseQuantity("5")               // { type: "decimal", amount: 5, unit: { type: "arbitrary" } }
- * parseQuantity("a handful")       // { type: "unspecified", notes: "a handful" }
+ * parseQuantity("~a handful")      // { type: "unspecified", notes: "a handful" }
  * parseQuantity("13 - 15 g")       // { type: "interval", from: 13, to: 15, unit: { type: "gram" } }
- * parseQuantity("3-5 parts")       // { type: "interval", from: 3, to: 5, unit: { type: "custom", name: "parts" } }
+ * parseQuantity("3-5 @parts")      // { type: "interval", from: 3, to: 5, unit: { type: "custom", name: "parts" } }
  * ```
  */
 export function parseQuantity(text: string): Quantity {
@@ -114,12 +119,18 @@ export function parseQuantity(text: string): Quantity {
       return { type: "interval", from, to, unit: standardUnit } as Interval;
     }
 
-    // Has text but not a standard unit → custom with the full text as name
+    // Custom units MUST be prefixed with "@"
+    if (!unitText.startsWith("@")) {
+      throw new Error(
+        `Unknown unit "${unitText}" in "${text}". Did you mean a standard unit? Custom units must be prefixed with "@".`,
+      );
+    }
+
     return {
       type: "interval",
       from,
       to,
-      unit: { type: "custom", name: unitText },
+      unit: { type: "custom", name: unitText.slice(1).trim() },
     } as Interval;
   }
 
@@ -149,16 +160,26 @@ export function parseQuantity(text: string): Quantity {
       return { type: "decimal", amount, unit: standardUnit } as DecimalAmount;
     }
 
-    // Has text but not a standard unit → custom with the full text as name
+    // Custom units MUST be prefixed with "@"
+    if (!unitText.startsWith("@")) {
+      throw new Error(
+        `Unknown unit "${unitText}" in "${text}". Did you mean a standard unit? Custom units must be prefixed with "@".`,
+      );
+    }
+
     return {
       type: "decimal",
       amount,
-      unit: { type: "custom", name: unitText },
+      unit: { type: "custom", name: unitText.slice(1).trim() },
     } as DecimalAmount;
   }
 
-  // No number detected → unspecified (free text)
-  return { type: "unspecified", notes: trimmed } as Unspecified;
+  // No number detected → must start with "~" for unspecified
+  if (!trimmed.startsWith("~")) {
+    throw new Error(`Unspecified quantity "${text}" must start with "~". For example: "~a handful".`);
+  }
+
+  return { type: "unspecified", notes: trimmed.slice(1).trimStart() } as Unspecified;
 }
 
 /**
@@ -254,5 +275,51 @@ function formatUnit(unit: Unit, options: FormatQuantityOptions = {}): string {
   }
 
   // For arbitrary units, no display
+  return "";
+}
+
+/**
+ * Format a Quantity for use in edit forms — includes parse-required prefix markers.
+ *
+ * Unspecified gets "~" prefix, custom units get "@" prefix so that the
+ * output round-trips cleanly through parseQuantity().
+ */
+export function formatQuantityForEdit(quantity: Quantity): string {
+  if (isUnspecifiedQuantity(quantity)) {
+    return `~${quantity.notes}`;
+  }
+
+  if (isIntervalQuantity(quantity)) {
+    const unitStr = formatUnitForEdit(quantity.unit);
+    const fromStr = formatNumber(quantity.from);
+    const toStr = formatNumber(quantity.to);
+    return `${fromStr} - ${toStr}${unitStr ? ` ${unitStr}` : ""}`;
+  }
+
+  if (isDecimalQuantity(quantity)) {
+    const amountStr = formatNumber(quantity.amount);
+    const unitStr = formatUnitForEdit(quantity.unit);
+    return `${amountStr}${unitStr ? ` ${unitStr}` : ""}`;
+  }
+
+  throw new Error(`Unknown quantity type: ${JSON.stringify(quantity)}`);
+}
+
+function formatUnitForEdit(unit: Unit): string {
+  // Standard units use the same display as formatUnit
+  if (isStandardUnit(unit)) {
+    const abbreviations: Record<string, string> = {
+      gram: "g",
+      kilogram: "kg",
+      milliliter: "ml",
+      liter: "l",
+    };
+    return abbreviations[unit.type] ?? unit.type;
+  }
+
+  if (unit.type === "custom") {
+    return `@${unit.name}`;
+  }
+
   return "";
 }

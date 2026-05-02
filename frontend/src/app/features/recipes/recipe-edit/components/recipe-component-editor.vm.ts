@@ -1,7 +1,7 @@
 import { Injectable, linkedSignal, signal } from "@angular/core";
 import { applyEach, form, validate } from "@angular/forms/signals";
 import type { ComponentResource, Quantity } from "@/shared/server";
-import { formatQuantity, parseQuantity } from "@/shared/utils/unit";
+import { formatQuantityForEdit, parseQuantity } from "@/shared/utils/unit";
 
 export interface EditableIngredient {
   id: string;
@@ -36,7 +36,7 @@ export class RecipeComponentEditorViewModel {
     (this.component()?.ingredients ?? []).map((i) => ({
       id: i.id,
       name: i.name,
-      quantity: formatQuantity(i.quantity, { unitDisplay: "short" }),
+      quantity: formatQuantityForEdit(i.quantity),
       notes: i.notes ?? "",
     })),
   );

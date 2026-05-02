@@ -185,10 +185,16 @@ test.describe("recipe components editor", () => {
       await editor.ingredientQuantityInput(0).blur();
     });
 
-    await test.step("save button shows validation error", async () => {
+    await test.step("save triggers validation, error icon appears inside the quantity input", async () => {
       await editor.saveBtn.click();
       await expect(editor.ingredientQuantityError(0)).toBeVisible();
       await expect(editor.saveError).toBeVisible();
+    });
+
+    await test.step("hover over error icon shows tooltip with parse error message", async () => {
+      await editor.ingredientQuantityError(0).hover();
+      await expect(editor.quantityErrorTooltip).toBeVisible();
+      await expect(editor.quantityErrorTooltip).toContainText("Cannot parse empty quantity text");
     });
   });
 
