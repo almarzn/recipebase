@@ -42,28 +42,26 @@ import type { EditableIngredient } from "./recipe-component-editor.vm";
       </div>
 
       <div class="flex items-center gap-1" data-testid="ingredient-toolbar">
-        @if (!isFirst()) {
-          <button
-            z-button
-            zType="ghost"
-            zSize="icon-xs"
-            (click)="moveUp.emit()"
-            data-testid="ingredient-move-up"
-          >
-            <ng-icon name="lucideChevronUp" />
-          </button>
-        }
-        @if (!isLast()) {
-          <button
-            z-button
-            zType="ghost"
-            zSize="icon-xs"
-            (click)="moveDown.emit()"
-            data-testid="ingredient-move-down"
-          >
-            <ng-icon name="lucideChevronDown" />
-          </button>
-        }
+        <button
+          z-button
+          zType="ghost"
+          zSize="icon-xs"
+          [zDisabled]="isFirst()"
+          (click)="moveUp.emit()"
+          data-testid="ingredient-move-up"
+        >
+          <ng-icon name="lucideChevronUp" />
+        </button>
+        <button
+          z-button
+          zType="ghost"
+          zSize="icon-xs"
+          [zDisabled]="isLast()"
+          (click)="moveDown.emit()"
+          data-testid="ingredient-move-down"
+        >
+          <ng-icon name="lucideChevronDown" />
+        </button>
         <button
           z-button
           zType="ghost"

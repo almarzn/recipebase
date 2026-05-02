@@ -216,14 +216,14 @@ test.describe("recipe components editor", () => {
     const editor = new RecipeComponentsPage(page);
     await editor.goto("pasta");
 
-    await test.step("first ingredient toolbar: move up hidden, move down visible", async () => {
-      await expect(editor.ingredientMoveUpBtn(0)).not.toBeVisible();
-      await expect(editor.ingredientMoveDownBtn(0)).toBeVisible();
+    await test.step("first ingredient toolbar: move up disabled, move down enabled", async () => {
+      await expect(editor.ingredientMoveUpBtn(0)).toBeDisabled();
+      await expect(editor.ingredientMoveDownBtn(0)).toBeEnabled();
     });
 
-    await test.step("second ingredient toolbar: move up visible, move down hidden", async () => {
-      await expect(editor.ingredientMoveUpBtn(1)).toBeVisible();
-      await expect(editor.ingredientMoveDownBtn(1)).not.toBeVisible();
+    await test.step("second ingredient toolbar: move up enabled, move down disabled", async () => {
+      await expect(editor.ingredientMoveUpBtn(1)).toBeEnabled();
+      await expect(editor.ingredientMoveDownBtn(1)).toBeDisabled();
     });
 
     await test.step("toolbar has delete and notes toggle buttons", async () => {
