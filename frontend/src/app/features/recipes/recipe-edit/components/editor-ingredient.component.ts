@@ -117,10 +117,14 @@ export class EditorIngredientComponent {
   readonly moveUp = output();
   readonly moveDown = output();
 
-  protected readonly showNotes = linkedSignal(() => {
-    const n = this.ingredientForm().notes();
-    const val = n.value;
-    return val() != null && val().trim() !== "";
+  protected readonly showNotes = linkedSignal({
+    source: this.ingredientForm,
+    computation: (_form, prev) => {
+      if (prev !== undefined) return prev;
+      const n = _form.notes();
+      const val = n.value;
+      return val() != null && val().trim() !== "";
+    },
   });
 
   protected readonly hasNotes = computed(() => {

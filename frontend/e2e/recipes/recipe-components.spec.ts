@@ -264,6 +264,35 @@ test.describe("recipe components editor", () => {
     });
   });
 
+  test("notes textarea stays visible after typing then clearing", async ({ page }) => {
+    await page.route("**/api/recipes/pasta", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(mockRecipe),
+      }),
+    );
+
+    const editor = new RecipeComponentsPage(page);
+    await editor.goto("pasta");
+
+    await test.step("ingredient 1 has empty notes, textarea hidden by default", async () => {
+      await expect(editor.ingredientNotesTextarea(1)).not.toBeVisible();
+    });
+
+    await test.step("click toggle to show empty textarea", async () => {
+      await editor.ingredientToggleNotesBtn(1).click();
+      await expect(editor.ingredientNotesTextarea(1)).toBeVisible();
+    });
+
+    await test.step("type text then clear it, textarea should stay visible", async () => {
+      await editor.ingredientNotesTextarea(1).fill("hello world");
+      await editor.ingredientNotesTextarea(1).fill("");
+      await editor.ingredientNotesTextarea(1).blur();
+      await expect(editor.ingredientNotesTextarea(1)).toBeVisible();
+    });
+  });
+
   test("moving ingredients up and down", async ({ page }) => {
     await page.route("**/api/recipes/pasta", (route) =>
       route.fulfill({
