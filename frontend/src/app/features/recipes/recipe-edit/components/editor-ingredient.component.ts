@@ -89,7 +89,7 @@ import type { EditableIngredient } from "./recipe-component-editor.vm";
           zType="textarea"
           [formField]="ingredientForm().notes"
           placeholder="Add notes..."
-          class="w-full min-h-[40px] border-none"
+          class="w-full min-h-[40px] border border-stone-200 rounded-md"
         ></textarea>
       }
     </div>
