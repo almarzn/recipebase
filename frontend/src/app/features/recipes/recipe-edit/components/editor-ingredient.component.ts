@@ -1,13 +1,20 @@
-import { ChangeDetectionStrategy, Component, computed, input, linkedSignal, output } from "@angular/core";
+import {
+	ChangeDetectionStrategy,
+	Component,
+	computed,
+	input,
+	linkedSignal,
+	output,
+} from "@angular/core";
 import type { FieldTree } from "@angular/forms/signals";
 import { FormField } from "@angular/forms/signals";
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import {
-  lucideAlertCircle,
-  lucideChevronDown,
-  lucideChevronUp,
-  lucideNotebookPen,
-  lucideTrash,
+	lucideAlertCircle,
+	lucideChevronDown,
+	lucideChevronUp,
+	lucideNotebookPen,
+	lucideTrash,
 } from "@ng-icons/lucide";
 import { ZardButtonComponent } from "@/shared/components/button";
 import { ZardInputDirective } from "@/shared/components/input";
@@ -16,11 +23,18 @@ import { ZardTooltipImports } from "@/shared/components/tooltip";
 import type { EditableIngredient } from "./recipe-component-editor.vm";
 
 @Component({
-  selector: "app-editor-ingredient",
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIcon, FormField, ZardButtonComponent, ZardInputDirective, ZardInputGroupComponent, ...ZardTooltipImports],
-  template: `
-    <div class="flex flex-col gap-2 border border-stone-100 rounded-lg p-3">
+	selector: "app-editor-ingredient",
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [
+		NgIcon,
+		FormField,
+		ZardButtonComponent,
+		ZardInputDirective,
+		ZardInputGroupComponent,
+		...ZardTooltipImports,
+	],
+	template: `
+    <div class="flex flex-col gap-2 border-l-2 pl-3 border-stone-100 has-focus:border-teal-800 hover:border-stone-400 transition-colors">
       <div class="grid grid-cols-[1fr_auto] gap-2 items-center">
         <input
           z-input
@@ -106,46 +120,52 @@ import type { EditableIngredient } from "./recipe-component-editor.vm";
         </div>
     </ng-template>
   `,
-  viewProviders: [
-    provideIcons({ lucideAlertCircle, lucideChevronDown, lucideChevronUp, lucideNotebookPen, lucideTrash }),
-  ],
+	viewProviders: [
+		provideIcons({
+			lucideAlertCircle,
+			lucideChevronDown,
+			lucideChevronUp,
+			lucideNotebookPen,
+			lucideTrash,
+		}),
+	],
 })
 export class EditorIngredientComponent {
-  readonly ingredientForm = input.required<FieldTree<EditableIngredient>>();
-  readonly isFirst = input(false);
-  readonly isLast = input(false);
-  readonly delete = output();
-  readonly moveUp = output();
-  readonly moveDown = output();
+	readonly ingredientForm = input.required<FieldTree<EditableIngredient>>();
+	readonly isFirst = input(false);
+	readonly isLast = input(false);
+	readonly delete = output();
+	readonly moveUp = output();
+	readonly moveDown = output();
 
-  protected readonly showNotes = linkedSignal({
-    source: this.ingredientForm,
-    computation: (_form, prev) => {
-      if (prev !== undefined) return prev;
-      const n = _form.notes();
-      const val = n.value;
-      return val() != null && val().trim() !== "";
-    },
-  });
+	protected readonly showNotes = linkedSignal({
+		source: this.ingredientForm,
+		computation: (_form, prev) => {
+			if (prev !== undefined) return prev;
+			const n = _form.notes();
+			const val = n.value;
+			return val() != null && val().trim() !== "";
+		},
+	});
 
-  protected readonly hasNotes = computed(() => {
-    const n = this.ingredientForm().notes();
-    const val = n.value;
-    return val() != null && val().trim() !== "";
-  });
+	protected readonly hasNotes = computed(() => {
+		const n = this.ingredientForm().notes();
+		const val = n.value;
+		return val() != null && val().trim() !== "";
+	});
 
-  protected readonly isQuantityError = computed(() => {
-    const q = this.ingredientForm().quantity();
-    return q.touched() && q.invalid();
-  });
+	protected readonly isQuantityError = computed(() => {
+		const q = this.ingredientForm().quantity();
+		return q.touched() && q.invalid();
+	});
 
-  protected readonly quantityErrorMessage = computed(() => {
-    const q = this.ingredientForm().quantity();
-    const errors = q.errors();
-    return errors?.map((e) => e.message).join(". ") ?? "";
-  });
+	protected readonly quantityErrorMessage = computed(() => {
+		const q = this.ingredientForm().quantity();
+		const errors = q.errors();
+		return errors?.map((e) => e.message).join(". ") ?? "";
+	});
 
-  protected toggleNotes(): void {
-    this.showNotes.update((v) => !v);
-  }
+	protected toggleNotes(): void {
+		this.showNotes.update((v) => !v);
+	}
 }
