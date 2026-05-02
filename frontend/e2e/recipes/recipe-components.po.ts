@@ -58,10 +58,6 @@ export class RecipeComponentsPage {
     return this.ingredientRow(index).getByTestId("ingredient-toggle-notes");
   }
 
-  ingredientNotesIndicator(index: number): Locator {
-    return this.ingredientRow(index).getByTestId("ingredient-notes-indicator");
-  }
-
   ingredientDeleteBtn(index: number): Locator {
     return this.ingredientRow(index).getByTestId("ingredient-delete");
   }

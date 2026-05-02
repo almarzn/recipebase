@@ -248,18 +248,16 @@ test.describe("recipe components editor", () => {
       await expect(editor.ingredientNotesTextarea(0)).not.toBeVisible();
     });
 
-    await test.step("click toggle shows textarea with content and indicator for ingredient with notes", async () => {
+    await test.step("click toggle shows textarea with content for ingredient with notes", async () => {
       await editor.ingredientToggleNotesBtn(0).click();
       await expect(editor.ingredientNotesTextarea(0)).toBeVisible();
       await expect(editor.ingredientNotesTextarea(0)).toHaveValue("Type 00");
-      await expect(editor.ingredientNotesIndicator(0)).toBeVisible();
     });
 
-    await test.step("ingredient with no notes has no indicator dot", async () => {
+    await test.step("ingredient with no notes still toggles but has empty textarea", async () => {
       await editor.ingredientToggleNotesBtn(1).click();
       await expect(editor.ingredientNotesTextarea(1)).toBeVisible();
       await expect(editor.ingredientNotesTextarea(1)).toHaveValue("");
-      await expect(editor.ingredientNotesIndicator(1)).not.toBeVisible();
     });
   });
 
