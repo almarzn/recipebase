@@ -1,4 +1,4 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, input, output, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, computed, input, linkedSignal, output } from "@angular/core";
 import type { FieldTree } from "@angular/forms/signals";
 import { FormField } from "@angular/forms/signals";
 import { NgIcon, provideIcons } from "@ng-icons/core";
@@ -117,7 +117,11 @@ export class EditorIngredientComponent {
   readonly moveUp = output();
   readonly moveDown = output();
 
-  protected readonly showNotes = signal(false);
+  protected readonly showNotes = linkedSignal(() => {
+    const n = this.ingredientForm().notes();
+    const val = n.value;
+    return val() != null && val().trim() !== "";
+  });
 
   protected readonly hasNotes = computed(() => {
     const n = this.ingredientForm().notes();
@@ -135,15 +139,6 @@ export class EditorIngredientComponent {
     const errors = q.errors();
     return errors?.map((e) => e.message).join(". ") ?? "";
   });
-
-  constructor() {
-    afterNextRender(() => {
-      const notes = this.ingredientForm().notes().value();
-      if (notes.trim() !== "") {
-        this.showNotes.set(true);
-      }
-    });
-  }
 
   protected toggleNotes(): void {
     this.showNotes.update((v) => !v);
