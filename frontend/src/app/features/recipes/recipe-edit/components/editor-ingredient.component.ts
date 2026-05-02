@@ -69,6 +69,7 @@ import type { EditableIngredient } from "./recipe-component-editor.vm";
           zType="ghost"
           zSize="icon-xs"
           (click)="toggleNotes()"
+          [class.border]="hasNotes()"
           data-testid="ingredient-toggle-notes"
         >
           <ng-icon name="lucideNotebookPen" [class.text-primary]="hasNotes()" />
