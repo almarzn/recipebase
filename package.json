@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@toolwind/anchors": "^1.0.10"
+  }
+}

@@ -39,6 +39,7 @@
     "@js-temporal/polyfill": "^0.5.1",
     "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4.1.12",
+    "@toolwind/anchors": "^1.0.10",
     "@types/node": "^25.6.0",
     "jsdom": "^28.0.0",
     "lucide-static": "^1.8.0",

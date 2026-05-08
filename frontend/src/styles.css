@@ -1,7 +1,9 @@
 @layer ng-icon, theme, base, components, utilities;
 @import "tailwindcss";
-@plugin "tailwindcss-animate";
+/* style.css */
+@import "@toolwind/anchors";
 
+@plugin "tailwindcss-animate";
 @custom-variant dark (&:is(.dark *));
 
 :root {
