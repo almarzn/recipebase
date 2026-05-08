@@ -72,6 +72,24 @@ export class RecipeComponentEditorViewModel {
     this.ingredientModel.update((curr) => curr.filter((_, i) => i !== index));
   }
 
+  moveIngredientUp(index: number): void {
+    if (index <= 0) return;
+    this.ingredientModel.update((curr) => {
+      const arr = [...curr];
+      [arr[index - 1], arr[index]] = [arr[index], arr[index - 1]];
+      return arr;
+    });
+  }
+
+  moveIngredientDown(index: number): void {
+    this.ingredientModel.update((curr) => {
+      if (index >= curr.length - 1) return curr;
+      const arr = [...curr];
+      [arr[index], arr[index + 1]] = [arr[index + 1], arr[index]];
+      return arr;
+    });
+  }
+
   readonly stepModel = linkedSignal<EditableStep[]>(() =>
     (this.component()?.steps ?? []).map((s) => ({
       id: s.id,

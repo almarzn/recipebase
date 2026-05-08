@@ -87,12 +87,17 @@ test.describe("recipe components editor", () => {
       await expect(editor.ingredientRow(0)).toBeVisible();
       await expect(editor.ingredientNameInput(0)).toHaveValue("Flour");
       await expect(editor.ingredientQuantityInput(0)).toHaveValue("500 g");
-      await expect(editor.ingredientNotesTextarea(0)).toHaveValue("Type 00");
 
       await expect(editor.ingredientRow(1)).toBeVisible();
       await expect(editor.ingredientNameInput(1)).toHaveValue("Eggs");
       await expect(editor.ingredientQuantityInput(1)).toHaveValue("5");
-      await expect(editor.ingredientNotesTextarea(1)).toHaveValue("");
+    });
+
+    await test.step("notes textarea visible for ingredient with notes, hidden for empty notes", async () => {
+      await expect(editor.ingredientNotesTextarea(0)).toBeVisible();
+      await expect(editor.ingredientNotesTextarea(0)).toHaveValue("Type 00");
+
+      await expect(editor.ingredientNotesTextarea(1)).not.toBeVisible();
     });
 
     await test.step("pre-populates steps from API", async () => {
@@ -195,6 +200,126 @@ test.describe("recipe components editor", () => {
       await editor.ingredientQuantityError(0).hover();
       await expect(editor.quantityErrorTooltip).toBeVisible();
       await expect(editor.quantityErrorTooltip).toContainText("Cannot parse empty quantity text");
+    });
+  });
+
+  test("ingredient toolbar buttons", async ({ page }) => {
+    await page.route("**/api/recipes/pasta", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(mockRecipe),
+      }),
+    );
+
+    const editor = new RecipeComponentsPage(page);
+    await editor.goto("pasta");
+
+    await test.step("first ingredient toolbar: move up disabled, move down enabled", async () => {
+      await expect(editor.ingredientMoveUpBtn(0)).toBeDisabled();
+      await expect(editor.ingredientMoveDownBtn(0)).toBeEnabled();
+    });
+
+    await test.step("second ingredient toolbar: move up enabled, move down disabled", async () => {
+      await expect(editor.ingredientMoveUpBtn(1)).toBeEnabled();
+      await expect(editor.ingredientMoveDownBtn(1)).toBeDisabled();
+    });
+
+    await test.step("toolbar has delete and notes toggle buttons", async () => {
+      await expect(editor.ingredientDeleteBtn(0)).toBeVisible();
+      await expect(editor.ingredientToggleNotesBtn(0)).toBeVisible();
+    });
+  });
+
+  test("ingredient notes toggle shows and hides textarea", async ({ page }) => {
+    await page.route("**/api/recipes/pasta", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(mockRecipe),
+      }),
+    );
+
+    const editor = new RecipeComponentsPage(page);
+    await editor.goto("pasta");
+
+    await test.step("notes textarea visible by default for ingredient with notes", async () => {
+      await expect(editor.ingredientNotesTextarea(0)).toBeVisible();
+      await expect(editor.ingredientNotesTextarea(0)).toHaveValue("Type 00");
+    });
+
+    await test.step("click toggle hides textarea for ingredient with notes", async () => {
+      await editor.ingredientToggleNotesBtn(0).click();
+      await expect(editor.ingredientNotesTextarea(0)).not.toBeVisible();
+    });
+
+    await test.step("notes textarea hidden by default for ingredient with empty notes", async () => {
+      await expect(editor.ingredientNotesTextarea(1)).not.toBeVisible();
+    });
+
+    await test.step("click toggle shows empty textarea for ingredient without notes", async () => {
+      await editor.ingredientToggleNotesBtn(1).click();
+      await expect(editor.ingredientNotesTextarea(1)).toBeVisible();
+      await expect(editor.ingredientNotesTextarea(1)).toHaveValue("");
+    });
+  });
+
+  test("notes textarea stays visible after typing then clearing", async ({ page }) => {
+    await page.route("**/api/recipes/pasta", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(mockRecipe),
+      }),
+    );
+
+    const editor = new RecipeComponentsPage(page);
+    await editor.goto("pasta");
+
+    await test.step("ingredient 1 has empty notes, textarea hidden by default", async () => {
+      await expect(editor.ingredientNotesTextarea(1)).not.toBeVisible();
+    });
+
+    await test.step("click toggle to show empty textarea", async () => {
+      await editor.ingredientToggleNotesBtn(1).click();
+      await expect(editor.ingredientNotesTextarea(1)).toBeVisible();
+    });
+
+    await test.step("type text then clear it, textarea should stay visible", async () => {
+      await editor.ingredientNotesTextarea(1).fill("hello world");
+      await editor.ingredientNotesTextarea(1).fill("");
+      await editor.ingredientNotesTextarea(1).blur();
+      await expect(editor.ingredientNotesTextarea(1)).toBeVisible();
+    });
+  });
+
+  test("moving ingredients up and down", async ({ page }) => {
+    await page.route("**/api/recipes/pasta", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(mockRecipe),
+      }),
+    );
+
+    const editor = new RecipeComponentsPage(page);
+    await editor.goto("pasta");
+
+    await test.step("initial order is Flour then Eggs", async () => {
+      await expect(editor.ingredientNameInput(0)).toHaveValue("Flour");
+      await expect(editor.ingredientNameInput(1)).toHaveValue("Eggs");
+    });
+
+    await test.step("move first ingredient down swaps order", async () => {
+      await editor.ingredientMoveDownBtn(0).click();
+      await expect(editor.ingredientNameInput(0)).toHaveValue("Eggs");
+      await expect(editor.ingredientNameInput(1)).toHaveValue("Flour");
+    });
+
+    await test.step("move second ingredient up restores original order", async () => {
+      await editor.ingredientMoveUpBtn(1).click();
+      await expect(editor.ingredientNameInput(0)).toHaveValue("Flour");
+      await expect(editor.ingredientNameInput(1)).toHaveValue("Eggs");
     });
   });
 

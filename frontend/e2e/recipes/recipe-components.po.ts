@@ -42,8 +42,24 @@ export class RecipeComponentsPage {
     return this.page.getByTestId(`component-editor-ingredient-row-${index}`);
   }
 
+  ingredientToolbar(index: number): Locator {
+    return this.ingredientRow(index).getByTestId("ingredient-toolbar");
+  }
+
+  ingredientMoveUpBtn(index: number): Locator {
+    return this.ingredientRow(index).getByTestId("ingredient-move-up");
+  }
+
+  ingredientMoveDownBtn(index: number): Locator {
+    return this.ingredientRow(index).getByTestId("ingredient-move-down");
+  }
+
+  ingredientToggleNotesBtn(index: number): Locator {
+    return this.ingredientRow(index).getByTestId("ingredient-toggle-notes");
+  }
+
   ingredientDeleteBtn(index: number): Locator {
-    return this.ingredientRow(index).locator("button").first();
+    return this.ingredientRow(index).getByTestId("ingredient-delete");
   }
 
   ingredientNameInput(index: number): Locator {
