@@ -274,6 +274,86 @@ class RecipeControllerIT {
             .andExpect(status().isNotFound());
     }
 
+    @Test
+    void replaceComponent_withMultipleQuantityTypes() throws Exception {
+        mockMvc.perform(put("/api/recipes/chocolate-cake/components/main")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {
+                  "name": "Mixed Quantities",
+                  "ingredients": [
+                    {"slug": "sugar", "name": "Sugar",
+                     "quantity": {"type": "decimal", "unit": {"type": "gram"}, "amount": 200}, "notes": "sifted"},
+                    {"slug": "salt", "name": "Salt",
+                     "quantity": {"type": "interval", "unit": {"type": "gram"}, "from": 5, "to": 10}, "notes": null},
+                    {"slug": "vanilla", "name": "Vanilla",
+                     "quantity": {"type": "unspecified", "notes": "to taste"}, "notes": null},
+                    {"slug": "eggs", "name": "Eggs",
+                     "quantity": {"type": "decimal", "unit": {"type": "arbitrary"}, "amount": 3}, "notes": "large"},
+                    {"slug": "extract", "name": "Extract",
+                     "quantity": {"type": "decimal", "unit": {"type": "custom", "name": "drops"}, "amount": 5}, "notes": null}
+                  ],
+                  "steps": [
+                    {"body": "First step.", "timer": null},
+                    {"body": "Second step.", "timer": null}
+                  ]
+                }
+                """))
+            .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/api/recipes/chocolate-cake"))
+            .andExpect(jsonPath("$.components[0].name").value("Mixed Quantities"))
+            .andExpect(jsonPath("$.components[0].ingredients.length()").value(5))
+            .andExpect(jsonPath("$.components[0].ingredients[0].slug").value("sugar"))
+            .andExpect(jsonPath("$.components[0].ingredients[0].quantity.type").value("decimal"))
+            .andExpect(jsonPath("$.components[0].ingredients[0].quantity.unit.type").value("gram"))
+            .andExpect(jsonPath("$.components[0].ingredients[0].quantity.amount").value(200))
+            .andExpect(jsonPath("$.components[0].ingredients[0].notes").value("sifted"))
+            .andExpect(jsonPath("$.components[0].ingredients[1].quantity.type").value("interval"))
+            .andExpect(jsonPath("$.components[0].ingredients[1].quantity.from").value(5))
+            .andExpect(jsonPath("$.components[0].ingredients[1].quantity.to").value(10))
+            .andExpect(jsonPath("$.components[0].ingredients[2].quantity.type").value("unspecified"))
+            .andExpect(jsonPath("$.components[0].ingredients[2].quantity.notes").value("to taste"))
+            .andExpect(jsonPath("$.components[0].ingredients[3].quantity.type").value("decimal"))
+            .andExpect(jsonPath("$.components[0].ingredients[3].quantity.unit.type").value("arbitrary"))
+            .andExpect(jsonPath("$.components[0].ingredients[3].quantity.amount").value(3))
+            .andExpect(jsonPath("$.components[0].ingredients[4].quantity.type").value("decimal"))
+            .andExpect(jsonPath("$.components[0].ingredients[4].quantity.unit.type").value("custom"))
+            .andExpect(jsonPath("$.components[0].ingredients[4].quantity.unit.name").value("drops"))
+            .andExpect(jsonPath("$.components[0].steps.length()").value(2))
+            .andExpect(jsonPath("$.components[0].steps[0].body").value("First step."))
+            .andExpect(jsonPath("$.components[0].steps[0].timer").doesNotExist())
+            .andExpect(jsonPath("$.components[0].steps[1].body").value("Second step."));
+    }
+
+    @Test
+    void replaceComponent_withEmptyIngredientsAndSteps() throws Exception {
+        mockMvc.perform(put("/api/recipes/chocolate-cake/components/main")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {"name": "Just Name", "ingredients": [], "steps": []}
+                """))
+            .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/api/recipes/chocolate-cake"))
+            .andExpect(jsonPath("$.components[0].name").value("Just Name"))
+            .andExpect(jsonPath("$.components[0].ingredients.length()").value(0))
+            .andExpect(jsonPath("$.components[0].steps.length()").value(0));
+    }
+
+    @Test
+    void replaceComponent_withNullNamePreservesNull() throws Exception {
+        mockMvc.perform(put("/api/recipes/chocolate-cake/components/main")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {"name": null, "ingredients": [], "steps": []}
+                """))
+            .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/api/recipes/chocolate-cake"))
+            .andExpect(jsonPath("$.components[0].name").doesNotExist());
+    }
+
     // ============================================================
     // DELETE /api/recipes/:slug/components/:componentSlug
     // ============================================================

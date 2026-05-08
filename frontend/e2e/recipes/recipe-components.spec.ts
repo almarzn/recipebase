@@ -340,4 +340,159 @@ test.describe("recipe components editor", () => {
       await expect(editor.editor).not.toBeVisible();
     });
   });
+
+  test("save sends correct PUT request with modified ingredients and steps", async ({ page }) => {
+    await page.route("**/api/recipes/pasta", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(mockRecipe),
+      }),
+    );
+
+    await page.route("**/api/recipes/pasta/components/dough", (route) => {
+      if (route.request().method() === "PUT") {
+        return route.fulfill({ status: 204 });
+      }
+      return route.continue();
+    });
+
+    const editor = new RecipeComponentsPage(page);
+    await editor.goto("pasta");
+
+    await test.step("modify ingredient name and quantity", async () => {
+      await editor.ingredientNameInput(0).fill("Bread Flour");
+      await editor.ingredientQuantityInput(0).fill("450 g");
+      await expect(editor.ingredientNameInput(0)).toHaveValue("Bread Flour");
+      await expect(editor.ingredientQuantityInput(0)).toHaveValue("450 g");
+    });
+
+    await test.step("modify a step body", async () => {
+      await editor.stepBodyInput(0).fill("Sift flour first.");
+      await expect(editor.stepBodyInput(0)).toHaveValue("Sift flour first.");
+    });
+
+    await test.step("save and verify PUT request payload", async () => {
+      const [putRequest] = await Promise.all([
+        page.waitForRequest(
+          (req) => req.method() === "PUT" && req.url().includes("/api/recipes/pasta/components/dough"),
+        ),
+        editor.saveBtn.click(),
+      ]);
+
+      const body = putRequest.postDataJSON();
+
+      expect(body.name).toBeNull();
+
+      expect(body.ingredients).toHaveLength(2);
+      expect(body.ingredients[0].slug).toBe("flour");
+      expect(body.ingredients[0].name).toBe("Bread Flour");
+      expect(body.ingredients[0].quantity).toEqual({
+        type: "decimal",
+        amount: 450,
+        unit: { type: "gram" },
+      });
+      expect(body.ingredients[0].notes).toBe("Type 00");
+
+      expect(body.ingredients[1].slug).toBe("eggs");
+      expect(body.ingredients[1].name).toBe("Eggs");
+      expect(body.ingredients[1].quantity.type).toBe("decimal");
+
+      expect(body.steps).toHaveLength(2);
+      expect(body.steps[0].body).toBe("Sift flour first.");
+      expect(body.steps[0].timer).toBeNull();
+      expect(body.steps[1].body).toBe("Knead for 10 minutes.");
+    });
+  });
+
+  test("save shows API error message", async ({ page }) => {
+    await page.route("**/api/recipes/pasta", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(mockRecipe),
+      }),
+    );
+
+    await page.route("**/api/recipes/pasta/components/dough", (route) => {
+      if (route.request().method() === "PUT") {
+        return route.fulfill({
+          status: 500,
+          contentType: "application/json",
+          body: JSON.stringify({ message: "Database constraint violation" }),
+        });
+      }
+      return route.continue();
+    });
+
+    const editor = new RecipeComponentsPage(page);
+    await editor.goto("pasta");
+
+    await test.step("click save with valid data triggers API error", async () => {
+      const [putRequest] = await Promise.all([
+        page.waitForRequest(
+          (req) => req.method() === "PUT" && req.url().includes("/api/recipes/pasta/components/dough"),
+        ),
+        editor.saveBtn.click(),
+      ]);
+
+      expect(putRequest).toBeTruthy();
+    });
+
+    await test.step("verify error message is displayed", async () => {
+      await expect(editor.saveError).toBeVisible();
+      await expect(editor.saveError).toContainText("Database constraint violation");
+    });
+  });
+
+  test("save with new ingredient generates slug from name", async ({ page }) => {
+    await page.route("**/api/recipes/pasta", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(mockRecipe),
+      }),
+    );
+
+    await page.route("**/api/recipes/pasta/components/dough", (route) => {
+      if (route.request().method() === "PUT") {
+        return route.fulfill({ status: 204 });
+      }
+      return route.continue();
+    });
+
+    const editor = new RecipeComponentsPage(page);
+    await editor.goto("pasta");
+
+    await test.step("add a new ingredient", async () => {
+      await editor.addIngredientBtn.click();
+      await expect(editor.ingredientRow(2)).toBeVisible();
+    });
+
+    await test.step("fill new ingredient and save", async () => {
+      await editor.ingredientNameInput(2).fill("Olive Oil");
+      await editor.ingredientQuantityInput(2).fill("30 ml");
+      await expect(editor.ingredientNameInput(2)).toHaveValue("Olive Oil");
+      await expect(editor.ingredientQuantityInput(2)).toHaveValue("30 ml");
+
+      const [putRequest] = await Promise.all([
+        page.waitForRequest(
+          (req) => req.method() === "PUT" && req.url().includes("/api/recipes/pasta/components/dough"),
+        ),
+        editor.saveBtn.click(),
+      ]);
+
+      const body = putRequest.postDataJSON();
+
+      expect(body.ingredients).toHaveLength(3);
+      expect(body.ingredients[2].slug).toBe("olive-oil");
+      expect(body.ingredients[2].name).toBe("Olive Oil");
+      expect(body.ingredients[2].quantity).toEqual({
+        type: "decimal",
+        amount: 30,
+        unit: { type: "milliliter" },
+      });
+      expect(body.ingredients[2].notes).toBeNull();
+    });
+  });
 });

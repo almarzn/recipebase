@@ -32,7 +32,11 @@ import { RecipeComponentEditorViewModel } from "./recipe-component-editor.vm";
 
       <!-- Save -->
       <div class="flex justify-end items-center gap-3 border-t border-stone-100 pt-4">
-        @if (vm.ingredientsForm().invalid()) {
+        @if (vm.submitError()) {
+          <span class="text-sm text-destructive" data-testid="component-editor-save-error">
+            {{ vm.submitError() }}
+          </span>
+        } @else if (vm.ingredientsForm().invalid()) {
           <span class="text-sm text-destructive" data-testid="component-editor-save-error">
             Fix quantity errors before saving
           </span>
@@ -41,6 +45,8 @@ import { RecipeComponentEditorViewModel } from "./recipe-component-editor.vm";
           z-button
           zType="default"
           zSize="sm"
+          [zLoading]="vm.submitting()"
+          [disabled]="vm.submitting()"
           (click)="vm.saveChanges()"
           data-testid="component-editor-save"
         >
